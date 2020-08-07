@@ -26,6 +26,9 @@ const io = socket(server);
 io.on('connection', (socket) => {
     console.log(`New client connected ${socket.id}`);
     socket.emit('message', 'Hello world');
+    socket.on('disconnect', () => {
+        console.log(`Client disconnected ${socket.id}`);
+    });
 });
 
 /************************************************************************************
