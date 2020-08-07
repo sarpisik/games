@@ -1,4 +1,5 @@
 import React from 'react';
+import socketIOClient from 'socket.io-client';
 import { useRound } from './app/slices';
 import { Board, ScoreBoard, Undo } from './components';
 
@@ -14,7 +15,14 @@ import { Board, ScoreBoard, Undo } from './components';
 
 function App() {
     const [, dsp] = useRound();
-    
+
+    React.useEffect(function connectSocket() {
+        const socket = socketIOClient(
+            process.env.REACT_APP_SOCKET_URL as string
+        );
+        socket.on('message', console.log);
+    }, []);
+
     React.useEffect(function startAppOnMounted() {
         dsp.setInitialRound();
 
