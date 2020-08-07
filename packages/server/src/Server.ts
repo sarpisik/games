@@ -23,7 +23,10 @@ const server = http.createServer(app);
  *                              Set socket settings
  ***********************************************************************************/
 const io = socket(server);
-io.on('connection', console.log);
+io.on('connection', (socket) => {
+    console.log(`New client connected ${socket.id}`);
+    socket.emit('message', 'Hello world');
+});
 
 /************************************************************************************
  *                              Set basic express settings

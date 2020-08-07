@@ -21,6 +21,10 @@ function App() {
             process.env.REACT_APP_SOCKET_URL as string
         );
         socket.on('message', console.log);
+
+        return () => {
+            socket.disconnect();
+        };
     }, []);
 
     React.useEffect(function startAppOnMounted() {
