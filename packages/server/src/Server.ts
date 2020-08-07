@@ -1,3 +1,5 @@
+import http from 'http';
+
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import path from 'path';
@@ -7,12 +9,21 @@ import express, { Request, Response, NextFunction } from 'express';
 import { BAD_REQUEST } from 'http-status-codes';
 import 'express-async-errors';
 
+import socket from 'socket.io';
+
 import BaseRouter from './routes';
 import logger from '@shared/Logger';
 import { cookieProps } from '@shared/constants';
 
 // Init express
 const app = express();
+const server = http.createServer(app);
+
+/************************************************************************************
+ *                              Set socket settings
+ ***********************************************************************************/
+const io = socket(server);
+io.on('connection', console.log);
 
 /************************************************************************************
  *                              Set basic express settings
@@ -44,4 +55,4 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 // Export express instance
-export default app;
+export default server;
