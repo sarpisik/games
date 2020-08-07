@@ -1,0 +1,1 @@
+export { generateLabelCoords } from './generateLabelCoords';

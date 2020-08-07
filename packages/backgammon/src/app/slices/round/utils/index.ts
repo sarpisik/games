@@ -1,0 +1,1 @@
+export { rollDices } from './rollDices';

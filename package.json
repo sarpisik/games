@@ -1,0 +1,17 @@
+{
+    "name": "root",
+    "private": true,
+    "scripts": {
+        "bootstrap": "lerna bootstrap",
+        "clean": "lerna clean -y",
+        "dev": "lerna run dev"
+    },
+    "devDependencies": {
+        "lerna": "3.22.1"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "npx lerna run --concurrency 1 precommit"
+        }
+    }
+}

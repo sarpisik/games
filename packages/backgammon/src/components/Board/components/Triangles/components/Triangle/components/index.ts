@@ -1,0 +1,1 @@
+export { FilledTriangle } from './FilledTriangle';

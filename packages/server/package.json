@@ -1,0 +1,84 @@
+{
+    "name": "server",
+    "version": "0.0.0",
+    "scripts": {
+        "build": "node build.js",
+        "lint:types": "tsc -p tsconfig.prod.json --noEmit",
+        "start": "node -r module-alias/register ./dist --env=production",
+        "dev": "nodemon",
+        "test": "nodemon --config ./spec/nodemon.json",
+        "precommit": "npm run lint:types && lint-staged"
+    },
+    "nodemonConfig": {
+        "watch": [
+            "src"
+        ],
+        "ext": "ts, html",
+        "ignore": [
+            "src/public"
+        ],
+        "exec": "ts-node -r tsconfig-paths/register ./src"
+    },
+    "_moduleAliases": {
+        "@daos": "dist/daos",
+        "@entities": "dist/entities",
+        "@shared": "dist/shared",
+        "@server": "dist/Server"
+    },
+    "lint-staged": {
+        "*.+(ts)": [
+            "prettier --write",
+            "eslint --fix",
+            "git add"
+        ]
+    },
+    "dependencies": {
+        "bcrypt": "5.0.0",
+        "command-line-args": "5.1.1",
+        "cookie-parser": "1.4.5",
+        "dotenv": "8.2.0",
+        "express": "4.17.1",
+        "express-async-errors": "3.1.1",
+        "helmet": "4.0.0",
+        "http-status-codes": "1.4.0",
+        "jsonwebtoken": "8.5.1",
+        "module-alias": "2.2.2",
+        "morgan": "1.10.0",
+        "randomstring": "1.1.5",
+        "typescript": "3.9.7",
+        "winston": "3.3.3"
+    },
+    "devDependencies": {
+        "@types/bcrypt": "3.0.0",
+        "@types/command-line-args": "5.0.0",
+        "@types/cookie-parser": "1.4.2",
+        "@types/express": "4.17.7",
+        "@types/find": "0.2.1",
+        "@types/helmet": "0.0.47",
+        "@types/jasmine": "3.5.12",
+        "@types/jsonfile": "6.0.0",
+        "@types/jsonwebtoken": "8.5.0",
+        "@types/morgan": "1.9.1",
+        "@types/node": "14.0.27",
+        "@types/randomstring": "1.1.6",
+        "@types/supertest": "2.0.10",
+        "@typescript-eslint/eslint-plugin": "3.6.0",
+        "@typescript-eslint/parser": "3.6.0",
+        "eslint": "^6.6.0",
+        "eslint-config-airbnb-base": "14.2.0",
+        "eslint-config-prettier": "6.11.0",
+        "eslint-plugin-import": "2.22.0",
+        "eslint-plugin-prettier": "3.1.4",
+        "find": "0.3.0",
+        "fs-extra": "9.0.1",
+        "husky": "4.2.5",
+        "jasmine": "3.6.1",
+        "jsonfile": "6.0.1",
+        "lint-staged": "10.2.11",
+        "nodemon": "2.0.4",
+        "prettier": "2.0.5",
+        "supertest": "4.0.2",
+        "ts-node": "8.10.2",
+        "tsconfig-paths": "3.9.0"
+    }
+}

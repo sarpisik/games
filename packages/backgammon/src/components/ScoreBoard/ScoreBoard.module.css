@@ -1,0 +1,7 @@
+.d-flex {
+    display: flex;
+}
+
+.d-flex > p {
+    margin-right: 1rem;
+}

@@ -1,0 +1,1 @@
+export { usePointsLayout } from './slices';

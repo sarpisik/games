@@ -1,0 +1,1 @@
+export { createPointsOnRound } from './createPointsOnRound';
