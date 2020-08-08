@@ -1,6 +1,7 @@
 import io from 'socket.io';
 import { BACKGAMMON_TYPES } from 'types';
 import { rollDices } from './utils';
+import { layout } from './constants';
 
 export default function bacgammon(socket: io.Socket) {
     // Generate initial game
@@ -19,6 +20,7 @@ export default function bacgammon(socket: io.Socket) {
                 },
                 dice: rollDices(),
                 id: Date.now(),
+                layout,
             },
         ],
     };
