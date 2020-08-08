@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import socketIOClient from 'socket.io-client';
-import { setGame } from './app/slices';
+import { EVENTS } from 'types/lib/backgammon';
+import { SOCKET_ACTIONS } from './app/middlewares/socket/actions';
 import { Board, ScoreBoard, Undo } from './components';
 
 /*
@@ -19,19 +19,11 @@ function App() {
 
     React.useEffect(
         function connectSocket() {
-            const socket = socketIOClient(
-                process.env.REACT_APP_SOCKET_URL as string
-            );
-            socket.on(
-                'initialGame',
-                (initialGame: Parameters<typeof setGame>[0]) => {
-                    dispatch(setGame(initialGame));
-                }
-            );
-            socket.on('message', console.log);
+            dispatch({ type: SOCKET_ACTIONS.CONNECT });
+            dispatch({ type: EVENTS.INITIAL_GAME });
 
             return () => {
-                socket.disconnect();
+                dispatch({ type: SOCKET_ACTIONS.DISCONNECT });
             };
         },
         [dispatch]

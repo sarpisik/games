@@ -2,6 +2,8 @@ import io from 'socket.io';
 import { BACKGAMMON_TYPES } from 'types';
 import { rollDices } from './utils';
 import { layout } from './constants';
+import { EVENTS } from 'types/lib/backgammon';
+import { round } from './round';
 
 export default function bacgammon(socket: io.Socket) {
     // Generate initial game
@@ -24,5 +26,8 @@ export default function bacgammon(socket: io.Socket) {
             },
         ],
     };
-    socket.emit('initialGame', initialGame);
+    socket.on(EVENTS.INITIAL_GAME, () => {
+        socket.emit(EVENTS.INITIAL_GAME, initialGame);
+    });
+    socket.on(EVENTS.ROUND, round(socket));
 }

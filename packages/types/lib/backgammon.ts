@@ -1,3 +1,10 @@
+export interface EmitRound {
+    fromTriangleIndex: number;
+    toTriangleIndex: number;
+    color: keyof Pick<typeof PLAYERS, "BLACK" | "WHITE">;
+    round: Round;
+}
+
 export interface Game {
     id: string;
     white: string;
@@ -19,8 +26,19 @@ interface Brokens {
     [PLAYERS.WHITE]: number;
     [PLAYERS.BLACK]: number;
 }
+
 export enum PLAYERS {
     WHITE = -1,
     NONE = 0,
     BLACK = 1,
+}
+
+export const OPPONENT = {
+    [PLAYERS.WHITE]: PLAYERS.BLACK,
+    [PLAYERS.BLACK]: PLAYERS.WHITE,
+} as const;
+
+export enum EVENTS {
+    ROUND = "ROUND",
+    INITIAL_GAME = "INITIAL_GAME",
 }

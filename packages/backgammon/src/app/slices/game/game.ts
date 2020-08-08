@@ -20,9 +20,18 @@ export const gameSlice = createSlice({
             state.rounds = action.payload.rounds;
             state.white = action.payload.white;
         },
+        resetCurrentRoundLayout(state) {
+            const currentRound = state.rounds[state.rounds.length - 1];
+            currentRound.layout = JSON.parse(
+                JSON.stringify(currentRound.layout)
+            );
+        },
+        addRound(state, action: PayloadAction<Game['rounds'][number]>) {
+            state.rounds.push(action.payload);
+        },
     },
 });
 
-export const { setGame } = gameSlice.actions;
+export const { resetCurrentRoundLayout, setGame, addRound } = gameSlice.actions;
 
 export default gameSlice.reducer;

@@ -1,2 +1,7 @@
-export { default as game, setGame } from './game';
+export {
+    default as game,
+    resetCurrentRoundLayout,
+    addRound,
+    setGame,
+} from './game';
 export { useLayout, useRound } from './hooks';

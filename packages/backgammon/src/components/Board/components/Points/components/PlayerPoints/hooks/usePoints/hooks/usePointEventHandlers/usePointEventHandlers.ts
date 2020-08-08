@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { usePrintLayout } from '../../../../../../../../../../app/slices/pointsLayout';
 import { useUnit } from '../../../../../../../../hooks/useUnit';
 import { CircleProps } from '../../../../../shared/components/Point/components/Circle';
@@ -13,16 +12,13 @@ const usePointEventHandlers: UsePointEventhandlers = () => {
     const { getUnit } = useUnit();
     const { paintLayout } = usePrintLayout();
 
-    const onDragEnd: OnDragEnd = useCallback(
-        (triangleIndex) => ({ target }) => {
-            const targetX = getUnit(target.attrs.x);
-            const targetY = getUnit(target.attrs.y);
-            const color = target.attrs.fill;
+    const onDragEnd: OnDragEnd = (fromTriangleIndex) => ({ target }) => {
+        const targetX = getUnit(target.attrs.x);
+        const targetY = getUnit(target.attrs.y);
+        const color = target.attrs.fill.toUpperCase();
 
-            paintLayout(triangleIndex, targetX, targetY, color.toUpperCase());
-        },
-        [getUnit, paintLayout]
-    );
+        paintLayout(fromTriangleIndex, targetX, targetY, color.toUpperCase());
+    };
 
     return { onDragEnd };
 };
