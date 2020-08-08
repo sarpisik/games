@@ -8,7 +8,7 @@ import { fillTriangle, isPlayer, isTopBlock, xOffsetCalculator } from './utils';
 import { Point } from '../../../../../shared/components';
 
 type Layout = ReturnType<typeof usePointsLayout>[0];
-type Round = ReturnType<typeof useRound>[0];
+type Round = ReturnType<typeof useRound>;
 
 const {
     LEFT_BLOCK_START_X,

@@ -4,7 +4,7 @@ import { useCalculateAvailableMovements } from './hooks';
 import { useRound } from '../../../../app/slices';
 
 export default function InvalidDice(): React.ReactElement | null {
-    const [round] = useRound();
+    const round = useRound();
 
     // Check validality only if round not over.
     return round?.dice.length > 0 ? <Invalid /> : null;

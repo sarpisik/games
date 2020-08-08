@@ -9,7 +9,7 @@ import { filterBrokenPoint, generateBrokenPointProps } from './utils';
 type OnDragEnd = CircleProps['onDragEnd'];
 
 export default function useBrokenPoints(): BrokenPointProps[] {
-    const [round] = useRound();
+    const round = useRound();
     const { getUnit } = useUnit();
     const { paintTriangle } = usePrintLayout();
 

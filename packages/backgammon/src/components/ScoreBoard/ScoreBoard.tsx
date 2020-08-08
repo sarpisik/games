@@ -1,13 +1,13 @@
 import React from 'react';
-import { useRound } from '../../app/slices';
 import { PLAYERS } from '../Board/constants';
 import { Player, Dice } from './components';
 import styles from './ScoreBoard.module.css';
+import { useRound } from '../../app/slices';
 
 type PlayerProps = React.ComponentProps<typeof Player>;
 
 export default function ScoreBoard(): React.ReactElement {
-    const [round] = useRound();
+    const round = useRound();
 
     return (
         <div className={styles['d-flex']}>
