@@ -1,6 +1,7 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import socketIOClient from 'socket.io-client';
-import { useRound } from './app/slices';
+import { setGame } from './app/slices';
 import { Board, ScoreBoard, Undo } from './components';
 
 /*
@@ -14,25 +15,27 @@ import { Board, ScoreBoard, Undo } from './components';
  */
 
 function App() {
-    const [, dsp] = useRound();
+    const dispatch = useDispatch();
 
-    React.useEffect(function connectSocket() {
-        const socket = socketIOClient(
-            process.env.REACT_APP_SOCKET_URL as string
-        );
-        socket.on('message', console.log);
+    React.useEffect(
+        function connectSocket() {
+            const socket = socketIOClient(
+                process.env.REACT_APP_SOCKET_URL as string
+            );
+            socket.on(
+                'initialGame',
+                (initialGame: Parameters<typeof setGame>[0]) => {
+                    dispatch(setGame(initialGame));
+                }
+            );
+            socket.on('message', console.log);
 
-        return () => {
-            socket.disconnect();
-        };
-    }, []);
-
-    React.useEffect(function startAppOnMounted() {
-        dsp.setInitialRound();
-
-        // skip static dep dispatch
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+            return () => {
+                socket.disconnect();
+            };
+        },
+        [dispatch]
+    );
 
     return (
         <div className="App">

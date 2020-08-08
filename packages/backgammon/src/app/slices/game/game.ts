@@ -1,15 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { BACKGAMMON_TYPES } from 'types';
 
-type Game = any;
+type Game = BACKGAMMON_TYPES.Game;
 
 const initialState: Game = {
-    __typename: 'Game',
     id: '',
-    white: null,
-    black: null,
-    rounds: null,
-    createdAt: '',
-    updatedAt: '',
+    white: '',
+    black: '',
+    rounds: [],
 };
 
 export const gameSlice = createSlice({
@@ -17,11 +15,9 @@ export const gameSlice = createSlice({
     initialState,
     reducers: {
         setGame(state, action: PayloadAction<Game>) {
-            state.black = action.payload.black;
-            state.createdAt = action.payload.createdAt;
             state.id = action.payload.id;
+            state.black = action.payload.black;
             state.rounds = action.payload.rounds;
-            state.updatedAt = action.payload.updatedAt;
             state.white = action.payload.white;
         },
     },

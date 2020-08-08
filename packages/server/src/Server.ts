@@ -14,6 +14,7 @@ import socket from 'socket.io';
 import BaseRouter from './routes';
 import logger from '@shared/Logger';
 import { cookieProps } from '@shared/constants';
+import { backgammon } from './sockets';
 
 // Init express
 const app = express();
@@ -29,6 +30,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log(`Client disconnected ${socket.id}`);
     });
+    backgammon(socket);
 });
 
 /************************************************************************************

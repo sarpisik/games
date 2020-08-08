@@ -1,0 +1,27 @@
+{
+    "name": "types",
+    "version": "1.0.0",
+    "description": "> TODO: description",
+    "author": "Sarp ISIK <wdsarpisik@gmail.com>",
+    "homepage": "https://github.com/sarpisik/games#readme",
+    "private": "true",
+    "license": "ISC",
+    "main": "lib/index.ts",
+    "directories": {
+        "lib": "lib",
+        "test": "__tests__"
+    },
+    "files": [
+        "lib"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sarpisik/games.git"
+    },
+    "scripts": {
+        "test": "echo \"Error: run tests from root\" && exit 1"
+    },
+    "bugs": {
+        "url": "https://github.com/sarpisik/games/issues"
+    }
+}
