@@ -5,12 +5,13 @@ import {
     calculateAvailableTriangleExist,
 } from './utils';
 
-export default function calculateSkipRound(round: Round) {
+export default async function calculateSkipRound(round: Round) {
     const shouldCalculateAvailableTriangleForBrokens =
         round.brokens[round.player] > 0;
-    const shoulSkipRound = !(shouldCalculateAvailableTriangleForBrokens
+    const promise = shouldCalculateAvailableTriangleForBrokens
         ? calculateAvailableTriangleForBrokens(round)
-        : calculateAvailableTriangleExist(round));
+        : calculateAvailableTriangleExist(round);
+    const shoulSkipRound = !(await promise);
 
     return shoulSkipRound;
 }

@@ -1,0 +1,1 @@
+export { recursivelyCalculateByDices } from './recursivelyCalculateByDices';

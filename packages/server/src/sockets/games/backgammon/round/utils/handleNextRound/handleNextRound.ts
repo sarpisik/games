@@ -4,8 +4,10 @@ import { rollDices } from '../../../utils';
 import { calculateSkipRound, calculateGameOver } from './utils';
 
 export default async function handleNextRound(socket: io.Socket, round: Round) {
-    const shouldGameOver = await calculateGameOver(round);
-    const shouldSkipRound = calculateSkipRound(round);
+    const [shouldGameOver, shouldSkipRound] = await Promise.all([
+        calculateGameOver(round),
+        calculateSkipRound(round),
+    ]);
 
     if (shouldGameOver) {
         socket.emit(EVENTS.GAME_OVER, shouldGameOver);
