@@ -16,6 +16,8 @@ type InitialGame = Parameters<typeof setGame>[0];
 type AddRound = Parameters<typeof addRound>[0];
 type UndoRound = Parameters<typeof undoRound>[0];
 
+const REACT_APP_SOCKET_URL = process.env.REACT_APP_SOCKET_URL as string;
+
 const socket: () => Middleware = () => {
     let connection: SocketContextType = null;
 
@@ -50,51 +52,49 @@ const socket: () => Middleware = () => {
     };
 
     return (store) => (next) => (action) => {
-        switch (action.type) {
-            case SOCKET_ACTIONS.CONNECT:
-                if (connection !== null) connection.disconnect();
-                connection = socketIOClient(
-                    process.env.REACT_APP_SOCKET_URL as string
-                );
-                // @ts-ignore
-                connection.on(EVENTS.INITIAL_GAME, onInitGame(store));
-                // @ts-ignore
-                connection.on(EVENTS.ROUND, onRound(store));
-                // @ts-ignore
-                connection.on(EVENTS.SKIP_ROUND, onSkipRound(store));
-                // @ts-ignore
-                connection.on(EVENTS.UNDO_ROUND, onUndoRound(store));
-                break;
+        if (typeof action === 'function') {
+            action(store.dispatch, store.getState);
+        } else {
+            switch (action.type) {
+                case SOCKET_ACTIONS.CONNECT:
+                    if (connection !== null) connection.disconnect();
+                    connection = socketIOClient(REACT_APP_SOCKET_URL);
+                    // @ts-ignore
+                    connection.on(EVENTS.INITIAL_GAME, onInitGame(store));
+                    // @ts-ignore
+                    connection.on(EVENTS.ROUND, onRound(store));
+                    // @ts-ignore
+                    connection.on(EVENTS.SKIP_ROUND, onSkipRound(store));
+                    // @ts-ignore
+                    connection.on(EVENTS.UNDO_ROUND, onUndoRound(store));
+                    break;
 
-            case SOCKET_ACTIONS.DISCONNECT:
-                if (connection !== null) connection.disconnect();
-                connection = null;
-                break;
+                case SOCKET_ACTIONS.DISCONNECT:
+                    if (connection !== null) connection.disconnect();
+                    connection = null;
+                    break;
 
-            case EVENTS.INITIAL_GAME:
-                connection?.emit(EVENTS.INITIAL_GAME);
-                break;
+                case EVENTS.INITIAL_GAME:
+                    connection?.emit(EVENTS.INITIAL_GAME);
+                    break;
 
-            case EVENTS.ROUND:
-                connection?.emit(EVENTS.ROUND, action.payload);
-                break;
+                case EVENTS.ROUND:
+                    connection?.emit(EVENTS.ROUND, action.payload);
+                    break;
 
-            case EVENTS.BROKEN_POINT_ROUND:
-                connection?.emit(EVENTS.BROKEN_POINT_ROUND, action.payload);
-                break;
+                case EVENTS.BROKEN_POINT_ROUND:
+                    connection?.emit(EVENTS.BROKEN_POINT_ROUND, action.payload);
+                    break;
 
-            case EVENTS.UNDO_ROUND:
-                connection?.emit(EVENTS.UNDO_ROUND, action.payload);
-                break;
+                case EVENTS.UNDO_ROUND:
+                    connection?.emit(EVENTS.UNDO_ROUND, action.payload);
+                    break;
 
-            default:
-                if (typeof action === 'function') {
-                    action(store.dispatch, store.getState);
-                } else {
+                default:
                     next(action);
-                }
 
-                break;
+                    break;
+            }
         }
     };
 };
