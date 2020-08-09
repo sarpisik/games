@@ -22,6 +22,7 @@ export interface Round {
     turn: number;
     player: PLAYERS.WHITE | PLAYERS.BLACK;
     brokens: Brokens;
+    collected: Brokens;
     dice: number[];
     layout: number[][];
 }
