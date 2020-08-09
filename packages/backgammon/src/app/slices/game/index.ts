@@ -5,5 +5,6 @@ export {
     setGame,
     undoRound,
     replaceRound,
+    deleteRounds,
 } from './game';
 export { useLayout, usePaintLayout, useRound, useUndoHistory } from './hooks';

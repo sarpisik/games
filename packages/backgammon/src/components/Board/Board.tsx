@@ -9,7 +9,7 @@ import {
     Triangles,
     Frame,
     Points,
-    InvalidDice,
+    Notification,
 } from './components';
 
 useStrictMode(true);
@@ -23,7 +23,7 @@ export default function Board(): React.ReactElement {
                 <Blocks />
                 <Triangles />
                 <Points />
-                <InvalidDice />
+                <Notification />
             </Layer>
         </Frame>
     );

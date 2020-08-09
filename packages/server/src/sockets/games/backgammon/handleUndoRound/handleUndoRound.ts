@@ -5,7 +5,8 @@ export default function handleUndoRound(socket: io.Socket) {
     return function undoRound(rounds: EmitUndoRound) {
         const length = rounds.length;
         const shouldUndo =
-            rounds[length - 1].player === rounds[length - 2].player;
+            length > 0 &&
+            rounds[length - 1]?.player === rounds[length - 2]?.player;
         shouldUndo && rounds.pop();
 
         socket.emit(EVENTS.UNDO_ROUND, rounds);

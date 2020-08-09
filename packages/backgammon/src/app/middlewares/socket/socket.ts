@@ -1,6 +1,6 @@
 import { Middleware } from '@reduxjs/toolkit';
 import socketIOClient from 'socket.io-client';
-import { EVENTS } from 'types/lib/backgammon';
+import { EVENTS, EmitGameOver, PLAYERS } from 'types/lib/backgammon';
 import {
     addRound,
     deleteNotification,
@@ -8,6 +8,7 @@ import {
     setNotification,
     undoRound,
     replaceRound,
+    deleteRounds,
 } from '../../slices';
 import { store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
@@ -57,6 +58,14 @@ const socket: () => Middleware = () => {
         s.dispatch(addRound(round));
     };
 
+    const onGameOver = (s: typeof store) => (data: EmitGameOver) => {
+        const { winner } = data;
+        const message = `Winner is ${PLAYERS[winner].toUpperCase()}`;
+
+        s.dispatch(setNotification({ type: EVENTS.GAME_OVER, message }));
+        s.dispatch(deleteRounds());
+    };
+
     return (store) => (next) => (action) => {
         if (typeof action === 'function') {
             action(store.dispatch, store.getState);
@@ -73,6 +82,8 @@ const socket: () => Middleware = () => {
                     connection.on(EVENTS.SKIP_ROUND, onSkipRound(store));
                     // @ts-ignore
                     connection.on(EVENTS.UNDO_ROUND, onUndoRound(store));
+                    // @ts-ignore
+                    connection.on(EVENTS.GAME_OVER, onGameOver(store));
                     connection.on(
                         EVENTS.COLLECT_POINT_ROUND,
                         // @ts-ignore

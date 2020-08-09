@@ -9,6 +9,7 @@ export {
     useRound,
     useUndoHistory,
     replaceRound,
+    deleteRounds,
 } from './game';
 export {
     deleteNotification,

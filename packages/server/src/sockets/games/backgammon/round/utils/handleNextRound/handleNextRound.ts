@@ -1,12 +1,15 @@
 import io from 'socket.io';
 import { OPPONENT, Round, EVENTS } from 'types/lib/backgammon';
 import { rollDices } from '../../../utils';
-import { calculateSkipRound } from './utils';
+import { calculateSkipRound, calculateGameOver } from './utils';
 
-export default function handleNextRound(socket: io.Socket, round: Round) {
+export default async function handleNextRound(socket: io.Socket, round: Round) {
+    const shouldGameOver = await calculateGameOver(round);
     const shouldSkipRound = calculateSkipRound(round);
 
-    if (shouldSkipRound) {
+    if (shouldGameOver) {
+        socket.emit(EVENTS.GAME_OVER, shouldGameOver);
+    } else if (shouldSkipRound) {
         socket.emit(EVENTS.SKIP_ROUND, {
             round,
             message: 'You can not move. Skipping to next round.',

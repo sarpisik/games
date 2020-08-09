@@ -1,3 +1,7 @@
+export interface EmitGameOver {
+    winner: PLAYERS;
+}
+
 export type EmitBrokenPointRound = Omit<EmitRound, "fromTriangleIndex">;
 
 export type EmitCollectPointRound = Omit<EmitRound, "toTriangleIndex">;
@@ -47,6 +51,7 @@ export const OPPONENT = {
 
 export enum EVENTS {
     ROUND = "ROUND",
+    GAME_OVER = "GAME_OVER",
     BROKEN_POINT_ROUND = "BROKEN_POINT_ROUND",
     COLLECT_POINT_ROUND = "COLLECT_POINT_ROUND",
     SKIP_ROUND = "SKIP_ROUND",

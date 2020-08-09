@@ -7,7 +7,8 @@ export default function useUndoHistory() {
     const rounds = useSelector(selector);
 
     const length = rounds.length;
-    const isUndo = rounds[length - 1]?.player === rounds[length - 2]?.player;
+    const isUndo =
+        length > 0 && rounds[length - 1]?.player === rounds[length - 2]?.player;
     const undoRound = () => {
         dispatch({ type: EVENTS.UNDO_ROUND, payload: rounds });
     };

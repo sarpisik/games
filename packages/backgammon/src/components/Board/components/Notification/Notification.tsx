@@ -2,7 +2,7 @@ import React from 'react';
 import { useNotification } from '../../../../app/slices';
 import { Basement, Label } from './components';
 
-export default function InvalidDice(): React.ReactElement | null {
+export default function Notification(): React.ReactElement | null {
     const notification = useNotification();
     const { type, message } = notification;
 
