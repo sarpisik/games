@@ -1,5 +1,4 @@
-import { useRound } from '../../../../../../../../app/slices';
-import { usePrintLayout } from '../../../../../../../../app/slices/pointsLayout';
+import { usePaintLayout, useRound } from '../../../../../../../../app/slices';
 import { PLAYERS } from '../../../../../../constants';
 import { useUnit } from '../../../../../../hooks/useUnit';
 import { CircleProps } from '../../../shared/components/Point/components/Circle';
@@ -11,7 +10,7 @@ type OnDragEnd = CircleProps['onDragEnd'];
 export default function useBrokenPoints(): BrokenPointProps[] {
     const round = useRound();
     const { getUnit } = useUnit();
-    const { paintTriangle } = usePrintLayout();
+    const { paintTriangle } = usePaintLayout();
 
     const onDragEnd: OnDragEnd = ({ target }) => {
         const targetX = getUnit(target.attrs.x);

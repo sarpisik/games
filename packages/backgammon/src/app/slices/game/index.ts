@@ -1,7 +1,8 @@
 export {
+    addRound,
     default as game,
     resetCurrentRoundLayout,
-    addRound,
     setGame,
+    undoRound,
 } from './game';
-export { useLayout, useRound } from './hooks';
+export { useLayout, usePaintLayout, useRound, useUndoHistory } from './hooks';

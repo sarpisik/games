@@ -1,17 +1,19 @@
-export { pointsLayout, usePointsLayout } from './pointsLayout';
-export { round } from './round';
-export { history, useHistory } from './history';
 export {
+    addRound,
     game,
     resetCurrentRoundLayout,
-    addRound,
     setGame,
+    undoRound,
     useLayout,
+    usePaintLayout,
     useRound,
+    useUndoHistory,
 } from './game';
 export {
+    deleteNotification,
     notification,
     setNotification,
-    deleteNotification,
     useNotification,
 } from './notification';
+export { pointsLayout, usePointsLayout } from './pointsLayout';
+export { round } from './round';

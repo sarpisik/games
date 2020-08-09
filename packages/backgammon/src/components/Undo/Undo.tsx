@@ -1,17 +1,11 @@
 import React from 'react';
-import { useHistory } from '../../app/slices';
-import { useUndoHistory } from '../../app/slices/history';
-import { useRound } from '../../app/slices/round';
+import { useUndoHistory } from '../../app/slices';
 
 export default function Undo(): React.ReactElement {
-    const [history] = useHistory();
-    const [round] = useRound();
-    const undoHistory = useUndoHistory();
-
-    const disabled = history?.round.id !== round?.id;
+    const [isUndo, undoHistory] = useUndoHistory();
 
     return (
-        <button disabled={disabled} onClick={undoHistory}>
+        <button disabled={!isUndo} onClick={undoHistory}>
             undo
         </button>
     );

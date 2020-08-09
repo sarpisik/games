@@ -1,5 +1,7 @@
 export type EmitBrokenPointRound = Omit<EmitRound, "fromTriangleIndex">;
 
+export type EmitUndoRound = Round[];
+
 export interface EmitRound {
     fromTriangleIndex: number;
     toTriangleIndex: number;
@@ -44,5 +46,6 @@ export enum EVENTS {
     ROUND = "ROUND",
     BROKEN_POINT_ROUND = "BROKEN_POINT_ROUND",
     SKIP_ROUND = "SKIP_ROUND",
+    UNDO_ROUND = "UNDO_ROUND",
     INITIAL_GAME = "INITIAL_GAME",
 }

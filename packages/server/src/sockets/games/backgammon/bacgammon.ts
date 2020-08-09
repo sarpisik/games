@@ -5,6 +5,7 @@ import { layout } from './constants';
 import { EVENTS } from 'types/lib/backgammon';
 import { round } from './round';
 import { handleBrokenPoint } from './handleBrokenPoint';
+import { handleUndoRound } from './handleUndoRound';
 
 export default function bacgammon(socket: io.Socket) {
     // Generate initial game
@@ -32,4 +33,5 @@ export default function bacgammon(socket: io.Socket) {
     });
     socket.on(EVENTS.ROUND, round(socket));
     socket.on(EVENTS.BROKEN_POINT_ROUND, handleBrokenPoint(socket));
+    socket.on(EVENTS.UNDO_ROUND, handleUndoRound(socket));
 }
