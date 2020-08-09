@@ -1,13 +1,9 @@
-import { Round, NEXT_PLAYER } from '../../../../../../../../app/slices/round';
-import { TrianglesLayout } from '../../../../../../../../app/slices/pointsLayout';
-import { PLAYERS } from '../../../../../../constants';
+import { Round, PLAYERS, OPPONENT } from 'types/lib/backgammon';
 
-export default function calculateAvailableTriangleExist(
-    roundPlayer: Round['player'],
-    dices: number[],
-    layout: TrianglesLayout
-) {
+export default function calculateAvailableTriangleExist(round: Round) {
     let isValidTriangleExist = false;
+
+    const { player: roundPlayer, layout, dice: dices } = round;
     const isPlayerBlack = PLAYERS[roundPlayer] === 'BLACK';
     const triangles = isPlayerBlack ? [...layout].reverse() : layout;
     const limit = triangles.length;
@@ -16,14 +12,18 @@ export default function calculateAvailableTriangleExist(
         const [player] = triangles[i];
         if (player !== roundPlayer) continue;
 
+        let targetTriangleAvailable = false;
+
         const [dice] = dices;
         const targetTriangleIndex = i + dice;
         const targetTriangle = triangles[targetTriangleIndex];
 
-        const [targetPlayer, targetPoints] = targetTriangle;
-        const targetTriangleAvailable =
-            targetPlayer !== NEXT_PLAYER[roundPlayer] || targetPoints < 2;
+        if (targetTriangle) {
+            const [targetPlayer, targetPoints] = targetTriangle;
 
+            targetTriangleAvailable =
+                targetPlayer !== OPPONENT[roundPlayer] || targetPoints < 2;
+        }
         if (targetTriangleAvailable) {
             isValidTriangleExist = true;
             break;

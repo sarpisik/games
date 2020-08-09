@@ -9,3 +9,9 @@ export {
     useLayout,
     useRound,
 } from './game';
+export {
+    notification,
+    setNotification,
+    deleteNotification,
+    useNotification,
+} from './notification';

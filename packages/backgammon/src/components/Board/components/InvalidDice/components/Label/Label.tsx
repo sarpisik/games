@@ -4,7 +4,13 @@ import { SIZES } from '../../../../constants';
 
 const { BOARD_WIDTH, BOARD_HEIGHT } = SIZES;
 
-export default function Label(): ReactElement {
+interface LabelProps {
+    text: string;
+}
+
+export default function Label(props: LabelProps): ReactElement {
+    const { text } = props;
+
     return (
         <Text
             width={BOARD_WIDTH}
@@ -13,7 +19,7 @@ export default function Label(): ReactElement {
             align="center"
             verticalAlign="middle"
             fontSize={50}
-            text="You can not move. Skipping to next round."
+            text={text}
         />
     );
 }

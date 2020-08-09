@@ -2,23 +2,44 @@ import { Middleware } from '@reduxjs/toolkit';
 import socketIOClient from 'socket.io-client';
 import { SOCKET_ACTIONS } from './actions';
 import { EVENTS } from 'types/lib/backgammon';
-import { setGame, addRound } from '../../slices';
+import {
+    setGame,
+    addRound,
+    setNotification,
+    deleteNotification,
+} from '../../slices';
 import { store } from '../../store';
 
 type SocketContextType = ReturnType<typeof socketIOClient> | null;
+type InitialGame = Parameters<typeof setGame>[0];
+type AddRound = Parameters<typeof addRound>[0];
 
 const socket: () => Middleware = () => {
     let connection: SocketContextType = null;
 
-    const onInitGame = (s: typeof store) => (
-        initialGame: Parameters<typeof setGame>[0]
-    ) => {
+    const onInitGame = (s: typeof store) => (initialGame: InitialGame) => {
         s.dispatch(setGame(initialGame));
     };
 
-    const onRound = (s: typeof store) => (
-        round: Parameters<typeof addRound>[0]
-    ) => {
+    const onRound = (s: typeof store) => (round: AddRound) => {
+        const state = s.getState();
+        const { notification } = state;
+        const { type, message } = notification;
+
+        const shouldDeleteNotification = type && message;
+        shouldDeleteNotification && s.dispatch(deleteNotification());
+
+        s.dispatch(addRound(round));
+    };
+
+    const onSkipRound = (s: typeof store) => ({
+        round,
+        message,
+    }: {
+        round: AddRound;
+        message: Parameters<typeof setNotification>[0]['message'];
+    }) => {
+        s.dispatch(setNotification({ type: EVENTS.SKIP_ROUND, message }));
         s.dispatch(addRound(round));
     };
 
@@ -33,6 +54,8 @@ const socket: () => Middleware = () => {
                 connection.on(EVENTS.INITIAL_GAME, onInitGame(store));
                 // @ts-ignore
                 connection.on(EVENTS.ROUND, onRound(store));
+                // @ts-ignore
+                connection.on(EVENTS.SKIP_ROUND, onSkipRound(store));
                 break;
 
             case SOCKET_ACTIONS.DISCONNECT:
@@ -46,6 +69,10 @@ const socket: () => Middleware = () => {
 
             case EVENTS.ROUND:
                 connection?.emit(EVENTS.ROUND, action.payload);
+                break;
+
+            case EVENTS.BROKEN_POINT_ROUND:
+                connection?.emit(EVENTS.BROKEN_POINT_ROUND, action.payload);
                 break;
 
             default:

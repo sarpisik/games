@@ -16,9 +16,9 @@ export default function useBrokenPoints(): BrokenPointProps[] {
     const onDragEnd: OnDragEnd = ({ target }) => {
         const targetX = getUnit(target.attrs.x);
         const targetY = getUnit(target.attrs.y);
-        const color = target.attrs.fill;
+        const color = target.attrs.fill.toUpperCase();
 
-        paintTriangle(targetX, targetY, color.toUpperCase());
+        paintTriangle(targetX, targetY, color);
     };
 
     const brokens = [

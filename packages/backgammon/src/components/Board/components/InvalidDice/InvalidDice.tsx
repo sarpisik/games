@@ -1,22 +1,17 @@
 import React from 'react';
+import { useNotification } from '../../../../app/slices';
 import { Basement, Label } from './components';
-import { useCalculateAvailableMovements } from './hooks';
-import { useRound } from '../../../../app/slices';
 
 export default function InvalidDice(): React.ReactElement | null {
-    const round = useRound();
+    const notification = useNotification();
+    const { type, message } = notification;
 
-    // Check validality only if round not over.
-    return round?.dice.length > 0 ? <Invalid /> : null;
-}
+    const shouldOverlay = type && message;
 
-function Invalid() {
-    const shouldSkipRound = useCalculateAvailableMovements();
-
-    return shouldSkipRound ? (
+    return shouldOverlay ? (
         <React.Fragment>
             <Basement />
-            <Label />
+            <Label text={message} />
         </React.Fragment>
     ) : null;
 }

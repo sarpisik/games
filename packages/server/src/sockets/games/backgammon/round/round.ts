@@ -1,13 +1,11 @@
 import io from 'socket.io';
-import {
-    EmitRound,
-    PLAYERS,
-    OPPONENT,
-    Round,
-    EVENTS,
-} from 'types/lib/backgammon';
-import { filterValidDice, filterValidTriangleIndexes } from './utils';
+import { EmitRound, OPPONENT, PLAYERS, Round } from 'types/lib/backgammon';
 import { rollDices } from '../utils';
+import {
+    filterValidDice,
+    filterValidTriangleIndexes,
+    handleNextRound,
+} from './utils';
 
 export default function handleRound(socket: io.Socket) {
     return async function calculateRound(data: EmitRound) {
@@ -67,7 +65,6 @@ export default function handleRound(socket: io.Socket) {
             round.dice = rollDices();
         }
 
-        // Send round.
-        socket.emit(EVENTS.ROUND, round);
+        handleNextRound(socket, round);
     };
 }

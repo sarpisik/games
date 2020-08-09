@@ -4,6 +4,7 @@ import { rollDices } from './utils';
 import { layout } from './constants';
 import { EVENTS } from 'types/lib/backgammon';
 import { round } from './round';
+import { handleBrokenPoint } from './handleBrokenPoint';
 
 export default function bacgammon(socket: io.Socket) {
     // Generate initial game
@@ -14,7 +15,7 @@ export default function bacgammon(socket: io.Socket) {
         rounds: [
             {
                 attempt: 0,
-                player: BACKGAMMON_TYPES.PLAYERS.BLACK,
+                player: BACKGAMMON_TYPES.PLAYERS.WHITE,
                 turn: 1,
                 brokens: {
                     [BACKGAMMON_TYPES.PLAYERS.WHITE]: 0,
@@ -30,4 +31,5 @@ export default function bacgammon(socket: io.Socket) {
         socket.emit(EVENTS.INITIAL_GAME, initialGame);
     });
     socket.on(EVENTS.ROUND, round(socket));
+    socket.on(EVENTS.BROKEN_POINT_ROUND, handleBrokenPoint(socket));
 }
