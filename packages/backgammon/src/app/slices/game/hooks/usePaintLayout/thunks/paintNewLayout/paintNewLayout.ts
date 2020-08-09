@@ -5,7 +5,7 @@ import { AppThunk } from '../../../../../../store';
 import { calculateTargetTriangleIndex } from '../utils';
 import { filterValidDice, filterValidTriangleIndexes } from './utils';
 
-const printNewLayout = (
+const paintNewLayout = (
     fromTriangleIndex: number,
     targetX: number,
     targetY: number,
@@ -52,4 +52,4 @@ const printNewLayout = (
     }
 };
 
-export default printNewLayout;
+export default paintNewLayout;

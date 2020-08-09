@@ -1,2 +1,2 @@
 export { paintTriangle } from './paintTriangle';
-export { printNewLayout } from './printNewLayout';
+export { paintNewLayout } from './paintNewLayout';
