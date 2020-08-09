@@ -3,7 +3,7 @@ import { Rect } from 'react-konva';
 import { Rectangle } from './components';
 
 type RectangleProps = React.ComponentProps<typeof Rect>;
-interface FilledRectangleProps extends Omit<RectangleProps, 'fill'> {
+export interface FilledRectangleProps extends Omit<RectangleProps, 'fill'> {
     color: RectangleProps['fill'];
 }
 

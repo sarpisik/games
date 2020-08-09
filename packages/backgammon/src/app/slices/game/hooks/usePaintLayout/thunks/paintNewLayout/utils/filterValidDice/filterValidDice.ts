@@ -1,15 +1,27 @@
-import { PLAYERS } from '../../../../../../../../../components/Board/constants';
+import { PLAYERS, STAGES } from 'types/lib/backgammon';
 import { TrianglesLayout } from '../types/trianglesLayout';
 
-export default function filterValidDice(
-    startIndex: number,
-    player: PLAYERS,
-    dice: number[],
-    triangles: TrianglesLayout
-) {
+interface Params {
+    startIndex: number;
+    player: PLAYERS;
+    dices: number[];
+    triangles: TrianglesLayout;
+    stage: STAGES;
+}
+
+export default function filterValidDice({
+    startIndex,
+    player,
+    dices,
+    triangles,
+    stage,
+}: Params) {
+    if (stage === STAGES.COLLECT) return dices;
+
     const limit = triangles.length;
-    const validDice = dice.filter((digit) => {
-        if (player === PLAYERS.WHITE) return startIndex + digit < limit;
+    const isWhite = player === PLAYERS.WHITE;
+    const validDice = dices.filter((digit) => {
+        if (isWhite) return startIndex + digit < limit;
         return startIndex - digit >= 0;
     });
 

@@ -1,24 +1,37 @@
-import { PLAYERS } from '../../../../../../../../../components/Board/constants';
+import { PLAYERS } from 'types/lib/backgammon';
 import { TrianglesLayout } from '../types/trianglesLayout';
 
-export default function filterValidTriangleIndexes(
-    validDice: number[],
-    startIndex: number,
-    player: PLAYERS,
-    triangles: TrianglesLayout
-) {
-    const possibleTriangleIndexes = validDice.map((dice) => {
-        if (player === PLAYERS.WHITE) return startIndex + dice;
-        return startIndex - dice;
-    });
-    const validTriangleIndexes = possibleTriangleIndexes.filter((i) => {
-        const [owner, points] = triangles[i];
-        const isTaken = owner !== 0;
-        const isOpponent = isTaken && owner !== player;
-        const isBlocked = isOpponent && points > 1;
+interface Params {
+    validDices: number[];
+    startIndex: number;
+    player: PLAYERS;
+    triangles: TrianglesLayout;
+}
 
-        // Return un blocked triangle
-        return !isBlocked;
+export default function filterValidTriangleIndexes({
+    validDices,
+    startIndex,
+    player,
+    triangles,
+}: Params) {
+    const isWhite = player === PLAYERS.WHITE;
+    const possibleTriangleIndexes = validDices.map((dice) =>
+        isWhite ? startIndex + dice : startIndex - dice
+    );
+    const validTriangleIndexes = possibleTriangleIndexes.filter((i) => {
+        const triangle = triangles[i];
+
+        if (triangle) {
+            const [owner, points] = triangle;
+            const isTaken = owner !== 0;
+            const isOpponent = isTaken && owner !== player;
+            const isBlocked = isOpponent && points > 1;
+
+            // Return un blocked triangle
+            return !isBlocked;
+        }
+
+        return false;
     });
 
     return validTriangleIndexes;

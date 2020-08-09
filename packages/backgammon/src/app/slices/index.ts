@@ -8,6 +8,7 @@ export {
     usePaintLayout,
     useRound,
     useUndoHistory,
+    replaceRound,
 } from './game';
 export {
     deleteNotification,

@@ -29,6 +29,9 @@ export const gameSlice = createSlice({
         addRound(state, action: PayloadAction<Game['rounds'][number]>) {
             state.rounds.push(action.payload);
         },
+        replaceRound(state, action: PayloadAction<Game['rounds'][number]>) {
+            state.rounds[state.rounds.length - 1] = action.payload;
+        },
         undoRound(state, action: PayloadAction<Game['rounds']>) {
             state.rounds = action.payload;
         },
@@ -40,6 +43,7 @@ export const {
     setGame,
     addRound,
     undoRound,
+    replaceRound,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

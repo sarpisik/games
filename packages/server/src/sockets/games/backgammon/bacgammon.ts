@@ -5,6 +5,7 @@ import { handleBrokenPoint } from './handleBrokenPoint';
 import { handleUndoRound } from './handleUndoRound';
 import { round } from './round';
 import { rollDices } from './utils';
+import { handleCollectPoint } from './handleCollectPoint';
 
 export default function bacgammon(socket: io.Socket) {
     // Generate initial game
@@ -36,5 +37,6 @@ export default function bacgammon(socket: io.Socket) {
     });
     socket.on(EVENTS.ROUND, round(socket));
     socket.on(EVENTS.BROKEN_POINT_ROUND, handleBrokenPoint(socket));
+    socket.on(EVENTS.COLLECT_POINT_ROUND, handleCollectPoint(socket));
     socket.on(EVENTS.UNDO_ROUND, handleUndoRound(socket));
 }

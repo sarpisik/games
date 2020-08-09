@@ -1,0 +1,1 @@
+export { useCollectedPoints } from './useCollectedPoints';

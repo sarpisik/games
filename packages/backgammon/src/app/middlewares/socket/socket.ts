@@ -1,19 +1,21 @@
 import { Middleware } from '@reduxjs/toolkit';
 import socketIOClient from 'socket.io-client';
-import { SOCKET_ACTIONS } from './actions';
 import { EVENTS } from 'types/lib/backgammon';
 import {
-    setGame,
     addRound,
-    setNotification,
     deleteNotification,
+    setGame,
+    setNotification,
     undoRound,
+    replaceRound,
 } from '../../slices';
 import { store } from '../../store';
+import { SOCKET_ACTIONS } from './actions';
 
 type SocketContextType = ReturnType<typeof socketIOClient> | null;
 type InitialGame = Parameters<typeof setGame>[0];
 type AddRound = Parameters<typeof addRound>[0];
+type ReplaceRound = Parameters<typeof replaceRound>[0];
 type UndoRound = Parameters<typeof undoRound>[0];
 
 const REACT_APP_SOCKET_URL = process.env.REACT_APP_SOCKET_URL as string;
@@ -27,6 +29,10 @@ const socket: () => Middleware = () => {
 
     const onUndoRound = (s: typeof store) => (rounds: UndoRound) => {
         s.dispatch(undoRound(rounds));
+    };
+
+    const onReplaceRound = (s: typeof store) => (round: ReplaceRound) => {
+        s.dispatch(replaceRound(round));
     };
 
     const onRound = (s: typeof store) => (round: AddRound) => {
@@ -67,6 +73,11 @@ const socket: () => Middleware = () => {
                     connection.on(EVENTS.SKIP_ROUND, onSkipRound(store));
                     // @ts-ignore
                     connection.on(EVENTS.UNDO_ROUND, onUndoRound(store));
+                    connection.on(
+                        EVENTS.COLLECT_POINT_ROUND,
+                        // @ts-ignore
+                        onReplaceRound(store)
+                    );
                     break;
 
                 case SOCKET_ACTIONS.DISCONNECT:
@@ -84,6 +95,13 @@ const socket: () => Middleware = () => {
 
                 case EVENTS.BROKEN_POINT_ROUND:
                     connection?.emit(EVENTS.BROKEN_POINT_ROUND, action.payload);
+                    break;
+
+                case EVENTS.COLLECT_POINT_ROUND:
+                    connection?.emit(
+                        EVENTS.COLLECT_POINT_ROUND,
+                        action.payload
+                    );
                     break;
 
                 case EVENTS.UNDO_ROUND:

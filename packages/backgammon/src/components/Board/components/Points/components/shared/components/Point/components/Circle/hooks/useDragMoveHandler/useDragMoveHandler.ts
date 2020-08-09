@@ -5,10 +5,10 @@ import { CIRCLE_SIZE } from '../../constants';
 
 const POINT_SIZE = CIRCLE_SIZE.RADIUS;
 const {
-    LEFT_BLOCK_START_X,
     RIGHT_BLOCK_END_X,
     TOP_BLOCK_START_Y,
     BOTTOM_BLOCK_START_Y,
+    LEFT_CONTAINER_START_X,
 } = OFFSETS;
 
 export type OnDragMove = CircleProps['onDragMove'];
@@ -19,7 +19,7 @@ export default function useDragMoveHandler(): OnDragMove {
     const onDragMove: OnDragMove = ({ target }) => {
         const targetX = getUnit(target.attrs.x);
         const targetY = getUnit(target.attrs.y);
-        const isOverLeft = targetX - POINT_SIZE < LEFT_BLOCK_START_X;
+        const isOverLeft = targetX - POINT_SIZE < LEFT_CONTAINER_START_X;
         const isOverRight = targetX > RIGHT_BLOCK_END_X + POINT_SIZE;
         const isOverTop = targetY - POINT_SIZE < TOP_BLOCK_START_Y;
         const isOverBottom = targetY + POINT_SIZE > BOTTOM_BLOCK_START_Y;
@@ -29,7 +29,7 @@ export default function useDragMoveHandler(): OnDragMove {
         if (pointIsOverTheFrame) {
             const x = getUnitReverse(
                 isOverLeft
-                    ? LEFT_BLOCK_START_X + POINT_SIZE
+                    ? LEFT_CONTAINER_START_X + POINT_SIZE
                     : isOverRight
                     ? RIGHT_BLOCK_END_X + POINT_SIZE
                     : targetX
