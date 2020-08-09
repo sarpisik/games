@@ -1,6 +1,6 @@
-import { Round } from '../../../../../../../../../../../../app/slices/round';
-import { CIRCLE_SIZE } from '../../../../../../../shared/components/Point/components/Circle/constants';
+import { Round } from 'types/lib/backgammon';
 import { PLAYERS } from '../../../../../../../../../../constants';
+import { CIRCLE_SIZE } from '../../../../../../../shared/components/Point/components/Circle/constants';
 
 const OFFSET = 0.5;
 

@@ -1,13 +1,10 @@
-import {
-    usePointsLayout,
-    useRound,
-} from '../../../../../../../../../../app/slices';
+import { useLayout, useRound } from '../../../../../../../../../../app/slices';
 import { OFFSETS, PLAYERS } from '../../../../../../../../constants';
+import { Point } from '../../../../../shared/components';
 import { DIRECTIONS } from '../../types';
 import { fillTriangle, isPlayer, isTopBlock, xOffsetCalculator } from './utils';
-import { Point } from '../../../../../shared/components';
 
-type Layout = ReturnType<typeof usePointsLayout>[0];
+type Layout = ReturnType<typeof useLayout>;
 type Round = ReturnType<typeof useRound>;
 
 const {

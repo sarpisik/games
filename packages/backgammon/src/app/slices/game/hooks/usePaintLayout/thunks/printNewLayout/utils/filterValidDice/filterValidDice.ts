@@ -1,5 +1,5 @@
 import { PLAYERS } from '../../../../../../../../../components/Board/constants';
-import { TrianglesLayout } from '../../../../../../../pointsLayout';
+import { TrianglesLayout } from '../types/trianglesLayout';
 
 export default function filterValidDice(
     startIndex: number,

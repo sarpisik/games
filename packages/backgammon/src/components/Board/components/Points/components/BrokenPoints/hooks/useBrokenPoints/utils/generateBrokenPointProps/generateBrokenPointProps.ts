@@ -1,9 +1,9 @@
-import { Round } from '../../../../../../../../../../app/slices/round';
+import { Round } from 'types/lib/backgammon';
 import { PLAYERS } from '../../../../../../../../constants';
+import { CIRCLE_SIZE } from '../../../../../shared/components/Point/components/Circle/constants';
 import { BrokenPointProps } from '../../../../shared/types';
 import { COORDINATES } from './constants';
 import { generateLabelCoords } from './utils';
-import { CIRCLE_SIZE } from '../../../../../shared/components/Point/components/Circle/constants';
 
 export default function generateBrokenPointProps(
     round: Round,

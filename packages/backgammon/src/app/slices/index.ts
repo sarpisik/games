@@ -15,5 +15,3 @@ export {
     setNotification,
     useNotification,
 } from './notification';
-export { pointsLayout, usePointsLayout } from './pointsLayout';
-export { round } from './round';

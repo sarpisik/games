@@ -31,7 +31,8 @@
         "build": "craco build",
         "test": "craco test",
         "eject": "craco eject",
-        "precommit": "lint-staged"
+        "precommit": "npm run lint:types && lint-staged",
+        "lint:types": "tsc -p tsconfig.json --noEmit"
     },
     "eslintConfig": {
         "extends": "react-app"
