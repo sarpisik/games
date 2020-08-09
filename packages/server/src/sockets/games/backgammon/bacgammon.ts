@@ -21,6 +21,10 @@ export default function bacgammon(socket: io.Socket) {
                     [PLAYERS.WHITE]: 0,
                     [PLAYERS.BLACK]: 0,
                 },
+                collected: {
+                    [PLAYERS.WHITE]: 0,
+                    [PLAYERS.BLACK]: 0,
+                },
                 dice: rollDices(),
                 id: Date.now(),
                 layout,
