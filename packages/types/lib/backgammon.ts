@@ -16,10 +16,22 @@ export interface EmitRound {
 }
 
 export interface Game {
-    id: string;
-    white: string;
-    black: string; // Will be player id
+    id: number;
+    players: Players;
+    score: Score;
+    stages: number;
     rounds: Round[];
+}
+
+interface Players {
+    // Will be user ids
+    white: string;
+    black: string;
+}
+
+interface Score {
+    white: number;
+    black: number;
 }
 
 export interface Round {
@@ -57,6 +69,7 @@ export enum EVENTS {
     SKIP_ROUND = "SKIP_ROUND",
     UNDO_ROUND = "UNDO_ROUND",
     INITIAL_GAME = "INITIAL_GAME",
+    JOIN_ROOM = "JOIN_ROOM",
 }
 
 export enum STAGES {

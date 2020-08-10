@@ -1,13 +1,15 @@
-import { Router } from 'express';
-import UserRouter from './Users';
-import AuthRouter from './Auth';
+export { default as apiRoutes } from './api';
 
-// Init router and path
-const router = Router();
+// import { Router } from 'express';
+// import UserRouter from './Users';
+// import AuthRouter from './Auth';
 
-// Add sub-routes
-router.use('/users', UserRouter);
-router.use('/auth', AuthRouter);
+// // Init router and path
+// const router = Router();
 
-// Export the base-router
-export default router;
+// // Add sub-routes
+// router.use('/users', UserRouter);
+// router.use('/auth', AuthRouter);
+
+// // Export the base-router
+// export default router;

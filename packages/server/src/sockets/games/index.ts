@@ -1,1 +1,0 @@
-export { backgammon } from './backgammon';

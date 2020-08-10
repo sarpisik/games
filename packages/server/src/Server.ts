@@ -2,19 +2,16 @@ import http from 'http';
 
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
-import path from 'path';
 import helmet from 'helmet';
 
 import express, { Request, Response, NextFunction } from 'express';
 import { BAD_REQUEST } from 'http-status-codes';
 import 'express-async-errors';
 
-import socket from 'socket.io';
-
-import BaseRouter from './routes';
+import { apiRoutes } from './routes';
 import logger from '@shared/Logger';
 import { cookieProps } from '@shared/constants';
-import { backgammon } from './sockets';
+import { socket } from './connection/socket';
 
 // Init express
 const app = express();
@@ -24,14 +21,7 @@ const server = http.createServer(app);
  *                              Set socket settings
  ***********************************************************************************/
 const io = socket(server);
-io.on('connection', (socket) => {
-    console.log(`New client connected ${socket.id}`);
-    socket.emit('message', 'Hello world');
-    socket.on('disconnect', () => {
-        console.log(`Client disconnected ${socket.id}`);
-    });
-    backgammon(socket);
-});
+app.locals.io = io;
 
 /************************************************************************************
  *                              Set basic express settings
@@ -52,7 +42,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Add APIs
-app.use('/api', BaseRouter);
+app.use('/', apiRoutes(io));
 
 // Print API errors
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
