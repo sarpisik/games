@@ -4,9 +4,10 @@ import { BACKGAMMON_TYPES } from 'types';
 type Game = BACKGAMMON_TYPES.Game;
 
 const initialState: Game = {
-    id: '',
-    white: '',
-    black: '',
+    id: 0,
+    players: { black: '', white: '' },
+    stages: 0,
+    score: { black: 0, white: 0 },
     rounds: [],
 };
 
@@ -15,10 +16,12 @@ export const gameSlice = createSlice({
     initialState,
     reducers: {
         setGame(state, action: PayloadAction<Game>) {
-            state.id = action.payload.id;
-            state.black = action.payload.black;
-            state.rounds = action.payload.rounds;
-            state.white = action.payload.white;
+            const { id, players, stages, score, rounds } = action.payload;
+            state.id = id;
+            state.players = players;
+            state.rounds = rounds;
+            state.score = score;
+            state.stages = stages;
         },
         resetCurrentRoundLayout(state) {
             const currentRound = state.rounds[state.rounds.length - 1];

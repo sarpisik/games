@@ -1,6 +1,6 @@
-import { rollDices } from 'src/sockets/games/backgammon/utils';
 import { Game, PLAYERS } from 'types/lib/backgammon';
 import { layout } from '../constants';
+import { rollDices } from '../controller/socket/utils';
 
 export default class GamesService {
     constructor(private _games: Map<number, Game>) {}

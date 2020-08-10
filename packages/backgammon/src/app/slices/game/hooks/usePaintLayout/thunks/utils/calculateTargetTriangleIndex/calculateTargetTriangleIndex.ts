@@ -1,4 +1,4 @@
-import { LAYOUTS } from '../../../../../../../../components/Board/constants';
+import { LAYOUTS } from '../../../../../../../../views/game/components/Board/constants';
 
 export default function calculateTargetTriangleIndex(
     targetX: number,

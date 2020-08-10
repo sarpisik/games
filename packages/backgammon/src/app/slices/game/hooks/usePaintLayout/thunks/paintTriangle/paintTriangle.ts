@@ -1,6 +1,6 @@
 import { EmitBrokenPointRound, EVENTS, OPPONENT } from 'types/lib/backgammon';
 import { resetCurrentRoundLayout } from '../../../..';
-import { PLAYERS } from '../../../../../../../components/Board/constants';
+import { PLAYERS } from '../../../../../../../views/game/components/Board/constants';
 import { AppThunk } from '../../../../../../store';
 import { calculateTargetTriangleIndex } from '../utils';
 

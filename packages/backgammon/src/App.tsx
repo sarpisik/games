@@ -1,8 +1,6 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { EVENTS } from 'types/lib/backgammon';
-import { SOCKET_ACTIONS } from './app/middlewares/socket/actions';
-import { Board, ScoreBoard, Undo } from './components';
+import { Route, Switch } from 'react-router-dom';
+import { Game, Home } from './views';
 
 /*
  * TODO:
@@ -14,28 +12,15 @@ import { Board, ScoreBoard, Undo } from './components';
  * - []highlight available triangles on drag move.
  */
 
-function App() {
-    const dispatch = useDispatch();
-
-    React.useEffect(
-        function connectSocket() {
-            dispatch({ type: SOCKET_ACTIONS.CONNECT });
-            dispatch({ type: EVENTS.INITIAL_GAME });
-
-            return () => {
-                dispatch({ type: SOCKET_ACTIONS.DISCONNECT });
-            };
-        },
-        [dispatch]
-    );
-
+export default function App() {
     return (
-        <div className="App">
-            <Board />
-            <ScoreBoard />
-            <Undo />
-        </div>
+        <Switch>
+            <Route exact path="/:id">
+                <Game />
+            </Route>
+            <Route exact path="/">
+                <Home />
+            </Route>
+        </Switch>
     );
 }
-
-export default App;

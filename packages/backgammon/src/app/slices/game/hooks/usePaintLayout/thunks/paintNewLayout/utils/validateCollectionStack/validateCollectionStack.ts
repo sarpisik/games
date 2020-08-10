@@ -1,5 +1,5 @@
 import { PLAYERS } from 'types/lib/backgammon';
-import { LAYOUTS } from '../../../../../../../../../components/Board/constants';
+import { LAYOUTS } from '../../../../../../../../../views/game/components/Board/constants';
 
 export default function validateCollectionStack(
     targetX: number,
