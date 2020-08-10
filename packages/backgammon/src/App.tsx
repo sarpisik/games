@@ -8,7 +8,7 @@ import { Game, Home } from './views';
  * - [x]calculate double dice. e.g 3-3
  * - [x]calculate the movement availability before draggable
  *   and skip the round on invalid.
- * - []calculate when game finishes.
+ * - [x]calculate when game finishes.
  * - []highlight available triangles on drag move.
  */
 
