@@ -24,7 +24,7 @@ const paintNewLayout = (
     const state = getState();
     const { game } = state;
     const [round] = game.rounds.slice(-1);
-    const { dice, layout } = round;
+    const { id: roundId, dice, layout } = round;
 
     const player = PLAYERS[color];
     const stage = calculateStage(player, layout);
@@ -67,7 +67,8 @@ const paintNewLayout = (
                     fromTriangleIndex,
                     toTriangleIndex,
                     color,
-                    round,
+                    roundId,
+                    gameId: game.id,
                 };
                 dispatch({ type: EVENTS.ROUND, payload });
             }
@@ -78,7 +79,8 @@ const paintNewLayout = (
                 const payload: EmitCollectPointRound = {
                     fromTriangleIndex,
                     color,
-                    round,
+                    roundId,
+                    gameId: game.id,
                 };
                 dispatch({ type: EVENTS.COLLECT_POINT_ROUND, payload });
             }

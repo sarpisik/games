@@ -1,9 +1,9 @@
 import { EVENTS, OPPONENT, Round } from 'types/lib/backgammon';
-import { rollDices } from '../../../utils';
+import { rollDices } from '../utils';
 import { calculateGameOver, calculateSkipRound } from './utils';
 
 export default async function handleNextRound(
-    socket: SocketIO.Socket,
+    socket: SocketIO.Namespace,
     round: Round
 ) {
     const [shouldGameOver, shouldSkipRound] = await Promise.all([

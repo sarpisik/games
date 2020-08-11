@@ -16,7 +16,8 @@ export interface EmitRound {
     fromTriangleIndex: number;
     toTriangleIndex: number;
     color: keyof Pick<typeof PLAYERS, "BLACK" | "WHITE">;
-    round: Round;
+    roundId: Round["id"];
+    gameId: Game["id"];
 }
 
 export interface Game {

@@ -37,7 +37,6 @@ export default function useInitializeGame() {
             );
             const shouldRegister =
                 game.id > 0 && user.id > 0 && !registeredUser;
-            debugger;
             if (shouldRegister) {
                 dispatch({ type: EVENTS.SIGN_IN_USER, payload: user.id });
             }

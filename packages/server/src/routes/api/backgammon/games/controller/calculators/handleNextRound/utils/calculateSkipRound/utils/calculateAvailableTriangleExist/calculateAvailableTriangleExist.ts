@@ -1,5 +1,5 @@
-import { calculateShouldCollect } from 'src/routes/api/backgammon/games/controller/socket/utils';
 import { PLAYERS, Round } from 'types/lib/backgammon';
+import { calculateShouldCollect } from '../../../../../utils';
 import { recursivelyCalculateAvailableTriangle } from './utils';
 
 export default function calculateAvailableTriangleExist(round: Round) {

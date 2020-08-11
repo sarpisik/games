@@ -1,9 +1,17 @@
 import { Socket } from 'src/connection/socket';
 import { Controller, RouterType } from 'src/routes/api/shared/controller';
 import { withCatch } from 'src/routes/api/shared/middleware';
-import { EmitSignInUser, EVENTS, Game, PLAYERS } from 'types/lib/backgammon';
+import {
+    EmitSignInUser,
+    EVENTS,
+    Game,
+    PLAYERS,
+    EmitRound,
+} from 'types/lib/backgammon';
 import { GamesService } from '../service';
 import { layout } from '../constants';
+import { roundCalculator, handleNextRound } from './calculators';
+import asyncParser from '@shared/asyncParser';
 
 type GameParam = { id: string };
 
@@ -80,7 +88,7 @@ export default class GamesController extends Controller {
         const game = await this._gamesService.readGame(parseInt(roomName));
         this._emitGameUpdate(game);
         roomSocket.on(EVENTS.SIGN_IN_USER, this._signInUser.bind(this));
-        // this._roomSocket.on(EVENTS.ROUND, round(this._roomSocket));
+        roomSocket.on(EVENTS.ROUND, this._handleRoundCalculate.bind(this));
         // this._roomSocket.on(
         //     EVENTS.BROKEN_POINT_ROUND,
         //     handleBrokenPoint(this._roomSocket)
@@ -99,8 +107,8 @@ export default class GamesController extends Controller {
         game.players = Object.assign(game.players, players);
         this._emitGameUpdate(game);
     }
+
     private _emitGameUpdate(game: Game) {
-        console.log(game);
         this._emitRoomEvent(game.id.toString(), EVENTS.GAME_UPDATE, game);
 
         const shouldGameStart =
@@ -124,6 +132,16 @@ export default class GamesController extends Controller {
         _game.rounds.push(round);
         const game = await this._gamesService.updateGame(_game);
         this._emitRoomEvent(game.id.toString(), EVENTS.ROUND, round);
+    }
+
+    private async _handleRoundCalculate(data: EmitRound) {
+        const { gameId, roundId } = data;
+        const lastRound = await this._gamesService.readRound(gameId, roundId);
+        const _lastRound = await asyncParser(lastRound);
+        const nextRound = await roundCalculator(data, _lastRound);
+        const game = await this._gamesService.updateRounds(gameId, nextRound);
+
+        handleNextRound(this._namespace.to(gameId.toString()), nextRound);
     }
 
     private _emitRoomEvent<P>(roomName: string, event: EVENTS, payload: P) {

@@ -32,7 +32,6 @@ const setGame: (game: Game) => AppThunk = (game) => (dispatch, getState) => {
                 })
             );
         } else if (!Object.values(game.players).includes(-1)) {
-            debugger;
             alert('Logged in user does not exist in the game players.');
 
             history.replace('/');

@@ -14,7 +14,7 @@ const paintTriangle = (
     const state = getState();
     const { game } = state;
     const [round] = game.rounds.slice(-1);
-    const { layout } = round;
+    const { id: roundId, layout } = round;
 
     const player = PLAYERS[color];
     const targetTriangles =
@@ -51,7 +51,8 @@ const paintTriangle = (
         const payload: EmitBrokenPointRound = {
             toTriangleIndex,
             color,
-            round,
+            roundId,
+            gameId: game.id,
         };
 
         dispatch({ type: EVENTS.BROKEN_POINT_ROUND, payload });
