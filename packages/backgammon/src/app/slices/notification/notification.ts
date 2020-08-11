@@ -1,8 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { EVENTS } from 'types/lib/backgammon';
 
+export enum NOTIFICATION {
+    WHITE_PLAYER = 'WHITE_PLAYER',
+    BLACK_PLAYER = 'BLACK_PLAYER',
+}
+
+type NotificationType = NOTIFICATION | EVENTS;
+
 interface Notification {
-    type: string | EVENTS.SKIP_ROUND;
+    type: string | NotificationType;
     message: string;
 }
 

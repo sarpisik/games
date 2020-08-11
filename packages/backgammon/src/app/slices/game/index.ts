@@ -1,10 +1,16 @@
 export {
     addRound,
     default as game,
-    resetCurrentRoundLayout,
-    setGame,
-    undoRound,
-    replaceRound,
     deleteRounds,
+    replaceRound,
+    resetCurrentRoundLayout,
+    undoRound,
 } from './game';
-export { useLayout, usePaintLayout, useRound, useUndoHistory } from './hooks';
+export {
+    useGame,
+    useLayout,
+    usePaintLayout,
+    useRound,
+    useUndoHistory,
+} from './hooks';
+export { setGame } from './thunks';

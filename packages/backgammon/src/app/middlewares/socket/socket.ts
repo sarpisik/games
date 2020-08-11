@@ -1,6 +1,11 @@
 import { Middleware } from '@reduxjs/toolkit';
 import socketIOClient from 'socket.io-client';
-import { EVENTS, EmitGameOver, PLAYERS } from 'types/lib/backgammon';
+import {
+    EVENTS,
+    EmitGameOver,
+    PLAYERS,
+    EmitSignInUser,
+} from 'types/lib/backgammon';
 import {
     addRound,
     deleteNotification,
@@ -9,12 +14,13 @@ import {
     undoRound,
     replaceRound,
     deleteRounds,
+    signIn,
 } from '../../slices';
 import { store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
 
 type SocketContextType = ReturnType<typeof socketIOClient> | null;
-type InitialGame = Parameters<typeof setGame>[0];
+type Game = Parameters<typeof setGame>[0];
 type AddRound = Parameters<typeof addRound>[0];
 type ReplaceRound = Parameters<typeof replaceRound>[0];
 type UndoRound = Parameters<typeof undoRound>[0];
@@ -24,8 +30,8 @@ const REACT_APP_SOCKET_URL = process.env.REACT_APP_SOCKET_URL as string;
 const socket: () => Middleware = () => {
     let connection: SocketContextType = null;
 
-    const onInitGame = (s: typeof store) => (initialGame: InitialGame) => {
-        s.dispatch(setGame(initialGame));
+    const onUpdateGame = (s: typeof store) => (game: Game) => {
+        s.dispatch(setGame(game));
     };
 
     const onUndoRound = (s: typeof store) => (rounds: UndoRound) => {
@@ -71,11 +77,12 @@ const socket: () => Middleware = () => {
             action(store.dispatch, store.getState);
         } else {
             switch (action.type) {
-                case SOCKET_ACTIONS.CONNECT:
+                case EVENTS.JOIN_ROOM:
                     if (connection !== null) connection.disconnect();
                     connection = socketIOClient(REACT_APP_SOCKET_URL);
+                    connection.emit(EVENTS.JOIN_ROOM, action.payload);
                     // @ts-ignore
-                    connection.on(EVENTS.INITIAL_GAME, onInitGame(store));
+                    connection.on(EVENTS.GAME_UPDATE, onUpdateGame(store));
                     // @ts-ignore
                     connection.on(EVENTS.ROUND, onRound(store));
                     // @ts-ignore
@@ -96,8 +103,19 @@ const socket: () => Middleware = () => {
                     connection = null;
                     break;
 
-                case EVENTS.INITIAL_GAME:
-                    connection?.emit(EVENTS.INITIAL_GAME);
+                case EVENTS.SIGN_IN_USER:
+                    {
+                        const black = action.payload;
+                        const { game } = store.getState();
+                        const id = game.id;
+                        const white = game.players.white;
+                        signIn(black);
+                        const data: EmitSignInUser = {
+                            id,
+                            players: { white, black },
+                        };
+                        connection?.emit(EVENTS.SIGN_IN_USER, data);
+                    }
                     break;
 
                 case EVENTS.ROUND:

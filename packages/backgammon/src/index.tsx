@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { BrowserRouter as Router } from 'react-router-dom';
+import { Router } from 'react-router';
+import { history } from './lib';
 
 import App from './App';
 import { store } from './app/store';
@@ -12,7 +13,7 @@ import './index.css';
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
-            <Router>
+            <Router history={history}>
                 <App />
             </Router>
         </Provider>

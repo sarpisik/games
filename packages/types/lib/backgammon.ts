@@ -1,6 +1,10 @@
+export type CreateGame = Pick<Game, "players" | "stages">;
+
 export interface EmitGameOver {
     winner: PLAYERS;
 }
+
+export type EmitSignInUser = Pick<Game, "id" | "players">;
 
 export type EmitBrokenPointRound = Omit<EmitRound, "fromTriangleIndex">;
 
@@ -25,8 +29,8 @@ export interface Game {
 
 interface Players {
     // Will be user ids
-    white: string;
-    black: string;
+    white: number;
+    black: number;
 }
 
 interface Score {
@@ -56,6 +60,10 @@ export enum PLAYERS {
     BLACK = 1,
 }
 
+export interface User {
+    id: number;
+}
+
 export const OPPONENT = {
     [PLAYERS.WHITE]: PLAYERS.BLACK,
     [PLAYERS.BLACK]: PLAYERS.WHITE,
@@ -64,12 +72,14 @@ export const OPPONENT = {
 export enum EVENTS {
     ROUND = "ROUND",
     GAME_OVER = "GAME_OVER",
+    GAME_UPDATE = "GAME_UPDATE",
     BROKEN_POINT_ROUND = "BROKEN_POINT_ROUND",
     COLLECT_POINT_ROUND = "COLLECT_POINT_ROUND",
     SKIP_ROUND = "SKIP_ROUND",
     UNDO_ROUND = "UNDO_ROUND",
     INITIAL_GAME = "INITIAL_GAME",
     JOIN_ROOM = "JOIN_ROOM",
+    SIGN_IN_USER = "SIGN_IN_USER",
 }
 
 export enum STAGES {

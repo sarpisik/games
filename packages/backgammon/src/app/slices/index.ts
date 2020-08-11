@@ -1,15 +1,16 @@
 export {
     addRound,
+    deleteRounds,
     game,
+    replaceRound,
     resetCurrentRoundLayout,
     setGame,
     undoRound,
+    useGame,
     useLayout,
     usePaintLayout,
     useRound,
     useUndoHistory,
-    replaceRound,
-    deleteRounds,
 } from './game';
 export {
     deleteNotification,
@@ -17,3 +18,4 @@ export {
     setNotification,
     useNotification,
 } from './notification';
+export { signIn, signOut, user, useUser } from './user';

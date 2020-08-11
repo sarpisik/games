@@ -1,3 +1,4 @@
+export { useGame } from './useGame';
 export { useLayout } from './useLayout';
 export { usePaintLayout } from './usePaintLayout';
 export { useRound } from './useRound';

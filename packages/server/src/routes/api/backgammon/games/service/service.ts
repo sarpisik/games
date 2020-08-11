@@ -1,5 +1,5 @@
-import { Game, PLAYERS } from 'types/lib/backgammon';
-import { layout } from '../constants';
+import { BadRequestError } from '@shared/error';
+import { CreateGame, Game } from 'types/lib/backgammon';
 import { rollDices } from '../controller/socket/utils';
 
 export default class GamesService {
@@ -13,44 +13,49 @@ export default class GamesService {
                 if (games.has(id)) {
                     resolve(games.get(id));
                 } else {
-                    reject(`Game not found by id: ${id}`);
+                    reject(new BadRequestError(`Game not found by id: ${id}`));
                 }
             });
         });
     }
 
-    async createGame(data: Pick<Game, 'players' | 'stages'>) {
+    async createGame(data: CreateGame) {
         const { players, stages } = data;
 
         const id = Date.now();
-        const dice = await rollDices();
-        const round: Game['rounds'][number] = {
-            attempt: 0,
-            player: PLAYERS.WHITE,
-            turn: 1,
-            brokens: {
-                [PLAYERS.WHITE]: 0,
-                [PLAYERS.BLACK]: 0,
-            },
-            collected: {
-                [PLAYERS.WHITE]: 0,
-                [PLAYERS.BLACK]: 0,
-            },
-            dice,
-            id: Date.now(),
-            layout,
-        };
         const game: Game = {
             id,
             players,
             stages,
-            rounds: [round],
+            rounds: [],
             score: { white: 0, black: 0 },
         };
 
         this._games.set(id, game);
 
         return game;
+    }
+
+    async createRound(
+        data: Pick<
+            Game['rounds'][number],
+            'player' | 'brokens' | 'collected' | 'layout'
+        >
+    ) {
+        const { player, brokens, collected, layout } = data;
+        const dice = await rollDices();
+        const newRound: Game['rounds'][number] = {
+            player,
+            brokens,
+            collected,
+            layout,
+            dice,
+            attempt: 0,
+            turn: 1,
+            id: Date.now(),
+        };
+
+        return newRound;
     }
 
     updateGame(game: Game) {
@@ -61,7 +66,9 @@ export default class GamesService {
                 if (games.has(game.id)) {
                     resolve(games.set(game.id, game).get(game.id));
                 } else {
-                    reject(`Game not found by id: ${game.id}`);
+                    reject(
+                        new BadRequestError(`Game not found by id: ${game.id}`)
+                    );
                 }
             });
         });
@@ -75,7 +82,7 @@ export default class GamesService {
                 if (games.has(id)) {
                     resolve(games.delete(id));
                 } else {
-                    reject(`Game not found by id: ${id}`);
+                    reject(new BadRequestError(`Game not found by id: ${id}`));
                 }
             });
         });

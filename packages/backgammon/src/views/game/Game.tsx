@@ -1,24 +1,9 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-
 import { Board, ScoreBoard, Undo } from './components';
-
-import { SOCKET_ACTIONS } from '../../app/middlewares/socket/actions';
+import { useInitializeGame } from './hooks';
 
 export default function Game() {
-    const dispatch = useDispatch();
-
-    React.useEffect(
-        function connectSocket() {
-            dispatch({ type: SOCKET_ACTIONS.CONNECT });
-            // dispatch({ type: EVENTS.INITIAL_GAME });
-
-            return () => {
-                dispatch({ type: SOCKET_ACTIONS.DISCONNECT });
-            };
-        },
-        [dispatch]
-    );
+    useInitializeGame();
 
     return (
         <div className="Game">

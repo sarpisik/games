@@ -6,6 +6,8 @@ import { round } from './round';
 
 export default function handleSocket(io: SocketIO.Namespace) {
     return function onConnection(socket: SocketIO.Socket) {
+        console.log('client connected');
+
         socket.on(EVENTS.JOIN_ROOM, (roomName: string) => {
             socket.join(roomName);
             const roomSocket = socket.to(roomName);
