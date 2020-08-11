@@ -1,14 +1,8 @@
-import {
-    useLayout,
-    useRound,
-} from '../../../../../../../../../../../../app/slices';
 import { OFFSETS, PLAYERS } from '../../../../../../../../constants';
 import { Point } from '../../../../../shared/components';
 import { DIRECTIONS } from '../../types';
 import { fillTriangle, isPlayer, isTopBlock, xOffsetCalculator } from './utils';
-
-type Layout = ReturnType<typeof useLayout>;
-type Round = ReturnType<typeof useRound>;
+import { Game, User, Round } from 'types/lib/backgammon';
 
 const {
     LEFT_BLOCK_START_X,
@@ -19,13 +13,28 @@ const {
     BOTTOM_BLOCK_START_Y,
 } = OFFSETS;
 
-export default function createPointsOnRound(
-    round: Round,
-    onDragEnd: Parameters<typeof fillTriangle>[0]['onDragEnd']
-) {
+interface Params {
+    user: User;
+    game: Game;
+    round: Round;
+    onDragEnd: Parameters<typeof fillTriangle>[0]['onDragEnd'];
+}
+
+export default function createPointsOnRound({
+    user,
+    game,
+    round,
+    onDragEnd,
+}: Params) {
+    const roundPlayer = round?.player;
+    const roundPlayerColor = PLAYERS[roundPlayer];
+    const roundPlayerKey = findPlayerByColor(game.players, roundPlayerColor);
+    const roundPlayerId = roundPlayerKey && game.players[roundPlayerKey];
+    const roundPlayerIsUser = user.id === roundPlayerId;
+
     return function reducePointsFromLayout(
         points: React.ComponentProps<typeof Point>[],
-        [player, count]: Layout[number],
+        [player, count]: Round['layout'][number],
         triangleIndex: number
     ) {
         const isLeftBlock = triangleIndex < 6 || triangleIndex > 17;
@@ -40,7 +49,7 @@ export default function createPointsOnRound(
             ? LEFT_BLOCK_TRIANGLE_END_X
             : RIGHT_BLOCK_TRIANGLE_END_X;
         const yBlock = isTop ? TOP_BLOCK_START_Y : BOTTOM_BLOCK_START_Y;
-        const isRoundPlayer = round?.player === player;
+        const isRoundPlayer = roundPlayerIsUser && roundPlayer === player;
         const hasNoBroken = isPlayer(player) && round?.brokens[player] < 1;
         const draggable = isRoundPlayer && hasNoBroken;
 
@@ -65,4 +74,10 @@ export default function createPointsOnRound(
 
         return points;
     };
+}
+
+function findPlayerByColor(players: Game['players'], roundPlayerColor: string) {
+    return (Object.keys(players) as Array<keyof Game['players']>).find(
+        (color) => color.toUpperCase() === roundPlayerColor
+    );
 }

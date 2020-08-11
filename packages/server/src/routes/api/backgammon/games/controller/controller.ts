@@ -1,8 +1,9 @@
 import { Socket } from 'src/connection/socket';
 import { Controller, RouterType } from 'src/routes/api/shared/controller';
 import { withCatch } from 'src/routes/api/shared/middleware';
-import { EmitSignInUser, EVENTS, Game } from 'types/lib/backgammon';
+import { EmitSignInUser, EVENTS, Game, PLAYERS } from 'types/lib/backgammon';
 import { GamesService } from '../service';
+import { layout } from '../constants';
 
 type GameParam = { id: string };
 
@@ -100,9 +101,32 @@ export default class GamesController extends Controller {
     }
     private _emitGameUpdate(game: Game) {
         console.log(game);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        this._namespace.to(game.id.toString()).emit(EVENTS.GAME_UPDATE, game);
+        this._emitRoomEvent(game.id.toString(), EVENTS.GAME_UPDATE, game);
+
+        const shouldGameStart =
+            game.players.black > 0 &&
+            game.players.white > 0 &&
+            game.rounds.length < 1;
+
+        if (shouldGameStart) this._initializeRound(game);
         // this._namespace.to(game.id.toString()).emit(EVENTS.GAME_UPDATE, game);
+    }
+
+    private async _initializeRound(_game: Game) {
+        const brokens = { [PLAYERS.BLACK]: 0, [PLAYERS.WHITE]: 0 };
+        const _round: Parameters<GamesService['createRound']>[0] = {
+            player: PLAYERS.WHITE,
+            brokens,
+            collected: brokens,
+            layout,
+        };
+        const round = await this._gamesService.createRound(_round);
+        _game.rounds.push(round);
+        const game = await this._gamesService.updateGame(_game);
+        this._emitRoomEvent(game.id.toString(), EVENTS.ROUND, round);
+    }
+
+    private _emitRoomEvent<P>(roomName: string, event: EVENTS, payload: P) {
+        this._namespace.to(roomName).emit(event, payload);
     }
 }
