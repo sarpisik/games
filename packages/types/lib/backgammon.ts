@@ -10,13 +10,16 @@ export type EmitBrokenPointRound = Omit<EmitRound, "fromTriangleIndex">;
 
 export type EmitCollectPointRound = Omit<EmitRound, "toTriangleIndex">;
 
-export type EmitUndoRound = Round[];
+export type EmitUndoRound = EmitBase
 
-export interface EmitRound {
+export interface EmitRound extends EmitBase {
     fromTriangleIndex: number;
     toTriangleIndex: number;
     color: keyof Pick<typeof PLAYERS, "BLACK" | "WHITE">;
     roundId: Round["id"];
+}
+
+interface EmitBase {
     gameId: Game["id"];
 }
 

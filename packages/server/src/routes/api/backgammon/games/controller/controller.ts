@@ -1,17 +1,27 @@
+import asyncParser from '@shared/asyncParser';
 import { Socket } from 'src/connection/socket';
 import { Controller, RouterType } from 'src/routes/api/shared/controller';
 import { withCatch } from 'src/routes/api/shared/middleware';
 import {
+    EmitBrokenPointRound,
+    EmitCollectPointRound,
+    EmitRound,
     EmitSignInUser,
+    EmitUndoRound,
     EVENTS,
     Game,
     PLAYERS,
-    EmitRound,
 } from 'types/lib/backgammon';
-import { GamesService } from '../service';
 import { layout } from '../constants';
-import { roundCalculator, handleNextRound } from './calculators';
-import asyncParser from '@shared/asyncParser';
+import { GamesService } from '../service';
+import {
+    brokenPointCalculator,
+    collectPointCalculator,
+    handleNextRound,
+    roundCalculator,
+    shouldSkipRound,
+    undoRoundCalculator,
+} from './calculators';
 
 type GameParam = { id: string };
 
@@ -20,7 +30,7 @@ export default class GamesController extends Controller {
     private _socket!: SocketIO.Socket;
 
     constructor(
-        private _io: Socket,
+        _io: Socket,
         router: RouterType,
         private _gamesService: GamesService
     ) {
@@ -83,21 +93,21 @@ export default class GamesController extends Controller {
     private async _handleRoom(roomName: string) {
         this._socket.join(roomName);
         const roomSocket = this._socket.to(roomName);
-        // console.log(this);
 
         const game = await this._gamesService.readGame(parseInt(roomName));
         this._emitGameUpdate(game);
+
         roomSocket.on(EVENTS.SIGN_IN_USER, this._signInUser.bind(this));
         roomSocket.on(EVENTS.ROUND, this._handleRoundCalculate.bind(this));
-        // this._roomSocket.on(
-        //     EVENTS.BROKEN_POINT_ROUND,
-        //     handleBrokenPoint(this._roomSocket)
-        // );
-        // this._roomSocket.on(
-        //     EVENTS.COLLECT_POINT_ROUND,
-        //     handleCollectPoint(this._roomSocket)
-        // );
-        // this._roomSocket.on(EVENTS.UNDO_ROUND, handleUndoRound(this._roomSocket));
+        roomSocket.on(
+            EVENTS.BROKEN_POINT_ROUND,
+            this._handleBrokenPoint.bind(this)
+        );
+        roomSocket.on(
+            EVENTS.COLLECT_POINT_ROUND,
+            this._handleCollectPoint.bind(this)
+        );
+        roomSocket.on(EVENTS.UNDO_ROUND, this._handleUndoRound.bind(this));
     }
 
     private async _signInUser(data: EmitSignInUser) {
@@ -142,6 +152,43 @@ export default class GamesController extends Controller {
         const game = await this._gamesService.updateRounds(gameId, nextRound);
 
         handleNextRound(this._namespace.to(gameId.toString()), nextRound);
+    }
+
+    private async _handleBrokenPoint(data: EmitBrokenPointRound) {
+        const { gameId, roundId } = data;
+        const lastRound = await this._gamesService.readRound(gameId, roundId);
+        const _lastRound = await asyncParser(lastRound);
+        const nextRound = await brokenPointCalculator(data, _lastRound);
+        await this._gamesService.updateRounds(gameId, nextRound);
+
+        handleNextRound(this._namespace.to(gameId.toString()), nextRound);
+    }
+
+    private async _handleCollectPoint(data: EmitCollectPointRound) {
+        const { gameId, roundId } = data;
+        const lastRound = await this._gamesService.readRound(gameId, roundId);
+        const _lastRound = await asyncParser(lastRound);
+        const nextRound = await collectPointCalculator(data, _lastRound);
+
+        const roomName = gameId.toString();
+        if (shouldSkipRound(nextRound)) {
+            this._emitRoomEvent(roomName, nextRound.event, nextRound.round);
+        } else {
+            await this._gamesService.updateRounds(gameId, nextRound);
+
+            handleNextRound(this._namespace.to(roomName), nextRound);
+        }
+    }
+
+    private async _handleUndoRound(data: EmitUndoRound) {
+        const { gameId } = data;
+        const game = await this._gamesService.readGame(gameId);
+        const _game = await asyncParser(game);
+        const rounds = await undoRoundCalculator(_game.rounds);
+        _game.rounds = rounds;
+        await this._gamesService.updateGame(_game);
+
+        this._emitRoomEvent(_game.id.toString(), EVENTS.UNDO_ROUND, rounds);
     }
 
     private _emitRoomEvent<P>(roomName: string, event: EVENTS, payload: P) {

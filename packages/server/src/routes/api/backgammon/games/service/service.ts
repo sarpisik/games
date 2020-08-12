@@ -73,12 +73,16 @@ export default class GamesService {
 
         return new Promise<Game>((resolve, reject) => {
             setImmediate(() => {
-                if (games.has(game.id)) {
-                    resolve(games.set(game.id, game).get(game.id));
-                } else {
-                    reject(
-                        new BadRequestError(`Game not found by id: ${game.id}`)
-                    );
+                try {
+                    if (games.has(game.id)) {
+                        resolve(games.set(game.id, game).get(game.id));
+                    } else {
+                        throw new BadRequestError(
+                            `Game not found by id: ${game.id}`
+                        );
+                    }
+                } catch (error) {
+                    reject(error);
                 }
             });
         });
