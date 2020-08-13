@@ -1,4 +1,4 @@
-import { BadRequestError } from '@shared/error';
+import { BadRequestError, GameNotFoundError } from '@shared/error';
 import { CreateGame, Game, Round, PLAYERS } from 'types/lib/backgammon';
 import { rollDices } from '../controller/calculators/utils';
 import { findRoundById } from './utils';
@@ -14,7 +14,7 @@ export default class GamesService {
                 try {
                     if (games.has(id)) resolve(games.get(id));
                     else
-                        throw new BadRequestError(
+                        throw new GameNotFoundError(
                             `Game not found by id: ${id}`
                         );
                 } catch (error) {

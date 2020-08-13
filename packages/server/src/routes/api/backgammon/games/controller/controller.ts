@@ -27,6 +27,7 @@ import {
     undoRoundCalculator,
 } from './calculators';
 import { rollDices } from './calculators/utils';
+import { GameNotFoundError } from '@shared/error';
 
 type GameParam = { id: string };
 
@@ -97,23 +98,33 @@ export default class GamesController extends Controller {
     }
 
     private async _handleRoom(roomName: string) {
-        this._socket.join(roomName);
-        const roomSocket = this._socket.to(roomName);
+        try {
+            this._socket.join(roomName);
+            const roomSocket = this._socket.to(roomName);
+            const game = await this._gamesService.readGame(parseInt(roomName));
+            this._emitGameUpdate(game);
 
-        const game = await this._gamesService.readGame(parseInt(roomName));
-        this._emitGameUpdate(game);
-
-        roomSocket.on(EVENTS.SIGN_IN_USER, this._signInUser.bind(this));
-        roomSocket.on(EVENTS.ROUND, this._handleRoundCalculate.bind(this));
-        roomSocket.on(
-            EVENTS.BROKEN_POINT_ROUND,
-            this._handleBrokenPoint.bind(this)
-        );
-        roomSocket.on(
-            EVENTS.COLLECT_POINT_ROUND,
-            this._handleCollectPoint.bind(this)
-        );
-        roomSocket.on(EVENTS.UNDO_ROUND, this._handleUndoRound.bind(this));
+            roomSocket.on(EVENTS.SIGN_IN_USER, this._signInUser.bind(this));
+            roomSocket.on(EVENTS.ROUND, this._handleRoundCalculate.bind(this));
+            roomSocket.on(
+                EVENTS.BROKEN_POINT_ROUND,
+                this._handleBrokenPoint.bind(this)
+            );
+            roomSocket.on(
+                EVENTS.COLLECT_POINT_ROUND,
+                this._handleCollectPoint.bind(this)
+            );
+            roomSocket.on(EVENTS.UNDO_ROUND, this._handleUndoRound.bind(this));
+        } catch (error) {
+            if (error instanceof GameNotFoundError)
+                this._emitRoomEvent(roomName, EVENTS.ERROR, error.payload);
+            else
+                this._emitRoomEvent(
+                    roomName,
+                    EVENTS.BAD_REQUEST,
+                    error.message
+                );
+        }
     }
 
     private async _signInUser(data: EmitSignInUser) {

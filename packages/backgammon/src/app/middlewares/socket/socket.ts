@@ -7,6 +7,7 @@ import {
     EmitSignInUser,
     EmitStageOver,
     User,
+    EmitError,
 } from 'types/lib/backgammon';
 import {
     addRound,
@@ -66,6 +67,10 @@ const socket: () => Middleware = () => {
         s.dispatch(addRound(round));
     };
 
+    const onError = (s: typeof store) => (data: EmitError) => {
+        s.dispatch(setNotification(data));
+    };
+
     const onStageOver = (s: typeof store) => (data: EmitStageOver) => {
         const { game, user } = s.getState();
         const message = createWinnerMessage(game, user, data).concat(
@@ -105,6 +110,8 @@ const socket: () => Middleware = () => {
                     connection.on(EVENTS.STAGE_OVER, onStageOver(store));
                     // @ts-ignore
                     connection.on(EVENTS.GAME_OVER, onGameOver(store));
+                    // @ts-ignore
+                    connection.on(EVENTS.ERROR, onError(store));
                     connection.on(
                         EVENTS.COLLECT_POINT_ROUND,
                         // @ts-ignore

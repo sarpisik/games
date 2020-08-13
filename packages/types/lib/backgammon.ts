@@ -1,5 +1,10 @@
 export type CreateGame = Pick<Game, "players" | "stages">;
 
+export interface EmitError {
+    message: string;
+    type: EVENTS;
+}
+
 export type EmitGameOver = EmitStageOver;
 
 export interface EmitStageOver {
@@ -69,6 +74,9 @@ export enum EVENTS {
     STAGE_OVER = "STAGE_OVER",
     GAME_OVER = "GAME_OVER",
     GAME_UPDATE = "GAME_UPDATE",
+    GAME_NOT_FOUND = "GAME_NOT_FOUND",
+    ERROR = "ERROR",
+    BAD_REQUEST = "BAD_REQUEST",
     BROKEN_POINT_ROUND = "BROKEN_POINT_ROUND",
     COLLECT_POINT_ROUND = "COLLECT_POINT_ROUND",
     SKIP_ROUND = "SKIP_ROUND",
