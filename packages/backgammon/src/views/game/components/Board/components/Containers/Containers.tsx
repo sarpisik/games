@@ -1,12 +1,9 @@
 import React from 'react';
-
-import { LAYOUTS } from '../../constants';
+import { useContainers } from '../../../../../../app/slices';
 import { FilledRectangle } from '../FilledRectangle';
 
 export default function Containers() {
-    return (
-        <React.Fragment>
-            {LAYOUTS.CONTAINERS.map(FilledRectangle)}
-        </React.Fragment>
-    );
+    const containers = useContainers();
+
+    return <React.Fragment>{containers.map(FilledRectangle)}</React.Fragment>;
 }

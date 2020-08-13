@@ -13,6 +13,13 @@ export {
     useUndoHistory,
 } from './game';
 export {
+    measures,
+    useBlocks,
+    useContainers,
+    useSizes,
+    useStoreUnit,
+} from './measures';
+export {
     deleteNotification,
     notification,
     setNotification,

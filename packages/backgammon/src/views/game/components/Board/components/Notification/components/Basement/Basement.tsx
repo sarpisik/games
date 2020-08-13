@@ -1,10 +1,11 @@
 import React from 'react';
 import { Rect } from 'react-konva';
-import { SIZES } from '../../../../constants';
-
-const { BOARD_WIDTH, BOARD_HEIGHT } = SIZES;
+import { useSizes } from '../../../../../../../../app/slices/measures';
 
 export default function Basement(): React.ReactElement {
+    const sizes = useSizes();
+    const { BOARD_WIDTH, BOARD_HEIGHT } = sizes;
+
     return (
         <Rect
             x={0}

@@ -4,10 +4,10 @@ import { Game, Home } from './views';
 
 /*
  * TODO:
- * - [] dynamic responsive layout
+ * - [x] dynamic responsive layout
  * - [] highlight available triangles on drag move.
  * - [] calculate conrucrrently moves.
- * - [] calculate next stage
+ * - [x] calculate next stage
  */
 
 export default function App() {

@@ -1,14 +1,19 @@
-import { LAYOUTS, SIZES } from '../../../../../../../../../../constants';
+import { Containers } from '../../../../../../../../../../../../../../app/slices/measures/measures';
 
-export default function generateRectangle(
-    key: number,
-    color: string,
-    y: number,
-    baseContainer: typeof LAYOUTS['CONTAINERS'][number]
-) {
+interface Params {
+    key: number;
+    color: string;
+    y: number;
+    baseContainer: Containers[number];
+    width: number;
+}
+
+export default function generateRectangle(params: Params) {
+    const { key, color, y, baseContainer, width } = params;
+
     return Object.assign({}, baseContainer, {
         height: 1,
-        width: SIZES.CONTAINER_WIDTH,
+        width,
         y,
         color,
         key,

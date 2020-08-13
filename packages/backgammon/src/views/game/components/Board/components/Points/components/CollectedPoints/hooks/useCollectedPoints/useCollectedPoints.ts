@@ -1,27 +1,35 @@
 import { PLAYERS } from 'types/lib/backgammon';
-import { useRound } from '../../../../../../../../../../app/slices';
-import { LAYOUTS, SIZES } from '../../../../../../constants';
+import {
+    useContainers,
+    useRound,
+} from '../../../../../../../../../../app/slices';
+import { useSizes } from '../../../../../../../../../../app/slices/measures';
 import { generateCollectedPoints } from './utils';
 
 export default function useCollectedPoints() {
     const round = useRound();
+    const sizes = useSizes();
+    const containers = useContainers();
+    const { CONTAINER_WIDTH, CONTAINER_HEIGHT } = sizes;
 
     const whiteCollectedPoints = generateCollectedPoints({
-        points: round?.collected[PLAYERS.WHITE],
-        y: LAYOUTS.CONTAINERS[3].y + SIZES.CONTAINER_HEIGHT - 1,
-        baseContainer: LAYOUTS.CONTAINERS[3],
+        baseContainer: containers[3],
         color: '#ffffff',
-        stroke: '#000000',
+        points: round?.collected[PLAYERS.WHITE],
         reverse: false,
+        stroke: '#000000',
+        width: CONTAINER_WIDTH,
+        y: containers[3].y + CONTAINER_HEIGHT - 1,
     });
 
     const blackCollectedPoints = generateCollectedPoints({
-        points: round?.collected[PLAYERS.BLACK],
-        y: LAYOUTS.CONTAINERS[0].y,
-        baseContainer: LAYOUTS.CONTAINERS[0],
+        baseContainer: containers[0],
         color: '#000000',
+        points: round?.collected[PLAYERS.BLACK],
         reverse: true,
         stroke: '#ffffff',
+        width: CONTAINER_WIDTH,
+        y: containers[0].y,
     });
 
     return [blackCollectedPoints, whiteCollectedPoints] as const;

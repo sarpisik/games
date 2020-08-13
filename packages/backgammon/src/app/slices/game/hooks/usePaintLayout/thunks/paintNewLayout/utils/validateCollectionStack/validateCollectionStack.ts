@@ -1,14 +1,19 @@
 import { PLAYERS } from 'types/lib/backgammon';
-import { LAYOUTS } from '../../../../../../../../../views/game/components/Board/constants';
+import { Containers } from '../../../../../../../measures/measures';
 
-export default function validateCollectionStack(
-    targetX: number,
-    targetY: number,
-    player: PLAYERS.WHITE | PLAYERS.BLACK
-) {
+interface Params {
+    targetX: number;
+    targetY: number;
+    player: PLAYERS.WHITE | PLAYERS.BLACK;
+    containers: Containers;
+}
+
+export default function validateCollectionStack(params: Params) {
+    const { targetX, targetY, player, containers } = params;
+
     const isWhite = player === PLAYERS.WHITE;
     const containerIndex = isWhite ? 3 : 0;
-    const CONTAINER = LAYOUTS.CONTAINERS[containerIndex];
+    const CONTAINER = containers[containerIndex];
     const { x, y, width, height } = CONTAINER;
 
     const isInside =

@@ -22,7 +22,8 @@ const paintNewLayout = (
     color: keyof Pick<typeof PLAYERS, 'BLACK' | 'WHITE'>
 ): AppThunk => (dispatch, getState) => {
     const state = getState();
-    const { game } = state;
+    const { game, measures } = state;
+    const { containers } = measures;
     const [round] = game.rounds.slice(-1);
     const { id: roundId, dice, layout } = round;
 
@@ -46,11 +47,12 @@ const paintNewLayout = (
         dispatch(resetCurrentRoundLayout());
     } else {
         let targetInvalid = true;
-        const notInTheStack = !validateCollectionStack(
+        const notInTheStack = !validateCollectionStack({
+            containers,
+            player,
             targetX,
             targetY,
-            player
-        );
+        });
 
         if (shouldNotCollect || notInTheStack) {
             const toTriangleIndex = calculateTargetTriangleIndex(
