@@ -1,7 +1,9 @@
 export type CreateGame = Pick<Game, "players" | "stages">;
 
-export interface EmitGameOver {
-    winner: PLAYERS;
+export type EmitGameOver = EmitStageOver;
+
+export interface EmitStageOver {
+    winner: PLAYERS.BLACK | PLAYERS.WHITE;
 }
 
 export type EmitSignInUser = Pick<Game, "id" | "players">;
@@ -10,7 +12,7 @@ export type EmitBrokenPointRound = Omit<EmitRound, "fromTriangleIndex">;
 
 export type EmitCollectPointRound = Omit<EmitRound, "toTriangleIndex">;
 
-export type EmitUndoRound = EmitBase
+export type EmitUndoRound = EmitBase;
 
 export interface EmitRound extends EmitBase {
     fromTriangleIndex: number;
@@ -25,21 +27,15 @@ interface EmitBase {
 
 export interface Game {
     id: number;
-    players: Players;
-    score: Score;
+    players: PlayersMap;
+    score: PlayersMap;
     stages: number;
     rounds: Round[];
 }
 
-interface Players {
-    // Will be user ids
-    white: number;
-    black: number;
-}
-
-interface Score {
-    white: number;
-    black: number;
+interface PlayersMap {
+    [PLAYERS.WHITE]: number;
+    [PLAYERS.BLACK]: number;
 }
 
 export interface Round {
@@ -47,15 +43,10 @@ export interface Round {
     attempt: number;
     turn: number;
     player: PLAYERS.WHITE | PLAYERS.BLACK;
-    brokens: Brokens;
-    collected: Brokens;
+    brokens: PlayersMap;
+    collected: PlayersMap;
     dice: number[];
     layout: number[][];
-}
-
-interface Brokens {
-    [PLAYERS.WHITE]: number;
-    [PLAYERS.BLACK]: number;
 }
 
 export enum PLAYERS {
@@ -75,6 +66,7 @@ export const OPPONENT = {
 
 export enum EVENTS {
     ROUND = "ROUND",
+    STAGE_OVER = "STAGE_OVER",
     GAME_OVER = "GAME_OVER",
     GAME_UPDATE = "GAME_UPDATE",
     BROKEN_POINT_ROUND = "BROKEN_POINT_ROUND",

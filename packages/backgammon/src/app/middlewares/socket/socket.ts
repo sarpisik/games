@@ -5,6 +5,8 @@ import {
     EmitGameOver,
     PLAYERS,
     EmitSignInUser,
+    EmitStageOver,
+    User,
 } from 'types/lib/backgammon';
 import {
     addRound,
@@ -64,9 +66,19 @@ const socket: () => Middleware = () => {
         s.dispatch(addRound(round));
     };
 
+    const onStageOver = (s: typeof store) => (data: EmitStageOver) => {
+        const { game, user } = s.getState();
+        const message = createWinnerMessage(game, user, data).concat(
+            ' Preparing the next stage.'
+        );
+
+        s.dispatch(setNotification({ type: EVENTS.STAGE_OVER, message }));
+        s.dispatch(deleteRounds());
+    };
+
     const onGameOver = (s: typeof store) => (data: EmitGameOver) => {
-        const { winner } = data;
-        const message = `Winner is ${PLAYERS[winner].toUpperCase()}`;
+        const { game, user } = s.getState();
+        const message = createWinnerMessage(game, user, data);
 
         s.dispatch(setNotification({ type: EVENTS.GAME_OVER, message }));
         s.dispatch(deleteRounds());
@@ -90,6 +102,8 @@ const socket: () => Middleware = () => {
                     // @ts-ignore
                     connection.on(EVENTS.UNDO_ROUND, onUndoRound(store));
                     // @ts-ignore
+                    connection.on(EVENTS.STAGE_OVER, onStageOver(store));
+                    // @ts-ignore
                     connection.on(EVENTS.GAME_OVER, onGameOver(store));
                     connection.on(
                         EVENTS.COLLECT_POINT_ROUND,
@@ -107,13 +121,15 @@ const socket: () => Middleware = () => {
                     {
                         const black = action.payload;
                         const { game } = store.getState();
-                        const id = game.id;
-                        const white = game.players.white;
+                        const { id } = game;
+
                         signIn(black);
-                        const data: EmitSignInUser = {
-                            id,
-                            players: { white, black },
-                        };
+                        const players = Object.assign({}, game.players, {
+                            [PLAYERS.BLACK]: black,
+                        });
+
+                        const data: EmitSignInUser = { id, players };
+
                         connection?.emit(EVENTS.SIGN_IN_USER, data);
                     }
                     break;
@@ -147,3 +163,17 @@ const socket: () => Middleware = () => {
 };
 
 export default socket();
+
+function createWinnerMessage(
+    game: Game,
+    user: User,
+    data: EmitStageOver | EmitGameOver
+): string {
+    const { id } = user;
+    const { players } = game;
+    const { winner } = data;
+    const shouldWinner = players[winner] === id;
+    const message = shouldWinner ? 'Congratulations! You won!' : 'You lose!';
+
+    return message;
+}

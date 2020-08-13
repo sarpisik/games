@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { CreateGame } from 'types/lib/backgammon';
+import { CreateGame, PLAYERS } from 'types/lib/backgammon';
 import { useUser } from '../../../../../../app/slices';
 
 export default function Form(): React.ReactElement {
@@ -17,8 +17,8 @@ export default function Form(): React.ReactElement {
         event.preventDefault();
 
         const createGame: CreateGame = {
-            players: { white: user.id, black: -1 },
-            stages: 1,
+            players: { [PLAYERS.WHITE]: user.id, [PLAYERS.BLACK]: -1 },
+            stages: value,
         };
         axios
             .post('/api/backgammon/games', createGame)

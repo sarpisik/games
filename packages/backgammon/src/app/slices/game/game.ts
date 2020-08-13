@@ -1,13 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { BACKGAMMON_TYPES } from 'types';
+import { PLAYERS } from '../../../views/game/components/Board/constants';
 
 type Game = BACKGAMMON_TYPES.Game;
 
+const generatePlayers = (value: number) => ({
+    [PLAYERS.BLACK]: value,
+    [PLAYERS.WHITE]: value,
+});
+
 const initialState: Game = {
     id: -1,
-    players: { black: -1, white: -1 },
+    players: generatePlayers(-1),
     stages: 0,
-    score: { black: 0, white: 0 },
+    score: generatePlayers(0),
     rounds: [],
 };
 

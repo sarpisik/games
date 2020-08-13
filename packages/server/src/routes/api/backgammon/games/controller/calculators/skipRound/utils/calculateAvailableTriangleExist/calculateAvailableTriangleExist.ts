@@ -1,6 +1,6 @@
 import { PLAYERS, Round } from 'types/lib/backgammon';
-import { calculateShouldCollect } from '../../../../../utils';
 import { recursivelyCalculateAvailableTriangle } from './utils';
+import { calculateShouldCollect } from '../../../utils';
 
 export default function calculateAvailableTriangleExist(round: Round) {
     const { player: roundPlayer, layout, dice: dices } = round;

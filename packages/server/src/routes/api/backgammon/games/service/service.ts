@@ -1,5 +1,5 @@
 import { BadRequestError } from '@shared/error';
-import { CreateGame, Game, Round } from 'types/lib/backgammon';
+import { CreateGame, Game, Round, PLAYERS } from 'types/lib/backgammon';
 import { rollDices } from '../controller/calculators/utils';
 import { findRoundById } from './utils';
 
@@ -38,7 +38,7 @@ export default class GamesService {
             players,
             stages,
             rounds: [],
-            score: { white: 0, black: 0 },
+            score: { [PLAYERS.WHITE]: 0, [PLAYERS.BLACK]: 0 },
         };
 
         this._games.set(id, game);

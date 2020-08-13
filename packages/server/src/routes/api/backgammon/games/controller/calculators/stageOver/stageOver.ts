@@ -1,16 +1,16 @@
-import { Round, PLAYERS, EmitGameOver } from 'types/lib/backgammon';
+import { EmitStageOver, PLAYERS, Round } from 'types/lib/backgammon';
 
-export default function calculateGameOver(round: Round) {
-    return new Promise<EmitGameOver | null>((resolve, reject) => {
+export default function calculateStageOver(round: Round) {
+    return new Promise<EmitStageOver | null>((resolve, reject) => {
         setImmediate(() => {
             try {
                 const calculateWinner = handleWinner(round);
                 const whiteWinner = calculateWinner(PLAYERS.WHITE);
                 const blackWinner = calculateWinner(PLAYERS.BLACK);
 
-                if (whiteWinner) resolve(createGameOverPayload(PLAYERS.WHITE));
+                if (whiteWinner) resolve(createStageOverPayload(PLAYERS.WHITE));
                 else if (blackWinner)
-                    resolve(createGameOverPayload(PLAYERS.BLACK));
+                    resolve(createStageOverPayload(PLAYERS.BLACK));
                 else resolve(null);
             } catch (error) {
                 reject(error);
@@ -25,6 +25,8 @@ function handleWinner(round: Round) {
     };
 }
 
-function createGameOverPayload(winner: keyof Round['collected']): EmitGameOver {
+function createStageOverPayload(
+    winner: keyof Round['collected']
+): EmitStageOver {
     return { winner };
 }

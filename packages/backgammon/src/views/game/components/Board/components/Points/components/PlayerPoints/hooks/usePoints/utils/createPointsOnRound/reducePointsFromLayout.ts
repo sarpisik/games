@@ -27,9 +27,7 @@ export default function createPointsOnRound({
     onDragEnd,
 }: Params) {
     const roundPlayer = round?.player;
-    const roundPlayerColor = PLAYERS[roundPlayer];
-    const roundPlayerKey = findPlayerByColor(game.players, roundPlayerColor);
-    const roundPlayerId = roundPlayerKey && game.players[roundPlayerKey];
+    const roundPlayerId = game.players[roundPlayer];
     const roundPlayerIsUser = user.id === roundPlayerId;
 
     return function reducePointsFromLayout(
@@ -74,10 +72,4 @@ export default function createPointsOnRound({
 
         return points;
     };
-}
-
-function findPlayerByColor(players: Game['players'], roundPlayerColor: string) {
-    return (Object.keys(players) as Array<keyof Game['players']>).find(
-        (color) => color.toUpperCase() === roundPlayerColor
-    );
 }

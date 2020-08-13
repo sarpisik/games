@@ -10,18 +10,23 @@ import {
     EmitUndoRound,
     EVENTS,
     Game,
+    OPPONENT,
     PLAYERS,
+    Round,
 } from 'types/lib/backgammon';
 import { layout } from '../constants';
 import { GamesService } from '../service';
 import {
     brokenPointCalculator,
+    calculateGameOver,
+    calculateSkipRound,
+    calculateStageOver,
     collectPointCalculator,
-    handleNextRound,
     roundCalculator,
     shouldSkipRound,
     undoRoundCalculator,
 } from './calculators';
+import { rollDices } from './calculators/utils';
 
 type GameParam = { id: string };
 
@@ -72,10 +77,11 @@ export default class GamesController extends Controller {
         async (req, res) => {
             const { params, body } = req;
             const { id } = params;
-            const { black } = body.players;
+            const blackPlayerIndex = PLAYERS.BLACK;
+            const black = body.players[blackPlayerIndex];
 
             const game = await this._gamesService.readGame(parseInt(id));
-            game.players.black = black;
+            game.players[blackPlayerIndex] = black;
 
             const uptGame = await this._gamesService.updateGame(game);
 
@@ -122,18 +128,20 @@ export default class GamesController extends Controller {
         this._emitRoomEvent(game.id.toString(), EVENTS.GAME_UPDATE, game);
 
         const shouldGameStart =
-            game.players.black > 0 &&
-            game.players.white > 0 &&
+            game.players[PLAYERS.BLACK] > 0 &&
+            game.players[PLAYERS.WHITE] > 0 &&
             game.rounds.length < 1;
 
         if (shouldGameStart) this._initializeRound(game);
         // this._namespace.to(game.id.toString()).emit(EVENTS.GAME_UPDATE, game);
     }
 
-    private async _initializeRound(_game: Game) {
+    private async _initializeRound(_game: Game, player = PLAYERS.WHITE) {
         const brokens = { [PLAYERS.BLACK]: 0, [PLAYERS.WHITE]: 0 };
         const _round: Parameters<GamesService['createRound']>[0] = {
-            player: PLAYERS.WHITE,
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            player,
             brokens,
             collected: brokens,
             layout,
@@ -149,9 +157,9 @@ export default class GamesController extends Controller {
         const lastRound = await this._gamesService.readRound(gameId, roundId);
         const _lastRound = await asyncParser(lastRound);
         const nextRound = await roundCalculator(data, _lastRound);
-        const game = await this._gamesService.updateRounds(gameId, nextRound);
+        await this._gamesService.updateRounds(gameId, nextRound);
 
-        handleNextRound(this._namespace.to(gameId.toString()), nextRound);
+        this._handleNextRound(gameId.toString(), nextRound);
     }
 
     private async _handleBrokenPoint(data: EmitBrokenPointRound) {
@@ -161,7 +169,7 @@ export default class GamesController extends Controller {
         const nextRound = await brokenPointCalculator(data, _lastRound);
         await this._gamesService.updateRounds(gameId, nextRound);
 
-        handleNextRound(this._namespace.to(gameId.toString()), nextRound);
+        this._handleNextRound(gameId.toString(), nextRound);
     }
 
     private async _handleCollectPoint(data: EmitCollectPointRound) {
@@ -176,7 +184,59 @@ export default class GamesController extends Controller {
         } else {
             await this._gamesService.updateRounds(gameId, nextRound);
 
-            handleNextRound(this._namespace.to(roomName), nextRound);
+            this._handleNextRound(roomName, nextRound);
+        }
+    }
+
+    private async _handleNextRound(roomName: string, round: Round) {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        const self = this;
+        const socket = this._namespace.to(roomName);
+
+        const [shouldStageOver, shouldSkipRound] = await Promise.all([
+            calculateStageOver(round),
+            calculateSkipRound(round),
+        ]);
+
+        if (shouldStageOver) {
+            const { winner } = shouldStageOver;
+            const game = await this._gamesService.readGame(parseInt(roomName));
+            game.score[winner] += 1;
+
+            const [shouldGameOver] = await Promise.all([
+                calculateGameOver(game.stages, game.score),
+                this._gamesService.updateGame(game),
+            ]);
+
+            if (shouldGameOver) {
+                await this._gamesService.deleteGame(game.id);
+                socket.emit(EVENTS.GAME_OVER, shouldStageOver);
+            } else {
+                socket.emit(EVENTS.STAGE_OVER, shouldStageOver);
+                game.rounds = [];
+
+                setTimeout(async function reHandleNextRound() {
+                    await self._gamesService.updateGame(game);
+
+                    self._initializeRound(game, winner);
+                }, 1500);
+            }
+        } else if (shouldSkipRound) {
+            socket.emit(EVENTS.SKIP_ROUND, {
+                round,
+                message: 'You can not move. Skipping to next round.',
+            });
+
+            setTimeout(async function reHandleNextRound() {
+                round.player = OPPONENT[round.player];
+                round.turn += 1;
+                round.dice = await rollDices();
+
+                self._handleNextRound(roomName, round);
+            }, 1500);
+        } else {
+            // Send round.
+            socket.emit(EVENTS.ROUND, round);
         }
     }
 
