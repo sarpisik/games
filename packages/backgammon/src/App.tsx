@@ -4,12 +4,10 @@ import { Game, Home } from './views';
 
 /*
  * TODO:
- * - [x]render broken points.
- * - [x]calculate double dice. e.g 3-3
- * - [x]calculate the movement availability before draggable
- *   and skip the round on invalid.
- * - [x]calculate when game finishes.
- * - []highlight available triangles on drag move.
+ * - [] dynamic responsive layout
+ * - [] highlight available triangles on drag move.
+ * - [] calculate conrucrrently moves.
+ * - [] calculate next stage
  */
 
 export default function App() {
