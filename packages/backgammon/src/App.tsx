@@ -8,6 +8,7 @@ import { Game, Home } from './views';
  * - [x] handle overlay
  * - [] highlight available triangles on drag move.
  * - [] calculate conrucrrently moves.
+ * - [x] calculate next stage
  */
 
 export default function App() {
