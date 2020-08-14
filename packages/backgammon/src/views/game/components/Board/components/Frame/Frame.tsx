@@ -3,6 +3,8 @@ import { Stage } from 'react-konva';
 import { Provider, ReactReduxContext } from 'react-redux';
 import { useSizes } from '../../../../../../app/slices/measures';
 
+import styles from './Frame.module.css';
+
 type FrameProps = Omit<
     React.ComponentProps<typeof Stage>,
     'className' | 'width' | 'height'
@@ -16,7 +18,7 @@ export default function Frame(props: FrameProps): React.ReactElement {
         <ReactReduxContext.Consumer>
             {({ store }) => (
                 <Stage
-                    className="board-stage"
+                    className={styles.frame}
                     width={BOARD_WIDTH}
                     height={BOARD_HEIGHT}
                     {...props}
