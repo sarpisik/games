@@ -5,7 +5,7 @@ import { default as backgammon } from './backgammon';
 export default (io: Socket) => {
     const router = Router();
 
-    router.use('/api', backgammon(io));
+    router.use('/', backgammon(io));
 
     return router;
 };
