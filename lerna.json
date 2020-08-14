@@ -1,11 +1,5 @@
 {
     "packages": ["packages/*"],
-    "command": {
-        "bootstrap": {
-            "hoist": true,
-            "nohoist": ["module-alias"]
-        }
-    },
     "stream": true,
     "version": "0.0.0"
 }
