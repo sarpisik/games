@@ -8,7 +8,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import { BAD_REQUEST } from 'http-status-codes';
 import 'express-async-errors';
 
-import { apiRoutes } from './routes';
+import routes from './routes';
 import logger from '@shared/Logger';
 import { cookieProps } from '@shared/constants';
 import { socket } from './connection/socket';
@@ -42,7 +42,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Add APIs
-app.use('/api', apiRoutes(io));
+app.use('/', routes(io));
 
 // Print API errors
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
