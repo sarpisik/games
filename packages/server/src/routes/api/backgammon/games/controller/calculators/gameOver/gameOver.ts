@@ -1,4 +1,4 @@
-import { Game, PLAYERS } from 'types/lib/backgammon';
+import { Game, PLAYERS } from '@shared-types/backgammon';
 
 type Winner = [PLAYERS.WHITE | PLAYERS.BLACK, number];
 

@@ -1,4 +1,4 @@
-import { OPPONENT, Round } from 'types/lib/backgammon';
+import { OPPONENT, Round } from '@shared-types/backgammon';
 
 interface RecursivelyCalculateByDicesParams {
     dices: Round['dice'];

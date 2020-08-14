@@ -1,4 +1,4 @@
-import { Round, PLAYERS } from 'types/lib/backgammon';
+import { Round, PLAYERS } from '@shared-types/backgammon';
 
 export default function filterFarthestTriangle(
     triangles: Round['layout'],

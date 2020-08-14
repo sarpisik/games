@@ -1,5 +1,5 @@
 import { BAD_REQUEST, NOT_FOUND } from 'http-status-codes';
-import { EmitError, EVENTS } from 'types/lib/backgammon';
+import { EmitError, EVENTS } from '@shared-types/backgammon';
 import { paramMissingError } from './constants';
 
 export class CustomError extends Error {

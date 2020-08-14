@@ -1,4 +1,4 @@
-import { EmitRound, OPPONENT, PLAYERS, Round } from 'types/lib/backgammon';
+import { EmitRound, OPPONENT, PLAYERS, Round } from '@shared-types/backgammon';
 import { rollDices } from '../utils';
 import { filterValidDice, filterValidTriangleIndexes } from './utils';
 

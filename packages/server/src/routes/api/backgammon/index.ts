@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Socket } from 'src/connection/socket';
+import { Socket } from '@connection/socket';
 import { GamesController, GamesService } from './games';
 
 export default (socket: Socket) => {

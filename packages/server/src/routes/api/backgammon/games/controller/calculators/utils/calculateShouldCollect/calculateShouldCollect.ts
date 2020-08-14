@@ -1,4 +1,4 @@
-import { PLAYERS, Round } from 'types/lib/backgammon';
+import { PLAYERS, Round } from '@shared-types/backgammon';
 
 export default function calculateShouldCollect(
     player: PLAYERS.WHITE | PLAYERS.BLACK,

@@ -1,4 +1,4 @@
-import { Round } from 'types/lib/backgammon';
+import { Round } from '@shared-types/backgammon';
 
 export default function filterMaxDice(dices: Round['dice']) {
     const maxDiceIndex = 0;

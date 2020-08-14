@@ -1,4 +1,4 @@
-import { EmitStageOver, PLAYERS, Round } from 'types/lib/backgammon';
+import { EmitStageOver, PLAYERS, Round } from '@shared-types/backgammon';
 
 export default function calculateStageOver(round: Round) {
     return new Promise<EmitStageOver | null>((resolve, reject) => {

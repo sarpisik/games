@@ -1,4 +1,4 @@
-import { OPPONENT, PLAYERS, Round } from 'types/lib/backgammon';
+import { OPPONENT, PLAYERS, Round } from '@shared-types/backgammon';
 
 export default function calculateAvailableTriangleForBrokens(round: Round) {
     const { layout, player, dice } = round;

@@ -1,9 +1,7 @@
 import { rollDice } from './utils';
-import { BACKGAMMON_TYPES } from 'types';
+import { Round } from '@shared-types/backgammon';
 
-export default async function rollDices(): Promise<
-    BACKGAMMON_TYPES.Round['dice']
-> {
+export default async function rollDices(): Promise<Round['dice']> {
     const dice = await Promise.all([rollDice(), rollDice()]);
     const shouldDuplicate = dice[0] === dice[1];
 

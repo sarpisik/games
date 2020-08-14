@@ -1,5 +1,5 @@
 import { BadRequestError, GameNotFoundError } from '@shared/error';
-import { CreateGame, Game, Round, PLAYERS } from 'types/lib/backgammon';
+import { CreateGame, Game, Round, PLAYERS } from '@shared-types/backgammon';
 import { rollDices } from '../controller/calculators/utils';
 import { findRoundById } from './utils';
 

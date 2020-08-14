@@ -3,8 +3,9 @@
     "version": "0.0.0",
     "scripts": {
         "build": "node build.js",
+        "build:manual": "tsc --build tsconfig.prod.json",
         "lint:types": "tsc -p tsconfig.prod.json --noEmit",
-        "start": "node -r module-alias/register ./dist --env=production",
+        "start": "node -r module-alias/register ./dist/server/src --env=production",
         "dev": "nodemon",
         "test": "nodemon --config ./spec/nodemon.json",
         "precommit": "npm run lint:types && lint-staged"
@@ -20,10 +21,13 @@
         "exec": "ts-node -r tsconfig-paths/register ./src"
     },
     "_moduleAliases": {
-        "@daos": "dist/daos",
-        "@entities": "dist/entities",
-        "@shared": "dist/shared",
-        "@server": "dist/Server"
+        "@daos": "dist/server/src/daos",
+        "@connection": "dist/server/src/connection",
+        "@entities": "dist/server/src/entities",
+        "@routes": "dist/server/src/routes",
+        "@shared": "dist/server/src/shared",
+        "@shared-types": "dist/types/lib",
+        "@server": "dist/server/src/Server"
     },
     "lint-staged": {
         "*.+(ts)": [
@@ -46,7 +50,6 @@
         "morgan": "1.10.0",
         "randomstring": "1.1.5",
         "socket.io": "2.3.0",
-        "types": "*",
         "typescript": "3.9.7",
         "winston": "3.3.3"
     },

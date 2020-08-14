@@ -4,7 +4,7 @@ import {
     OPPONENT,
     PLAYERS,
     Round,
-} from 'types/lib/backgammon';
+} from '@shared-types/backgammon';
 import { calculateShouldCollect, rollDices } from '../utils';
 import {
     filterFarthestTriangle,

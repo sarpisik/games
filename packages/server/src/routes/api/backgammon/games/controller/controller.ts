@@ -1,7 +1,7 @@
 import asyncParser from '@shared/asyncParser';
-import { Socket } from 'src/connection/socket';
-import { Controller, RouterType } from 'src/routes/api/shared/controller';
-import { withCatch } from 'src/routes/api/shared/middleware';
+import { Socket } from '@connection/socket';
+import { Controller, RouterType } from '@routes/api/shared/controller';
+import { withCatch } from '@routes/api/shared/middleware';
 import {
     EmitBrokenPointRound,
     EmitCollectPointRound,
@@ -13,7 +13,7 @@ import {
     OPPONENT,
     PLAYERS,
     Round,
-} from 'types/lib/backgammon';
+} from '@shared-types/backgammon';
 import { layout } from '../constants';
 import { GamesService } from '../service';
 import {

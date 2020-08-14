@@ -1,4 +1,4 @@
-import { Round } from 'types/lib/backgammon';
+import { Round } from '@shared-types/backgammon';
 
 export default function findRoundById(roundId: Round['id'], rounds: Round[]) {
     return new Promise<Round>((resolve, reject) => {

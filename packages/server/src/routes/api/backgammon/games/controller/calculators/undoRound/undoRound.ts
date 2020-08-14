@@ -1,4 +1,4 @@
-import { Round } from 'types/lib/backgammon';
+import { Round } from '@shared-types/backgammon';
 
 export default function undoRoundCalculator(rounds: Round[]) {
     return new Promise<typeof rounds>((resolve, reject) => {

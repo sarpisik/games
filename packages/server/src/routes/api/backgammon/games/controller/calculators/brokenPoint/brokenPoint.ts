@@ -1,4 +1,8 @@
-import { EmitBrokenPointRound, OPPONENT, Round } from 'types/lib/backgammon';
+import {
+    EmitBrokenPointRound,
+    OPPONENT,
+    Round,
+} from '@shared-types/backgammon';
 import { rollDices } from '../utils';
 
 export default async function brokenPointCalculator(

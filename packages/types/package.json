@@ -19,9 +19,13 @@
         "url": "git+https://github.com/sarpisik/games.git"
     },
     "scripts": {
+        "build": "tsc --build ./tsconfig.json",
         "test": "echo \"Error: run tests from root\" && exit 1"
     },
     "bugs": {
         "url": "https://github.com/sarpisik/games/issues"
+    },
+    "dependencies": {
+        "typescript": "3.9.7"
     }
 }
