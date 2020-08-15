@@ -3,7 +3,7 @@
     "version": "0.0.0",
     "scripts": {
         "postinstall": "npm run build",
-        "build": "node build.js",
+        "build": "rm -rf dist && tsc --build tsconfig.prod.json",
         "build:manual": "tsc --build tsconfig.prod.json",
         "lint:types": "tsc -p tsconfig.prod.json --noEmit",
         "start": "pwd && ls && npm run build && node -r module-alias/register ./dist/server/src --env=production",
