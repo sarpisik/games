@@ -38,5 +38,7 @@ export default function Form(): React.ReactElement {
 }
 
 function parseGameId(response: { data: { id: number } }) {
+    console.log(response);
+
     return '/' + response?.data?.id;
 }
