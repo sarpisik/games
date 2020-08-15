@@ -41,7 +41,7 @@ export default class GamesController extends Controller {
         private _gamesService: GamesService
     ) {
         super(router, '/games');
-        this._namespace = _io.of('/backgammon');
+        this._namespace = _io.of('/socket/backgammon');
         this._namespace.on('connection', this._handleSocket.bind(this));
 
         this._initializeRoutes();
