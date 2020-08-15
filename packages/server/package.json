@@ -2,11 +2,11 @@
     "name": "server",
     "version": "0.0.0",
     "scripts": {
-        "postinstall": "npm run build",
-        "build": "rm -rf dist && tsc --build tsconfig.prod.json",
+        "build": "node build.js",
         "build:manual": "tsc --build tsconfig.prod.json",
+        "dist": "sh ./scripts/dist.sh",
         "lint:types": "tsc -p tsconfig.prod.json --noEmit",
-        "start": "pwd && ls && npm run build && node -r module-alias/register ./dist/server/src --env=production",
+        "start": "pwd && ls && node -r module-alias/register ./dist/server/src --env=production",
         "dev": "nodemon",
         "test": "nodemon --config ./spec/nodemon.json",
         "precommit": "npm run lint:types && lint-staged"
