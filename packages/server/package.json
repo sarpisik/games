@@ -6,7 +6,7 @@
         "build": "node build.js",
         "build:manual": "tsc --build tsconfig.prod.json",
         "lint:types": "tsc -p tsconfig.prod.json --noEmit",
-        "start": "node -r module-alias/register ./dist/server/src --env=production",
+        "start": "pwd && ls && node -r module-alias/register ./dist/server/src --env=production",
         "dev": "nodemon",
         "test": "nodemon --config ./spec/nodemon.json",
         "precommit": "npm run lint:types && lint-staged"
