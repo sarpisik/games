@@ -4,11 +4,9 @@ import { Game, Home } from './views';
 
 /*
  * TODO:
- * - [x] dynamic responsive layout
- * - [x] handle overlay
  * - [] highlight available triangles on drag move.
  * - [] calculate conrucrrently moves.
- * - [x] calculate next stage
+ * - [] set path prefix '/backgammon'
  */
 
 export default function App() {
