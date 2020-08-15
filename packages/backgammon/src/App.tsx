@@ -4,6 +4,7 @@ import { Game, Home } from './views';
 
 /*
  * TODO:
+ * - [] fix opponent's point draggable on broken point.
  * - [] highlight available triangles on drag move.
  * - [] calculate conrucrrently moves.
  * - [] set path prefix '/backgammon'
