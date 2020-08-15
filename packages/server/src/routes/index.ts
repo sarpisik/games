@@ -6,11 +6,11 @@ import { OK } from 'http-status-codes';
 export default (io: SocketIO.Server) => {
     const router = Router();
 
+    router.use('/api', apiRoutes(io));
+
     router.use('/', (_, res) => {
         res.status(OK).json({ message: 'Server is running' });
     });
-
-    router.use('/api', apiRoutes(io));
 
     return router;
 };
