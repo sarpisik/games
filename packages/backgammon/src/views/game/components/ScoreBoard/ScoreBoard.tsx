@@ -10,7 +10,7 @@ export default function ScoreBoard(): React.ReactElement {
     const round = useRound();
 
     return (
-        <div className={styles['d-flex']}>
+        <div className={styles.scoreboard}>
             <Player player={PLAYERS[round?.player] as PlayerProps['player']} />
             <Dice dice={round?.dice} />
         </div>
