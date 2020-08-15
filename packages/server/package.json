@@ -21,13 +21,13 @@
         "exec": "ts-node -r tsconfig-paths/register ./src"
     },
     "_moduleAliases": {
-        "@daos": "dist/server/src/daos",
-        "@connection": "dist/server/src/connection",
-        "@entities": "dist/server/src/entities",
-        "@routes": "dist/server/src/routes",
-        "@shared": "dist/server/src/shared",
-        "@shared-types": "dist/types/lib",
-        "@server": "dist/server/src/Server"
+        "@daos": "./dist/server/src/daos",
+        "@connection": "./dist/server/src/connection",
+        "@entities": "./dist/server/src/entities",
+        "@routes": "./dist/server/src/routes",
+        "@shared": "./dist/server/src/shared",
+        "@shared-types": "./dist/types/lib",
+        "@server": "./dist/server/src/Server"
     },
     "lint-staged": {
         "*.+(ts)": [
