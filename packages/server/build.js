@@ -3,6 +3,7 @@ const fs = require('fs-extra');
 const childProcess = require('child_process');
 
 try {
+    console.log('Running build.');
     // Remove current build
     fs.removeSync('./dist/');
     // Transpile the typescript files
@@ -13,6 +14,7 @@ try {
                 console.error(err);
                 return;
             }
+            console.log('Build success.');
             console.log(stdout);
         }
     );
