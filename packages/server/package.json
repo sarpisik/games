@@ -2,7 +2,7 @@
     "name": "server",
     "version": "0.0.0",
     "scripts": {
-        "build": "node build.js",
+        "build": "node build.js && npm run dist",
         "build:manual": "tsc --build tsconfig.prod.json",
         "dist": "sh ./scripts/dist.sh",
         "lint:types": "tsc -p tsconfig.prod.json --noEmit",
