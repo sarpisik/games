@@ -1,3 +1,4 @@
+require('module-alias/register');
 import './LoadEnv'; // Must be the first import
 
 import app from '@server';
