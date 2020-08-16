@@ -8,8 +8,7 @@
         "dist": "sh ./scripts/dist.sh",
         "deploy": "npm run build:dist && eb deploy",
         "lint:types": "tsc -p tsconfig.prod.json --noEmit",
-        "start": "./node_modules/pm2/bin/pm2-runtime ./build/server/src --env=production",
-        "poststart": "node ./node_modules/pm2/bin/pm2 logs",
+        "start": "./node_modules/pm2/bin/pm2-runtime start ecosystem.config.js --env production",
         "dev": "nodemon",
         "test": "nodemon --config ./spec/nodemon.json",
         "precommit": "npm run lint:types && lint-staged"
