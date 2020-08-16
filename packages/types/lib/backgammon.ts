@@ -30,8 +30,13 @@ interface EmitBase {
     gameId: Game["id"];
 }
 
-export interface GameClient extends Game {
+export interface GameClient extends Omit<Game, "rounds"> {
     isRoundPlayer: boolean;
+    rounds: GameClientRound[];
+}
+
+interface GameClientRound extends Round {
+    availableTriangles: number[];
 }
 
 export interface Game {
