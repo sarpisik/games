@@ -9,8 +9,8 @@ interface Params {
 }
 
 const CONTAINER_INDEX_MAP = {
-    [PLAYERS.WHITE]: 0,
-    [PLAYERS.BLACK]: 3,
+    [PLAYERS.BLACK]: 0,
+    [PLAYERS.WHITE]: 3,
 };
 
 export default function validateCollectionStack(params: Params) {

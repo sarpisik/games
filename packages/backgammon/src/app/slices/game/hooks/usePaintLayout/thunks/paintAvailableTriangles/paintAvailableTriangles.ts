@@ -36,7 +36,7 @@ const paintAvailableTriangles = (
             dice,
             layout
         );
-        paintTriangles.concat(stackIndex);
+        paintTriangles = paintTriangles.concat(stackIndex);
     }
 
     const validTriangleIndexes = filterValidTriangleIndexes({
@@ -46,8 +46,8 @@ const paintAvailableTriangles = (
         player,
         triangles: layout,
     });
-    paintTriangles.concat(validTriangleIndexes);
-    console.log(validTriangleIndexes);
+    paintTriangles = paintTriangles.concat(validTriangleIndexes);
+    console.log(paintTriangles);
 };
 
 export default paintAvailableTriangles;
