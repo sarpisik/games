@@ -4,9 +4,16 @@ import { TrianglesLayout } from '../types/trianglesLayout';
 interface Params {
     validDices: number[];
     startIndex: number;
-    player: PLAYERS;
+    player: PLAYERS.WHITE | PLAYERS.BLACK;
     triangles: TrianglesLayout;
 }
+
+const DIRECTIONS_MAP = {
+    [PLAYERS.WHITE]: (startIndex: number) => (dice: number) =>
+        startIndex + dice,
+    [PLAYERS.BLACK]: (startIndex: number) => (dice: number) =>
+        startIndex - dice,
+};
 
 export default function filterValidTriangleIndexes({
     validDices,
@@ -14,10 +21,9 @@ export default function filterValidTriangleIndexes({
     player,
     triangles,
 }: Params) {
-    const isWhite = player === PLAYERS.WHITE;
-    const possibleTriangleIndexes = validDices.map((dice) =>
-        isWhite ? startIndex + dice : startIndex - dice
-    );
+    const calculateDirectionFrom = DIRECTIONS_MAP[player];
+    const calculatePossibleIndexes = calculateDirectionFrom(startIndex);
+    const possibleTriangleIndexes = validDices.map(calculatePossibleIndexes);
     const validTriangleIndexes = possibleTriangleIndexes.filter((i) => {
         const triangle = triangles[i];
 

@@ -1,4 +1,4 @@
-import { GameClient, PLAYERS, Round, User } from 'types/lib/backgammon';
+import { GameClient, PLAYERS, Round } from 'types/lib/backgammon';
 import { OFFSETS } from '../../../../../../../../constants';
 import { Point } from '../../../../../shared/components';
 import { DIRECTIONS } from '../../types';
@@ -13,19 +13,18 @@ const {
     BOTTOM_BLOCK_START_Y,
 } = OFFSETS;
 
+type FillTriangleParams = Parameters<typeof fillTriangle>[0];
+
 interface Params {
-    user: User;
     game: GameClient;
     round: Round;
-    onDragEnd: Parameters<typeof fillTriangle>[0]['onDragEnd'];
+    onDragEnd: FillTriangleParams['onDragEnd'];
+    onDragStart: FillTriangleParams['onDragStart'];
 }
 
-export default function createPointsOnRound({
-    user,
-    game,
-    round,
-    onDragEnd,
-}: Params) {
+export default function createPointsOnRound(params: Params) {
+    const { game, round, onDragEnd, onDragStart } = params;
+
     const roundPlayer = round?.player;
 
     return function reducePointsFromLayout(
@@ -51,10 +50,9 @@ export default function createPointsOnRound({
 
         // If not empty triangle
         if (player !== PLAYERS.NONE) {
-            const color = PLAYERS[player];
-            const fullTriangle = fillTriangle({
+            const triangle: FillTriangleParams = {
                 triangleIndex,
-                color,
+                color: PLAYERS[player],
                 count,
                 draggable,
                 xOffset: xOffsetCalculator(
@@ -64,7 +62,10 @@ export default function createPointsOnRound({
                 ),
                 yOffset: yBlock,
                 onDragEnd,
-            });
+                onDragStart,
+            };
+
+            const fullTriangle = fillTriangle(triangle);
             points = [...points, ...fullTriangle];
         }
 

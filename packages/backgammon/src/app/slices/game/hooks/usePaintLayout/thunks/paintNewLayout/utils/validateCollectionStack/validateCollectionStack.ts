@@ -8,11 +8,15 @@ interface Params {
     containers: Containers;
 }
 
+const CONTAINER_INDEX_MAP = {
+    [PLAYERS.WHITE]: 0,
+    [PLAYERS.BLACK]: 3,
+};
+
 export default function validateCollectionStack(params: Params) {
     const { targetX, targetY, player, containers } = params;
 
-    const isWhite = player === PLAYERS.WHITE;
-    const containerIndex = isWhite ? 3 : 0;
+    const containerIndex = CONTAINER_INDEX_MAP[player];
     const CONTAINER = containers[containerIndex];
     const { x, y, width, height } = CONTAINER;
 

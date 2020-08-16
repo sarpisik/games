@@ -1,0 +1,1 @@
+export { calculateSumDices } from './calculateSumDices';

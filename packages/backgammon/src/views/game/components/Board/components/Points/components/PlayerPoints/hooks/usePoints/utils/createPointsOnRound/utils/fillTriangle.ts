@@ -1,5 +1,5 @@
 import { Point } from '../../../../../../shared/components';
-import { OnDragEnd } from '../../../hooks/usePointEventHandlers';
+import { OnDragEnd, OnDragStart } from '../../../hooks/usePointEventHandlers';
 import { yOffsetCalculator } from './offsetCalculators';
 
 interface Params {
@@ -10,6 +10,7 @@ interface Params {
     draggable: boolean;
     triangleIndex: number;
     onDragEnd: OnDragEnd;
+    onDragStart: OnDragStart;
 }
 
 export default function fillTriangle(params: Params) {
@@ -21,6 +22,7 @@ export default function fillTriangle(params: Params) {
         draggable,
         triangleIndex,
         onDragEnd,
+        onDragStart,
     } = params;
     const points = [] as React.ComponentProps<typeof Point>[];
 
@@ -35,7 +37,7 @@ export default function fillTriangle(params: Params) {
             color,
             draggable,
             onDragEnd: onDragEnd(triangleIndex),
-            // ...eventHandlers,
+            onDragStart: onDragStart(triangleIndex),
         });
     }
 
