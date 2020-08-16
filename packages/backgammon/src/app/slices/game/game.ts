@@ -1,19 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { BACKGAMMON_TYPES } from 'types';
-import { PLAYERS } from '../../../views/game/components/Board/constants';
-
-type Game = BACKGAMMON_TYPES.Game;
+import { GameClient, PLAYERS, Game } from 'types/lib/backgammon';
 
 const generatePlayers = (value: number) => ({
     [PLAYERS.BLACK]: value,
     [PLAYERS.WHITE]: value,
 });
 
-const initialState: Game = {
+const initialState: GameClient = {
     id: -1,
     players: generatePlayers(-1),
     stages: 0,
     score: generatePlayers(0),
+    isRoundPlayer: false,
     rounds: [],
 };
 
@@ -35,28 +33,38 @@ export const gameSlice = createSlice({
                 JSON.stringify(currentRound.layout)
             );
         },
-        addRound(state, action: PayloadAction<Game['rounds'][number]>) {
+        setRoundPlayer(
+            state,
+            action: PayloadAction<GameClient['isRoundPlayer']>
+        ) {
+            state.isRoundPlayer = action.payload;
+        },
+        addRound(state, action: PayloadAction<GameClient['rounds'][number]>) {
             state.rounds.push(action.payload);
         },
         deleteRounds(state) {
             state.rounds = [];
         },
-        replaceRound(state, action: PayloadAction<Game['rounds'][number]>) {
+        replaceRound(
+            state,
+            action: PayloadAction<GameClient['rounds'][number]>
+        ) {
             state.rounds[state.rounds.length - 1] = action.payload;
         },
-        undoRound(state, action: PayloadAction<Game['rounds']>) {
+        undoRound(state, action: PayloadAction<GameClient['rounds']>) {
             state.rounds = action.payload;
         },
     },
 });
 
 export const {
+    addRound,
+    deleteRounds,
+    replaceRound,
     resetCurrentRoundLayout,
     setInitialGame,
-    addRound,
+    setRoundPlayer,
     undoRound,
-    replaceRound,
-    deleteRounds,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

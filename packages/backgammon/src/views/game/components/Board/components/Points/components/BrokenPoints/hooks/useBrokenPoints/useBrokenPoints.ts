@@ -1,6 +1,7 @@
 import {
     usePaintLayout,
     useRound,
+    useGame,
 } from '../../../../../../../../../../app/slices';
 import { PLAYERS } from '../../../../../../constants';
 import { useUnit } from '../../../../../../hooks/useUnit';
@@ -11,6 +12,7 @@ import { filterBrokenPoint, generateBrokenPointProps } from './utils';
 type OnDragEnd = CircleProps['onDragEnd'];
 
 export default function useBrokenPoints(): BrokenPointProps[] {
+    const { isRoundPlayer } = useGame().game;
     const round = useRound();
     const { getUnit } = useUnit();
     const { paintTriangle } = usePaintLayout();
@@ -25,9 +27,9 @@ export default function useBrokenPoints(): BrokenPointProps[] {
 
     const brokens = [
         round?.brokens[PLAYERS.BLACK] > 0 &&
-            generateBrokenPointProps(round, PLAYERS.BLACK),
+            generateBrokenPointProps(isRoundPlayer, round, PLAYERS.BLACK),
         round?.brokens[PLAYERS.WHITE] > 0 &&
-            generateBrokenPointProps(round, PLAYERS.WHITE),
+            generateBrokenPointProps(isRoundPlayer, round, PLAYERS.WHITE),
     ]
         .filter(filterBrokenPoint)
         .map((props) => {

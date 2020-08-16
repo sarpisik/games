@@ -30,6 +30,10 @@ interface EmitBase {
     gameId: Game["id"];
 }
 
+export interface GameClient extends Game {
+    isRoundPlayer: boolean;
+}
+
 export interface Game {
     id: number;
     players: PlayersMap;

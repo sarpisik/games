@@ -1,4 +1,4 @@
-import { Round } from 'types/lib/backgammon';
+import { Round, GameClient } from 'types/lib/backgammon';
 import { PLAYERS } from '../../../../../../../../constants';
 import { CIRCLE_SIZE } from '../../../../../shared/components/Point/components/Circle/constants';
 import { BrokenPointProps } from '../../../../shared/types';
@@ -6,6 +6,7 @@ import { COORDINATES } from './constants';
 import { generateLabelCoords } from './utils';
 
 export default function generateBrokenPointProps(
+    isRoundPlayer: GameClient['isRoundPlayer'],
     round: Round,
     pointPlayer: Round['player']
 ): BrokenPointProps {
@@ -21,7 +22,7 @@ export default function generateBrokenPointProps(
         x,
         y,
         color: PLAYERS[pointPlayer],
-        draggable: Boolean(round.player === pointPlayer),
+        draggable: Boolean(isRoundPlayer && round.player === pointPlayer),
         label: {
             x: labelX,
             y: labelY,

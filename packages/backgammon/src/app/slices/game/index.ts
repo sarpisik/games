@@ -4,6 +4,7 @@ export {
     deleteRounds,
     replaceRound,
     resetCurrentRoundLayout,
+    setRoundPlayer,
     undoRound,
 } from './game';
 export {

@@ -1,23 +1,24 @@
 import { Middleware } from '@reduxjs/toolkit';
 import socketIOClient from 'socket.io-client';
 import {
-    EVENTS,
+    EmitError,
     EmitGameOver,
-    PLAYERS,
     EmitSignInUser,
     EmitStageOver,
+    EVENTS,
+    PLAYERS,
     User,
-    EmitError,
 } from 'types/lib/backgammon';
 import {
     addRound,
     deleteNotification,
+    deleteRounds,
+    replaceRound,
     setGame,
     setNotification,
-    undoRound,
-    replaceRound,
-    deleteRounds,
+    setRoundPlayer,
     signIn,
+    undoRound,
 } from '../../slices';
 import { store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
@@ -33,19 +34,33 @@ const REACT_APP_SOCKET_URL = process.env.REACT_APP_SOCKET_URL as string;
 const socket: () => Middleware = () => {
     let connection: SocketContextType = null;
 
+    const onSetRoundPlayer = (s: typeof store, round: AddRound) => {
+        const state = s.getState();
+        const { game, user } = state;
+
+        s.dispatch(
+            setRoundPlayer(
+                calculateIsRoundPlayer(user.id, game.players, round.player)
+            )
+        );
+    };
+
     const onUpdateGame = (s: typeof store) => (game: Game) => {
         s.dispatch(setGame(game));
     };
 
     const onUndoRound = (s: typeof store) => (rounds: UndoRound) => {
+        onSetRoundPlayer(s, rounds[rounds.length - 1]);
         s.dispatch(undoRound(rounds));
     };
 
     const onReplaceRound = (s: typeof store) => (round: ReplaceRound) => {
+        onSetRoundPlayer(s, round);
         s.dispatch(replaceRound(round));
     };
 
     const onRound = (s: typeof store) => (round: AddRound) => {
+        const dispatch = s.dispatch;
         const state = s.getState();
         const { notification } = state;
         const { type, message } = notification;
@@ -53,7 +68,8 @@ const socket: () => Middleware = () => {
         const shouldDeleteNotification = type && message;
         shouldDeleteNotification && s.dispatch(deleteNotification());
 
-        s.dispatch(addRound(round));
+        onSetRoundPlayer(s, round);
+        dispatch(addRound(round));
     };
 
     const onSkipRound = (s: typeof store) => ({
@@ -63,6 +79,7 @@ const socket: () => Middleware = () => {
         round: AddRound;
         message: Parameters<typeof setNotification>[0]['message'];
     }) => {
+        onSetRoundPlayer(s, round);
         s.dispatch(setNotification({ type: EVENTS.SKIP_ROUND, message }));
         s.dispatch(addRound(round));
     };
@@ -183,4 +200,15 @@ function createWinnerMessage(
     const message = shouldWinner ? 'Congratulations! You won!' : 'You lose!';
 
     return message;
+}
+
+function calculateIsRoundPlayer(
+    userId: User['id'],
+    gamePlayers: Game['players'],
+    roundPlayerIndex: Game['rounds'][number]['player']
+) {
+    const roundPlayerId = gamePlayers[roundPlayerIndex];
+    const isRoundPlayer = userId === roundPlayerId;
+
+    return isRoundPlayer;
 }

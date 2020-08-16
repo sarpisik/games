@@ -2,7 +2,7 @@ import { OFFSETS, PLAYERS } from '../../../../../../../../constants';
 import { Point } from '../../../../../shared/components';
 import { DIRECTIONS } from '../../types';
 import { fillTriangle, isPlayer, isTopBlock, xOffsetCalculator } from './utils';
-import { Game, User, Round } from 'types/lib/backgammon';
+import { Game, User, Round, GameClient } from 'types/lib/backgammon';
 
 const {
     LEFT_BLOCK_START_X,
@@ -15,7 +15,7 @@ const {
 
 interface Params {
     user: User;
-    game: Game;
+    game: GameClient;
     round: Round;
     onDragEnd: Parameters<typeof fillTriangle>[0]['onDragEnd'];
 }
@@ -27,8 +27,6 @@ export default function createPointsOnRound({
     onDragEnd,
 }: Params) {
     const roundPlayer = round?.player;
-    const roundPlayerId = game.players[roundPlayer];
-    const roundPlayerIsUser = user.id === roundPlayerId;
 
     return function reducePointsFromLayout(
         points: React.ComponentProps<typeof Point>[],
@@ -47,7 +45,7 @@ export default function createPointsOnRound({
             ? LEFT_BLOCK_TRIANGLE_END_X
             : RIGHT_BLOCK_TRIANGLE_END_X;
         const yBlock = isTop ? TOP_BLOCK_START_Y : BOTTOM_BLOCK_START_Y;
-        const isRoundPlayer = roundPlayerIsUser && roundPlayer === player;
+        const isRoundPlayer = game.isRoundPlayer && roundPlayer === player;
         const hasNoBroken = isPlayer(player) && round?.brokens[player] < 1;
         const draggable = isRoundPlayer && hasNoBroken;
 
