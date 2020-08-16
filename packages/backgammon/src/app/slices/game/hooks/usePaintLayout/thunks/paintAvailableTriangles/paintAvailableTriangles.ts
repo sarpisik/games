@@ -4,12 +4,14 @@ import {
     calculateStage,
     filterValidDice,
     filterValidTriangleIndexes,
+    calculateStackIndex,
 } from './utils';
 
 const paintAvailableTriangles = (
     fromTriangleIndex: number,
     color: keyof Pick<typeof PLAYERS, 'BLACK' | 'WHITE'>
-): AppThunk => (dispatch, getState) => {
+): AppThunk => async (dispatch, getState) => {
+    let paintTriangles: number[] = [];
     const state = getState();
     const { game } = state;
     const [round] = game.rounds.slice(-1);
@@ -17,7 +19,7 @@ const paintAvailableTriangles = (
 
     const player = PLAYERS[color];
     const stage = calculateStage(player, layout);
-    const shouldNotCollect = stage === STAGES.MOVE;
+    const collect = stage === STAGES.COLLECT;
 
     const validDice = filterValidDice({
         startIndex: fromTriangleIndex,
@@ -26,6 +28,17 @@ const paintAvailableTriangles = (
         triangles: layout,
         stage,
     });
+
+    if (collect) {
+        const stackIndex = await calculateStackIndex(
+            player,
+            fromTriangleIndex,
+            dice,
+            layout
+        );
+        paintTriangles.concat(stackIndex);
+    }
+
     const validTriangleIndexes = filterValidTriangleIndexes({
         isDouble: dice[0] === dice[1],
         validDices: validDice,
@@ -33,7 +46,7 @@ const paintAvailableTriangles = (
         player,
         triangles: layout,
     });
-    console.log(shouldNotCollect);
+    paintTriangles.concat(validTriangleIndexes);
     console.log(validTriangleIndexes);
 };
 
