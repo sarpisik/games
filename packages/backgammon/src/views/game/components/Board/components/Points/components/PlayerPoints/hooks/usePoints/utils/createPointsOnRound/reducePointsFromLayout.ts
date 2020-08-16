@@ -1,8 +1,8 @@
-import { OFFSETS, PLAYERS } from '../../../../../../../../constants';
+import { GameClient, PLAYERS, Round, User } from 'types/lib/backgammon';
+import { OFFSETS } from '../../../../../../../../constants';
 import { Point } from '../../../../../shared/components';
 import { DIRECTIONS } from '../../types';
 import { fillTriangle, isPlayer, isTopBlock, xOffsetCalculator } from './utils';
-import { Game, User, Round, GameClient } from 'types/lib/backgammon';
 
 const {
     LEFT_BLOCK_START_X,
