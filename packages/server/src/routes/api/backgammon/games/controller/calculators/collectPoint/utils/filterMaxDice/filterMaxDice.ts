@@ -1,38 +1,13 @@
 import { Round } from '@shared-types/backgammon';
+import { customPromiseEach } from '@shared/customPromise';
 
-export default function filterMaxDice(dices: Round['dice']) {
-    const maxDiceIndex = 0;
+export default async function filterMaxDice(dices: Round['dice']) {
+    let maxDiceIndex = 0;
 
-    return new Promise<number>((resolve, reject) => {
-        recursivelyFilterMaxDice({
-            dices,
-            maxDiceIndex,
-            resolve,
-        }).catch(reject);
-    });
-}
-
-interface Params {
-    dices: Round['dice'];
-    maxDiceIndex: number;
-    resolve: (value: number) => void;
-    i?: number;
-}
-
-async function recursivelyFilterMaxDice(data: Params) {
-    const { dices, maxDiceIndex, resolve, i = 0 } = data;
-
-    if (i >= dices.length) {
-        resolve(maxDiceIndex);
-    } else {
-        const dice = dices[i];
+    await customPromiseEach(dices, function getHigherDice(dice, i) {
         const prevDice = dices[maxDiceIndex];
+        maxDiceIndex = dice > prevDice ? i : maxDiceIndex;
+    });
 
-        data.maxDiceIndex = dice > prevDice ? i : maxDiceIndex;
-        data.i = i + 1;
-
-        setImmediate(() => {
-            recursivelyFilterMaxDice(data);
-        });
-    }
+    return maxDiceIndex;
 }

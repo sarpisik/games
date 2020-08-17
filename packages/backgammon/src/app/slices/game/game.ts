@@ -29,9 +29,9 @@ export const gameSlice = createSlice({
         },
         resetCurrentRoundLayout(state) {
             const currentRound = state.rounds[state.rounds.length - 1];
-            const newRound = JSON.parse(JSON.stringify(currentRound.layout));
-            newRound.availableTriangles = [];
-            currentRound.layout = newRound;
+            const newLayout = JSON.parse(JSON.stringify(currentRound.layout));
+            currentRound.availableTriangles = [];
+            currentRound.layout = newLayout;
         },
         setAvailableTriangles(
             state,

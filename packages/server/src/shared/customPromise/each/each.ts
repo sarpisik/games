@@ -1,15 +1,15 @@
 export default function customPromiseEach<Item>(
-    items: Item[],
-    cb: (item: Item) => unknown
+    items: Params<Item>['items'],
+    cb: Params<Item>['cb']
 ) {
     return new Promise((resolve, reject) => {
         recursivelyCustomPromiseEach({ items, cb, resolve }).catch(reject);
     });
 }
 
-interface Params<Item> {
-    items: Item[];
-    cb: (item: Item) => unknown;
+interface Params<T> {
+    items: T[];
+    cb: (value: T, index: number, array: T[]) => void;
     resolve: () => void;
     i?: number;
 }
@@ -21,7 +21,7 @@ async function recursivelyCustomPromiseEach<Item>(params: Params<Item>) {
         resolve();
     } else {
         const item = items[i];
-        cb(item);
+        cb(item, i, items);
         params.i = i + 1;
         setImmediate(() => {
             recursivelyCustomPromiseEach(params);

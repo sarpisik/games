@@ -1,43 +1,17 @@
-import { PLAYERS, Round } from '@shared-types/backgammon';
+import { Round } from '@shared-types/backgammon';
+import { customPromiseFindIndex } from '@shared/customPromise';
 
 export default function filterValidDice(
-    player: PLAYERS.WHITE | PLAYERS.BLACK,
     triangleIndex: number,
     dices: Round['dice']
 ) {
-    return new Promise<number>((resolve, reject) => {
-        recursivelyFilterValidDice({
-            dices,
-            triangleIndex,
-            resolve,
-        }).catch(reject);
-    });
+    const findDiceIndex = handleFindIndex(triangleIndex);
+
+    return customPromiseFindIndex(dices, findDiceIndex);
 }
 
-interface Params {
-    dices: Round['dice'];
-    triangleIndex: number;
-    resolve: (value: number) => void;
-    i?: number;
-}
-
-async function recursivelyFilterValidDice(data: Params) {
-    const { dices, triangleIndex, resolve, i = 0 } = data;
-
-    if (i >= dices.length) {
-        resolve(-1);
-    } else {
-        const dice = dices[i];
-        const shouldCollect = dice - 1 === triangleIndex;
-
-        if (shouldCollect) {
-            resolve(i);
-        } else {
-            data.i = i + 1;
-
-            setImmediate(() => {
-                recursivelyFilterValidDice(data);
-            });
-        }
-    }
+function handleFindIndex(triangleIndex: number) {
+    return function findIndex(dice: number) {
+        return dice - 1 === triangleIndex;
+    };
 }

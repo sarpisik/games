@@ -11,6 +11,7 @@ import {
     filterMaxDice,
     filterValidDice,
 } from './utils';
+import { customPromise } from '@shared/customPromise';
 
 export default async function collectPointCalculator(
     data: EmitCollectPointRound,
@@ -18,30 +19,34 @@ export default async function collectPointCalculator(
 ) {
     const { fromTriangleIndex } = data;
     const { player, layout, dice: dices } = round;
-    const shouldCollect = calculateShouldCollect(player, layout);
-    const triangleIndex =
-        player === PLAYERS.BLACK
-            ? fromTriangleIndex
-            : layout.length - 1 - fromTriangleIndex;
+    const shouldCollect = await calculateShouldCollect(player, layout);
+
     if (shouldCollect) {
+        const triangleIndex =
+            player === PLAYERS.BLACK
+                ? fromTriangleIndex
+                : layout.length - 1 - fromTriangleIndex;
+
         const [
             validDiceIndex,
             farthestTriangleIndex,
             maxDiceIndex,
         ] = await Promise.all([
-            filterValidDice(player, triangleIndex, dices),
+            filterValidDice(triangleIndex, dices),
             filterFarthestTriangle(layout, player),
             filterMaxDice(dices),
         ]);
 
         const diceAndTriangleAreEqual = validDiceIndex > -1;
-        const isFarthestTriangle = fromTriangleIndex === farthestTriangleIndex;
-        const shouldCollectableByHigherDice =
-            dices[maxDiceIndex] > triangleIndex + 1;
+        const shouldCollectable = await customPromise(() => {
+            const isFarthestTriangle =
+                fromTriangleIndex === farthestTriangleIndex;
+            const collectableByHigherDice =
+                dices[maxDiceIndex] > triangleIndex + 1;
+            const collectable = isFarthestTriangle && collectableByHigherDice;
 
-        const shouldCollectable =
-            diceAndTriangleAreEqual ||
-            (isFarthestTriangle && shouldCollectableByHigherDice);
+            return diceAndTriangleAreEqual || collectable;
+        });
 
         if (shouldCollectable) {
             const diceIndex = diceAndTriangleAreEqual
@@ -62,10 +67,14 @@ export default async function collectPointCalculator(
             ];
 
             // Generate new id
-            round.id = Date.now();
+            await customPromise(() => {
+                round.id = Date.now();
+            });
 
             // Delete used dice
-            round.dice.splice(diceIndex, 1);
+            await customPromise(() => {
+                round.dice.splice(diceIndex, 1);
+            });
 
             // Increase collected points
             round.collected[player] += 1;
@@ -81,16 +90,20 @@ export default async function collectPointCalculator(
             return round;
         }
 
-        return generateEventPayload(round);
+        return generateEvent(round);
     }
 
-    return generateEventPayload(round);
+    return generateEvent(round);
 }
 
 export function shouldSkipRound(
     tested: Round | ReturnType<typeof generateEventPayload>
 ): tested is ReturnType<typeof generateEventPayload> {
     return Object.prototype.hasOwnProperty.call(tested, 'event');
+}
+
+function generateEvent(round: Round) {
+    return customPromise(() => generateEventPayload(round));
 }
 
 function generateEventPayload(round: Round) {

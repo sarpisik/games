@@ -11,7 +11,7 @@ export default async function calculateSkipRound(round: Round) {
     const promise = shouldCalculateAvailableTriangleForBrokens
         ? calculateAvailableTriangleForBrokens(round)
         : calculateAvailableTriangleExist(round);
-    const shoulSkipRound = !(await promise);
+    const shouldNotSkipRound = await promise;
 
-    return shoulSkipRound;
+    return !shouldNotSkipRound;
 }

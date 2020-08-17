@@ -108,7 +108,10 @@ export default class GamesController extends Controller {
             const game = await this._gamesService.readGame(parseInt(roomName));
             this._emitGameUpdate(game);
 
+            /* USER EVENTS */
             roomSocket.on(EVENTS.SIGN_IN_USER, this._signInUser.bind(this));
+
+            /* ROUND EVENTS */
             roomSocket.on(EVENTS.ROUND, this._handleRoundCalculate.bind(this));
             roomSocket.on(
                 EVENTS.BROKEN_POINT_ROUND,

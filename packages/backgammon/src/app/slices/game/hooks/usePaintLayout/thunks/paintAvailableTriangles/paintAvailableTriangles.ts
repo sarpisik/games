@@ -42,6 +42,7 @@ const paintAvailableTriangles = (
 
     const validTriangleIndexes = filterValidTriangleIndexes({
         isDouble: dice[0] === dice[1],
+        collect,
         validDices: validDice,
         startIndex: fromTriangleIndex,
         player,

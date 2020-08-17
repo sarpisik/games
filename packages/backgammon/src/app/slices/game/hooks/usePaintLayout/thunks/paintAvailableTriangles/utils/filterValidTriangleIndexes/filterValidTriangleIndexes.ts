@@ -2,6 +2,7 @@ import { PLAYERS, Round } from 'types/lib/backgammon';
 
 interface Params {
     isDouble: boolean;
+    collect: boolean;
     validDices: number[];
     startIndex: number;
     player: PLAYERS.WHITE | PLAYERS.BLACK;
@@ -15,13 +16,15 @@ const DIRECTIONS_MAP = {
         startIndex - dice,
 };
 
-export default function filterValidTriangleIndexes({
-    isDouble,
-    validDices,
-    startIndex,
-    player,
-    triangles,
-}: Params) {
+export default function filterValidTriangleIndexes(params: Params) {
+    const {
+        isDouble,
+        collect,
+        validDices,
+        startIndex,
+        player,
+        triangles,
+    } = params;
     const calculateDirectionFrom = DIRECTIONS_MAP[player];
     const calculatePossibleIndexes = calculateDirectionFrom(startIndex);
     const possibleTriangleIndexes = validDices.map(calculatePossibleIndexes);
@@ -29,9 +32,15 @@ export default function filterValidTriangleIndexes({
         ? getValidTrianglesOnDoubledDice(
               triangles,
               possibleTriangleIndexes,
-              player
+              player,
+              collect
           )
-        : getValidTriangles(triangles, possibleTriangleIndexes, player);
+        : getValidTriangles(
+              triangles,
+              possibleTriangleIndexes,
+              player,
+              collect
+          );
 
     return validTriangleIndexes;
 }
@@ -39,16 +48,17 @@ export default function filterValidTriangleIndexes({
 function getValidTrianglesOnDoubledDice(
     triangles: Params['triangles'],
     tIndexes: number[],
-    player: Params['player']
+    player: Params['player'],
+    collect: boolean
 ) {
     let validTriangles: number[] = [];
 
     for (const tIndex of tIndexes) {
         const triangle = triangles[tIndex];
 
-        if (!triangle) break;
+        if (!collect && !triangle) break;
 
-        if (triangleIsBlocked(player, triangle)) break;
+        if (triangle && triangleIsBlocked(player, triangle)) break;
 
         validTriangles.push(tIndex);
     }
@@ -59,7 +69,8 @@ function getValidTrianglesOnDoubledDice(
 function getValidTriangles(
     triangles: Params['triangles'],
     tIndexes: number[],
-    player: Params['player']
+    player: Params['player'],
+    collect: boolean
 ) {
     let validTriangles: number[] = [];
     const limit = tIndexes.length;
@@ -68,9 +79,9 @@ function getValidTriangles(
         const tIndex = tIndexes[i];
         const triangle = triangles[tIndex];
 
-        if (!triangle) continue;
+        if (!collect && !triangle) continue;
 
-        if (triangleIsBlocked(player, triangle)) {
+        if (triangle && triangleIsBlocked(player, triangle)) {
             const isOver = i - validTriangles.length > 1;
 
             if (isOver) break;
