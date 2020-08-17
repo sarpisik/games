@@ -7,6 +7,10 @@ type ColoredTriangleType = Omit<
     'color'
 >;
 
+export const TriangleHighlight: React.FC<ColoredTriangleType> = (props) => (
+    <FilledTriangle strokeWidth={0} color={COLORS.HIGHLIGHT} {...props} />
+);
+
 export const TriangleEven: React.FC<ColoredTriangleType> = (props) => (
     <FilledTriangle stroke="black" color={COLORS.EVEN} {...props} />
 );

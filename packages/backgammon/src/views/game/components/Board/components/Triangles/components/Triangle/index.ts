@@ -1,1 +1,1 @@
-export { TriangleEven, TriangleOdd } from './Triangle';
+export { TriangleEven, TriangleHighlight, TriangleOdd } from './Triangle';
