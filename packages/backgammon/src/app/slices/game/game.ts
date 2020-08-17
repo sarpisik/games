@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { GameClient, PLAYERS, Game } from 'types/lib/backgammon';
+import { GameClient, PLAYERS } from 'types/lib/backgammon';
 
 const generatePlayers = (value: number) => ({
     [PLAYERS.BLACK]: value,
@@ -19,7 +19,7 @@ export const gameSlice = createSlice({
     name: 'game',
     initialState,
     reducers: {
-        setInitialGame(state, action: PayloadAction<Game>) {
+        setInitialGame(state, action: PayloadAction<GameClient>) {
             const { id, players, stages, score, rounds } = action.payload;
             state.id = id;
             state.players = players;
@@ -29,9 +29,18 @@ export const gameSlice = createSlice({
         },
         resetCurrentRoundLayout(state) {
             const currentRound = state.rounds[state.rounds.length - 1];
-            currentRound.layout = JSON.parse(
-                JSON.stringify(currentRound.layout)
-            );
+            const newRound = JSON.parse(JSON.stringify(currentRound.layout));
+            newRound.availableTriangles = [];
+            currentRound.layout = newRound;
+        },
+        setAvailableTriangles(
+            state,
+            action: PayloadAction<
+                GameClient['rounds'][number]['availableTriangles']
+            >
+        ) {
+            const currentRound = state.rounds[state.rounds.length - 1];
+            currentRound.availableTriangles = action.payload;
         },
         setRoundPlayer(
             state,
@@ -40,7 +49,9 @@ export const gameSlice = createSlice({
             state.isRoundPlayer = action.payload;
         },
         addRound(state, action: PayloadAction<GameClient['rounds'][number]>) {
-            state.rounds.push(action.payload);
+            const round = action.payload;
+            round.availableTriangles = [];
+            state.rounds.push(round);
         },
         deleteRounds(state) {
             state.rounds = [];
@@ -49,7 +60,9 @@ export const gameSlice = createSlice({
             state,
             action: PayloadAction<GameClient['rounds'][number]>
         ) {
-            state.rounds[state.rounds.length - 1] = action.payload;
+            const round = action.payload;
+            round.availableTriangles = [];
+            state.rounds[state.rounds.length - 1] = round;
         },
         undoRound(state, action: PayloadAction<GameClient['rounds']>) {
             state.rounds = action.payload;
@@ -62,6 +75,7 @@ export const {
     deleteRounds,
     replaceRound,
     resetCurrentRoundLayout,
+    setAvailableTriangles,
     setInitialGame,
     setRoundPlayer,
     undoRound,

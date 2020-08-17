@@ -1,6 +1,12 @@
 import { EmitRound, OPPONENT, PLAYERS, Round } from '@shared-types/backgammon';
 import { rollDices } from '../utils';
-import { filterValidDice, filterValidTriangleIndexes } from './utils';
+import {
+    filterValidDice,
+    filterValidTriangleIndexes,
+    deleteUsedDice,
+    validateTargetTriangle,
+} from './utils';
+import { InvalidTriangleError } from '@shared/error';
 
 export default async function roundCalculator(data: EmitRound, round: Round) {
     const { fromTriangleIndex, color, toTriangleIndex } = data;
@@ -15,10 +21,18 @@ export default async function roundCalculator(data: EmitRound, round: Round) {
     );
     const validTriangleIndexes = await filterValidTriangleIndexes(
         validDice,
+        dice[0] === dice[1],
         fromTriangleIndex,
         player,
         layout
     );
+    const targetIsValid = await validateTargetTriangle(
+        validTriangleIndexes,
+        toTriangleIndex
+    );
+    if (!targetIsValid)
+        throw new InvalidTriangleError(toTriangleIndex, validTriangleIndexes);
+
     const targetTriangle = layout[toTriangleIndex];
     const [owner, points] = targetTriangle;
     const shouldCapture = owner !== player;
@@ -47,11 +61,8 @@ export default async function roundCalculator(data: EmitRound, round: Round) {
     round.id = Date.now();
 
     // Delete used dice
-    const usedDiceIndex = dice.findIndex((dice) => {
-        const delta = Math.abs(toTriangleIndex - fromTriangleIndex);
-        return delta === dice;
-    });
-    round.dice.splice(usedDiceIndex, 1);
+    const usedDice = Math.abs(toTriangleIndex - fromTriangleIndex);
+    await deleteUsedDice(round.dice, validDice, usedDice);
 
     // Create new round if all dice used.
     const shouldJumpToNextRound = round.dice.length < 1;

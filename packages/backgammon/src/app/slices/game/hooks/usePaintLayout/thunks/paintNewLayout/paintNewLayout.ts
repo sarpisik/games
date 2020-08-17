@@ -1,19 +1,14 @@
 import {
+    EmitCollectPointRound,
     EmitRound,
     EVENTS,
     PLAYERS,
     STAGES,
-    EmitCollectPointRound,
 } from 'types/lib/backgammon';
-import { resetCurrentRoundLayout } from '../../../../..';
 import { AppThunk } from '../../../../../../store';
+import { resetCurrentRoundLayout } from '../../../../game';
 import { calculateTargetTriangleIndex } from '../utils';
-import {
-    calculateStage,
-    filterValidDice,
-    filterValidTriangleIndexes,
-    validateCollectionStack,
-} from './utils';
+import { calculateStage, validateCollectionStack } from './utils';
 
 const paintNewLayout = (
     fromTriangleIndex: number,
@@ -25,25 +20,13 @@ const paintNewLayout = (
     const { game, measures } = state;
     const { containers } = measures;
     const [round] = game.rounds.slice(-1);
-    const { id: roundId, dice, layout } = round;
+    const { id: roundId, availableTriangles, layout } = round;
 
     const player = PLAYERS[color];
     const stage = calculateStage(player, layout);
     const shouldNotCollect = stage === STAGES.MOVE;
-    const validDice = filterValidDice({
-        startIndex: fromTriangleIndex,
-        player,
-        dices: dice,
-        triangles: layout,
-        stage,
-    });
-    const validTriangleIndexes = filterValidTriangleIndexes({
-        validDices: validDice,
-        startIndex: fromTriangleIndex,
-        player,
-        triangles: layout,
-    });
-    if (shouldNotCollect && validTriangleIndexes.length < 1) {
+
+    if (shouldNotCollect && availableTriangles.length < 1) {
         dispatch(resetCurrentRoundLayout());
     } else {
         let targetInvalid = true;
@@ -62,7 +45,7 @@ const paintNewLayout = (
             const targetTriangleNotExist = toTriangleIndex < 0;
             targetInvalid =
                 targetTriangleNotExist ||
-                !validTriangleIndexes.includes(toTriangleIndex);
+                !availableTriangles.includes(toTriangleIndex);
 
             if (!targetInvalid) {
                 const payload: EmitRound = {

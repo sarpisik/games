@@ -28,3 +28,33 @@ export class GameNotFoundError extends NotFoundError {
         this.payload = { message, type: EVENTS.GAME_NOT_FOUND };
     }
 }
+
+export class InvalidDiceError extends BadRequestError {
+    payload: EmitError;
+
+    constructor(usedDice: number, possibleDices: number[]) {
+        const usedDiceMsg = `Invalid dice: ${usedDice}`;
+        const possibleDicesMsg = `Possibe dices: ${possibleDices.join(', ')}`;
+        const message = usedDiceMsg + '\n' + possibleDicesMsg;
+
+        super();
+
+        this.payload = { message, type: EVENTS.INVALID_DICE };
+    }
+}
+
+export class InvalidTriangleError extends BadRequestError {
+    payload: EmitError;
+
+    constructor(targetTriangle: number, possibleTriangles: number[]) {
+        const targetTriangleMsg = `Invalid triangle: ${targetTriangle}`;
+        const possibleTrianglesMsg = `Possibe triangles: ${possibleTriangles.join(
+            ', '
+        )}`;
+        const message = targetTriangleMsg + '\n' + possibleTrianglesMsg;
+
+        super();
+
+        this.payload = { message, type: EVENTS.INVALID_TRIANGLE };
+    }
+}

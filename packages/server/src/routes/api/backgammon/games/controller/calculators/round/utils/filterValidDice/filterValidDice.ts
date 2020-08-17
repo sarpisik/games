@@ -1,18 +1,20 @@
 import { PLAYERS, Round } from '@shared-types/backgammon';
+import { calculatePossibleDices } from './utils';
 
-export default function filterValidDice(
+export default async function filterValidDice(
     triangleIndex: number,
     player: PLAYERS.WHITE | PLAYERS.BLACK,
     dice: Round['dice'],
     trianglesLimit: number
 ) {
     const validDice: number[] = [];
+    const possibleDices = await calculatePossibleDices(dice);
 
     return new Promise<Round['dice']>((resolve, reject) => {
         recursivelyFilterValidDice(
             triangleIndex,
             player,
-            dice,
+            possibleDices,
             trianglesLimit,
             validDice,
             resolve
@@ -20,30 +22,40 @@ export default function filterValidDice(
     });
 }
 
+const DICES_MAP = {
+    [PLAYERS.WHITE]: (limit: number, startIndex: number, digit: number) =>
+        startIndex + digit < limit,
+    [PLAYERS.BLACK]: (_limit: number, startIndex: number, digit: number) =>
+        startIndex - digit >= 0,
+};
+
 async function recursivelyFilterValidDice(
     triangleIndex: number,
     player: PLAYERS.WHITE | PLAYERS.BLACK,
-    dices: Round['dice'],
+    possibleDices: Round['dice'],
     trianglesLimit: number,
     validDice: number[],
     resolve: (value: Round['dice']) => void,
     diceIndex = 0
 ) {
-    if (diceIndex >= dices.length) {
+    if (diceIndex >= possibleDices.length) {
         resolve(validDice);
     } else {
-        const dice = dices[diceIndex];
-        const isValidDice =
-            player === PLAYERS.WHITE
-                ? triangleIndex + dice < trianglesLimit
-                : triangleIndex - dice >= 0;
+        const dice = possibleDices[diceIndex];
+
+        const isValidDice = DICES_MAP[player](
+            trianglesLimit,
+            triangleIndex,
+            dice
+        );
+
         isValidDice && validDice.push(dice);
 
         setImmediate(() => {
             recursivelyFilterValidDice(
                 triangleIndex,
                 player,
-                dices,
+                possibleDices,
                 trianglesLimit,
                 validDice,
                 resolve,

@@ -27,7 +27,11 @@ import {
     undoRoundCalculator,
 } from './calculators';
 import { rollDices } from './calculators/utils';
-import { GameNotFoundError } from '@shared/error';
+import {
+    GameNotFoundError,
+    InvalidDiceError,
+    InvalidTriangleError,
+} from '@shared/error';
 
 type GameParam = { id: string };
 
@@ -164,13 +168,34 @@ export default class GamesController extends Controller {
     }
 
     private async _handleRoundCalculate(data: EmitRound) {
-        const { gameId, roundId } = data;
-        const lastRound = await this._gamesService.readRound(gameId, roundId);
-        const _lastRound = await asyncParser(lastRound);
-        const nextRound = await roundCalculator(data, _lastRound);
-        await this._gamesService.updateRounds(gameId, nextRound);
+        try {
+            const { gameId, roundId } = data;
+            const lastRound = await this._gamesService.readRound(
+                gameId,
+                roundId
+            );
+            const _lastRound = await asyncParser(lastRound);
+            const nextRound = await roundCalculator(data, _lastRound);
+            await this._gamesService.updateRounds(gameId, nextRound);
 
-        this._handleNextRound(gameId.toString(), nextRound);
+            this._handleNextRound(gameId.toString(), nextRound);
+        } catch (error) {
+            if (
+                error instanceof InvalidDiceError ||
+                error instanceof InvalidTriangleError
+            )
+                this._emitRoomEvent(
+                    data.gameId.toString(),
+                    EVENTS.ERROR,
+                    error.payload
+                );
+            else
+                this._emitRoomEvent(
+                    data.gameId.toString(),
+                    EVENTS.BAD_REQUEST,
+                    error.message
+                );
+        }
     }
 
     private async _handleBrokenPoint(data: EmitBrokenPointRound) {

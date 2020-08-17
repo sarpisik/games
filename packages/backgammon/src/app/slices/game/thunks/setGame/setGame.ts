@@ -1,4 +1,4 @@
-import { Game } from 'types/lib/backgammon';
+import { GameClient } from 'types/lib/backgammon';
 import { history } from '../../../../../lib';
 import { PLAYERS } from '../../../../../views/game/components/Board/constants';
 import { AppThunk } from '../../../../store';
@@ -6,7 +6,10 @@ import { setNotification } from '../../../notification';
 import { NOTIFICATION } from '../../../notification/notification';
 import { setInitialGame } from '../../game';
 
-const setGame: (game: Game) => AppThunk = (game) => (dispatch, getState) => {
+const setGame: (game: GameClient) => AppThunk = (game) => (
+    dispatch,
+    getState
+) => {
     const state = getState();
     const { id, players } = game;
     const { user } = state;

@@ -6,6 +6,7 @@ import {
     filterValidTriangleIndexes,
     calculateStackIndex,
 } from './utils';
+import { setAvailableTriangles } from '../../../../game';
 
 const paintAvailableTriangles = (
     fromTriangleIndex: number,
@@ -47,7 +48,8 @@ const paintAvailableTriangles = (
         triangles: layout,
     });
     paintTriangles = paintTriangles.concat(validTriangleIndexes);
-    console.log(paintTriangles);
+
+    dispatch(setAvailableTriangles(paintTriangles));
 };
 
 export default paintAvailableTriangles;
