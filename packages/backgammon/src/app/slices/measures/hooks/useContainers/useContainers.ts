@@ -22,8 +22,9 @@ const INDEX_MAP: { [key: number]: number } = { 0: -1, 3: 24 };
 function handleHighlightContainer(availableTriangles?: AvailableTriangles) {
     return function highlightContainer(container: Container, i: number) {
         const isExist = INDEX_MAP[i];
-        const containerIndex = typeof isExist === 'number' ? isExist : -2;
+        const containerIndex = typeof isExist === 'number' ? isExist : -99;
         const shouldHighlight = availableTriangles?.includes(containerIndex);
+
         if (shouldHighlight) {
             container = Object.assign({}, container, {
                 color: COLORS.HIGHLIGHT,

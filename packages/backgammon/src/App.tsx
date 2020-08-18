@@ -4,7 +4,6 @@ import { Game, Home } from './views';
 
 /*
  * TODO:
- * - [x] fix opponent's point draggable on broken point.
  * - [] calculate mars.
  * - [] highlight broken point triangle.
  * - [x] calculate conrucrrently moves.
