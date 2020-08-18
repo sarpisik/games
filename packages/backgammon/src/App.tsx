@@ -5,7 +5,7 @@ import { Game, Home } from './views';
 /*
  * TODO:
  * - [] calculate mars.
- * - [] highlight broken point triangle.
+ * - [x] highlight broken point triangle.
  * - [x] calculate conrucrrently moves.
  */
 

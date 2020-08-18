@@ -1,21 +1,23 @@
 import {
+    useGame,
     usePaintLayout,
     useRound,
-    useGame,
 } from '../../../../../../../../../../app/slices';
 import { PLAYERS } from '../../../../../../constants';
 import { useUnit } from '../../../../../../hooks/useUnit';
 import { CircleProps } from '../../../shared/components/Point/components/Circle';
+import { generatePlayerColor } from '../../../shared/utils';
 import { BrokenPointProps } from '../../shared/types';
 import { filterBrokenPoint, generateBrokenPointProps } from './utils';
 
 type OnDragEnd = CircleProps['onDragEnd'];
+type OnDragStart = CircleProps['onDragStart'];
 
 export default function useBrokenPoints(): BrokenPointProps[] {
     const { isRoundPlayer } = useGame().game;
     const round = useRound();
     const { getUnit } = useUnit();
-    const { paintTriangle } = usePaintLayout();
+    const { paintTriangle, paintBrokenPointTriangles } = usePaintLayout();
 
     const onDragEnd: OnDragEnd = ({ target }) => {
         const targetX = getUnit(target.attrs.x);
@@ -23,6 +25,12 @@ export default function useBrokenPoints(): BrokenPointProps[] {
         const color = target.attrs.fill.toUpperCase();
 
         paintTriangle(targetX, targetY, color);
+    };
+
+    const onDragStart: OnDragStart = ({ target }) => {
+        const color = generatePlayerColor(target);
+
+        paintBrokenPointTriangles(color);
     };
 
     const brokens = [
@@ -34,6 +42,8 @@ export default function useBrokenPoints(): BrokenPointProps[] {
         .filter(filterBrokenPoint)
         .map((props) => {
             props.onDragEnd = onDragEnd;
+            props.onDragStart = onDragStart;
+
             return props;
         });
 

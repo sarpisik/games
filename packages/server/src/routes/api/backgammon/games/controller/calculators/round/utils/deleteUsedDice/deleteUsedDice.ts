@@ -11,8 +11,8 @@ export default async function deleteUsedDice(
     usedDice: number
 ) {
     const usedDiceIndex = await customPromiseFindIndex(
-        possibleDices,
-        (possibleDice) => possibleDice === usedDice
+        dices,
+        (dice) => dice === usedDice
     );
 
     if (usedDiceIndex < 0) throw new InvalidDiceError(usedDice, possibleDices);

@@ -1,7 +1,7 @@
-import { PLAYERS } from 'types/lib/backgammon';
 import { usePaintLayout } from '../../../../../../../../../../../../app/slices';
 import { useUnit } from '../../../../../../../../hooks/useUnit';
 import { CircleProps } from '../../../../../shared/components/Point/components/Circle';
+import { generatePlayerColor } from '../../../../../shared/utils';
 
 type UsePointEventhandlers = () => {
     onDragEnd: OnDragEnd;
@@ -17,13 +17,13 @@ const usePointEventHandlers: UsePointEventhandlers = () => {
     const onDragEnd: OnDragEnd = (fromTriangleIndex) => ({ target }) => {
         const targetX = getUnit(target.attrs.x);
         const targetY = getUnit(target.attrs.y);
-        const color = generateColor(target);
+        const color = generatePlayerColor(target);
 
         paintLayout(fromTriangleIndex, targetX, targetY, color);
     };
 
     const onDragStart: OnDragStart = (fromTriangleIndex) => ({ target }) => {
-        const color = generateColor(target);
+        const color = generatePlayerColor(target);
 
         paintAvailableTriangles(fromTriangleIndex, color);
     };
@@ -32,9 +32,3 @@ const usePointEventHandlers: UsePointEventhandlers = () => {
 };
 
 export default usePointEventHandlers;
-
-function generateColor(
-    target: any
-): keyof Pick<typeof PLAYERS, 'BLACK' | 'WHITE'> {
-    return target.attrs.fill.toUpperCase();
-}

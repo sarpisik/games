@@ -38,9 +38,9 @@ import { PLAYERS } from '@shared-types/backgammon';
 // ];
 export default [
     // Top left.
+    [PLAYERS.WHITE, 1],
     [PLAYERS.BLACK, 2],
-    [PLAYERS.BLACK, 2],
-    [PLAYERS.BLACK, 2],
+    [PLAYERS.BLACK, 3],
     [PLAYERS.BLACK, 3],
     [PLAYERS.BLACK, 3],
     [PLAYERS.BLACK, 3],
@@ -65,10 +65,10 @@ export default [
 
     // Bottom left.
 
-    [PLAYERS.NONE, 0],
-    [PLAYERS.NONE, 0],
-    [PLAYERS.WHITE, 2],
-    [PLAYERS.WHITE, 4],
-    [PLAYERS.WHITE, 4],
     [PLAYERS.WHITE, 5],
+    [PLAYERS.WHITE, 4],
+    [PLAYERS.WHITE, 4],
+    [PLAYERS.NONE, 0],
+    [PLAYERS.WHITE, 1],
+    [PLAYERS.BLACK, 1],
 ];
