@@ -5,6 +5,7 @@ import logger from '@shared/Logger';
 
 /*
  * TODO:
+ * - [x] calculate/validate concurrently move & collect.
  * - [] remove finished game.
  * - [] programmatically remove finished game.
  */

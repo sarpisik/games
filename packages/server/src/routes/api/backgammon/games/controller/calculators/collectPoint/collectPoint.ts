@@ -1,17 +1,21 @@
 import {
     EmitCollectPointRound,
     EVENTS,
-    OPPONENT,
     PLAYERS,
     Round,
 } from '@shared-types/backgammon';
-import { calculateShouldCollect, rollDices } from '../utils';
+import { customPromise } from '@shared/customPromise';
+import { calculateShouldCollect } from '../utils';
 import {
+    calculateCollectArea,
+    calculateUsedDices,
     filterFarthestTriangle,
     filterMaxDice,
     filterValidDice,
+    handleCollect,
 } from './utils';
-import { customPromise } from '@shared/customPromise';
+
+type HandleCollectParams = Parameters<typeof handleCollect>[0];
 
 export default async function collectPointCalculator(
     data: EmitCollectPointRound,
@@ -19,6 +23,7 @@ export default async function collectPointCalculator(
 ) {
     const { fromTriangleIndex } = data;
     const { player, layout, dice: dices } = round;
+
     const shouldCollect = await calculateShouldCollect(player, layout);
 
     if (shouldCollect) {
@@ -38,7 +43,7 @@ export default async function collectPointCalculator(
         ]);
 
         const diceAndTriangleAreEqual = validDiceIndex > -1;
-        const shouldCollectable = await customPromise(() => {
+        const shouldPickable = await customPromise(() => {
             const isFarthestTriangle =
                 fromTriangleIndex === farthestTriangleIndex;
             const collectableByHigherDice =
@@ -48,46 +53,51 @@ export default async function collectPointCalculator(
             return diceAndTriangleAreEqual || collectable;
         });
 
-        if (shouldCollectable) {
-            const diceIndex = diceAndTriangleAreEqual
+        if (shouldPickable) {
+            const deleteDicesFrom = diceAndTriangleAreEqual
                 ? validDiceIndex
                 : maxDiceIndex;
-            const triangleIndex = diceAndTriangleAreEqual
-                ? fromTriangleIndex
-                : farthestTriangleIndex;
 
-            const triangle = round.layout[triangleIndex];
-            const [owner, points] = triangle;
-            const newPoints = points - 1;
+            const handleCollectParams = await customPromise(
+                (): HandleCollectParams => ({
+                    round,
+                    triangleIndex: diceAndTriangleAreEqual
+                        ? triangleIndex
+                        : farthestTriangleIndex,
+                    deleteDicesFrom,
+                    deleteDicesCount: 1,
+                    player,
+                })
+            );
 
-            // Paint new layout
-            round.layout[triangleIndex] = [
-                newPoints < 1 ? PLAYERS.NONE : owner,
-                newPoints,
-            ];
+            return handleCollect(handleCollectParams);
+        }
 
-            // Generate new id
-            await customPromise(() => {
-                round.id = Date.now();
-            });
+        const collectArea = await calculateCollectArea(player, layout);
+        const calculateMovableParams = await customPromise(
+            (): CalculateMovableParams => ({
+                dices,
+                layout: collectArea,
+                player,
+                startIndex: triangleIndex,
+            })
+        );
+        const usedIndexes = await calculateUsedDices(calculateMovableParams);
 
-            // Delete used dice
-            await customPromise(() => {
-                round.dice.splice(diceIndex, 1);
-            });
+        const deleteDicesCount = usedIndexes.length;
+        const shouldMoveAndPick = deleteDicesCount > 0;
+        if (shouldMoveAndPick) {
+            const handleCollectParams = await customPromise(
+                (): HandleCollectParams => ({
+                    round,
+                    triangleIndex,
+                    deleteDicesFrom: 0,
+                    deleteDicesCount,
+                    player,
+                })
+            );
 
-            // Increase collected points
-            round.collected[player] += 1;
-
-            // Create new round if all dice used.
-            const shouldJumpToNextRound = round.dice.length < 1;
-            if (shouldJumpToNextRound) {
-                round.player = OPPONENT[round.player];
-                round.turn += 1;
-                round.dice = await rollDices();
-            }
-
-            return round;
+            return handleCollect(handleCollectParams);
         }
 
         return generateEvent(round);
@@ -109,3 +119,5 @@ function generateEvent(round: Round) {
 function generateEventPayload(round: Round) {
     return { event: EVENTS.COLLECT_POINT_ROUND, round };
 }
+
+type CalculateMovableParams = Parameters<typeof calculateUsedDices>[0];

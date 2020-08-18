@@ -6,9 +6,8 @@ import { Game, Home } from './views';
  * TODO:
  * - [x] fix opponent's point draggable on broken point.
  * - [] calculate mars.
- * - [] highlight available triangles on drag move.
- * - [] calculate conrucrrently moves.
- * - [] set path prefix '/backgammon'
+ * - [x] highlight available triangles on drag move.
+ * - [x] calculate conrucrrently moves.
  */
 
 export default function App() {

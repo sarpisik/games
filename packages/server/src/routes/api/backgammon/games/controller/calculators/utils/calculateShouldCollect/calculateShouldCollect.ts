@@ -1,26 +1,13 @@
 import { PLAYERS, Round } from '@shared-types/backgammon';
-import { customPromise } from '@shared/customPromise';
-
-const START_MAP = {
-    [PLAYERS.BLACK]: 6,
-    [PLAYERS.WHITE]: 0,
-};
-const END_MAP = {
-    [PLAYERS.BLACK]: (length: number) => length,
-    [PLAYERS.WHITE]: (length: number) => length - 6,
-};
+import { calculateCollectArea } from '../calculateCollectArea';
+import { calculateShouldMove } from '../calculateShouldMove';
 
 export default async function calculateShouldCollect(
     player: PLAYERS.WHITE | PLAYERS.BLACK,
     layout: Round['layout']
 ) {
-    const start = START_MAP[player];
-    const end = END_MAP[player](layout.length);
-
-    const collectArea = await customPromise(() => layout.slice(start, end));
-    const shouldMove = await customPromise(() =>
-        collectArea.some(([owner]) => owner === player)
-    );
+    const collectArea = await calculateCollectArea(player, layout);
+    const shouldMove = await calculateShouldMove(player, collectArea);
 
     return !shouldMove;
 }
