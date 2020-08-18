@@ -17,6 +17,7 @@ const INDEX_MAP = {
 
 export default async function handleCollect(params: Params) {
     const { round, deleteDicesFrom, deleteDicesCount, player } = params;
+
     const triangleIndex = INDEX_MAP[player](params.triangleIndex);
     const triangle = round.layout[triangleIndex];
     const [owner, points] = triangle;

@@ -13,6 +13,7 @@ import {
     filterMaxDice,
     filterValidDice,
     handleCollect,
+    transformCollectAreaIndex,
 } from './utils';
 
 type HandleCollectParams = Parameters<typeof handleCollect>[0];
@@ -27,10 +28,10 @@ export default async function collectPointCalculator(
     const shouldCollect = await calculateShouldCollect(player, layout);
 
     if (shouldCollect) {
-        const triangleIndex =
-            player === PLAYERS.BLACK
-                ? fromTriangleIndex
-                : layout.length - 1 - fromTriangleIndex;
+        const triangleIndex = await transformCollectAreaIndex(
+            player,
+            fromTriangleIndex
+        );
 
         const [
             validDiceIndex,
@@ -58,12 +59,17 @@ export default async function collectPointCalculator(
                 ? validDiceIndex
                 : maxDiceIndex;
 
+            const tIndex = diceAndTriangleAreEqual
+                ? triangleIndex
+                : await transformCollectAreaIndex(
+                      player,
+                      farthestTriangleIndex
+                  );
+
             const handleCollectParams = await customPromise(
                 (): HandleCollectParams => ({
                     round,
-                    triangleIndex: diceAndTriangleAreEqual
-                        ? triangleIndex
-                        : farthestTriangleIndex,
+                    triangleIndex: tIndex,
                     deleteDicesFrom,
                     deleteDicesCount: 1,
                     player,
