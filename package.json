@@ -2,6 +2,7 @@
     "name": "root",
     "private": true,
     "scripts": {
+        "add": "lerna add",
         "bootstrap": "lerna bootstrap",
         "clean": "lerna clean -y",
         "dev": "lerna run dev"

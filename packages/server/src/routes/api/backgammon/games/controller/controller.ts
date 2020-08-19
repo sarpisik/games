@@ -32,6 +32,7 @@ import {
     InvalidDiceError,
     InvalidTriangleError,
 } from '@shared/error';
+import { OK } from 'http-status-codes';
 
 type GameParam = { id: string };
 
@@ -52,11 +53,18 @@ export default class GamesController extends Controller {
     }
 
     private _initializeRoutes = () => {
+        this.router.get(this.path, this._getGames);
         this.router.post(this.path, this._createGame);
         this.router.get(this.path + '/:id', this._getGame);
         this.router.put(this.path + '/:id', this._updateGame);
         // this.router.delete(this.path + '/:id', this._deleteGame);
     };
+
+    private _getGames = withCatch<any, Game[]>(async (req, res) => {
+        const games = await this._gamesService.readGames();
+
+        res.status(OK).json(games);
+    });
 
     private _getGame = withCatch<GameParam, Game>(async (req, res) => {
         const { id } = req.params;

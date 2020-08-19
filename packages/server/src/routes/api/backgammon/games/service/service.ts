@@ -2,9 +2,19 @@ import { BadRequestError, GameNotFoundError } from '@shared/error';
 import { CreateGame, Game, Round, PLAYERS } from '@shared-types/backgammon';
 import { rollDices } from '../controller/calculators/utils';
 import { findRoundById } from './utils';
+import { customPromise, customPromiseMap } from '@shared/customPromise';
 
 export default class GamesService {
     constructor(private _games: Map<number, Game>) {}
+
+    async readGames() {
+        const gamesMap = await customPromise(() => Array.from(this._games));
+
+        return customPromiseMap(gamesMap, function parseGame(gameMap) {
+            const [, game] = gameMap;
+            return game;
+        });
+    }
 
     readGame(id: number) {
         const games = this._games;

@@ -52,5 +52,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     });
 });
 
+// Export app instance for testing
+export { app };
 // Export express instance
 export default server;
