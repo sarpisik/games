@@ -5,6 +5,9 @@ import logger from '@shared/Logger';
 
 /*
  * TODO:
+ * - [] create surrender event.
+ * - [] handle quit room event.
+ * - [] restart game event.
  * - [] programmatically remove finished game.
  * - [] set round timer.
  */

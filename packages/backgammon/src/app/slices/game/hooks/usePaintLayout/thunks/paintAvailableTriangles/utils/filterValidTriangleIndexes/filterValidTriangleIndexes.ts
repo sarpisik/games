@@ -72,6 +72,7 @@ function getValidTriangles(
     player: Params['player'],
     collect: boolean
 ) {
+    let isBlockedAlready = false;
     let validTriangles: number[] = [];
     const limit = tIndexes.length;
 
@@ -82,10 +83,13 @@ function getValidTriangles(
         if (!collect && !triangle) continue;
 
         if (triangle && triangleIsBlocked(player, triangle)) {
-            const isOver = i - validTriangles.length > 1;
+            const isOver = i - validTriangles.length > 1 || isBlockedAlready;
 
             if (isOver) break;
 
+            // Current dice is blocked so,
+            // prevent using of sum dices.
+            isBlockedAlready = true;
             continue;
         }
 

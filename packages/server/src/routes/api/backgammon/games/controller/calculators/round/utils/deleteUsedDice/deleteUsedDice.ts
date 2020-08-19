@@ -10,20 +10,21 @@ export default async function deleteUsedDice(
     possibleDices: number[],
     usedDice: number
 ) {
-    const isDouble = dices[0] === dices[1];
-    const dicesToRemove = isDouble ? possibleDices : dices;
     const usedDiceIndex = await customPromiseFindIndex(
-        dicesToRemove,
-        (dice) => dice === usedDice
+        possibleDices,
+        (possibleDice) => possibleDice === usedDice
     );
 
     if (usedDiceIndex < 0) throw new InvalidDiceError(usedDice, possibleDices);
 
+    const isDouble = dices[0] === dices[1];
     if (isDouble) {
         await customPromise(() => dices.splice(0, usedDiceIndex + 1));
     } else {
         const usedDiceIsSum = await customPromiseCb(() => usedDiceIndex > 1);
-        const start = usedDiceIsSum ? 0 : usedDiceIndex;
+        const start = usedDiceIsSum
+            ? 0
+            : await customPromiseFindIndex(dices, (dice) => dice === usedDice);
         const end = usedDiceIsSum ? usedDiceIndex : 1;
         await customPromiseCb(() => dices.splice(start, end));
     }

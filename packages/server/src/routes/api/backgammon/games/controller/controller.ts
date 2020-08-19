@@ -183,22 +183,31 @@ export default class GamesController extends Controller {
 
             this._handleNextRound(gameId.toString(), nextRound);
         } catch (error) {
+            const gameId = data.gameId;
+            const roomName = data.gameId.toString();
             if (
                 error instanceof InvalidDiceError ||
                 error instanceof InvalidTriangleError
-            )
+            ) {
+                this._emitRoomEvent(roomName, EVENTS.ERROR, error.payload);
+                setTimeout(() => {
+                    this._replaceRound(gameId);
+                }, 1500);
+            } else
                 this._emitRoomEvent(
-                    data.gameId.toString(),
-                    EVENTS.ERROR,
-                    error.payload
-                );
-            else
-                this._emitRoomEvent(
-                    data.gameId.toString(),
+                    roomName,
                     EVENTS.BAD_REQUEST,
                     error.message
                 );
         }
+    }
+
+    private async _replaceRound(gameId: Game['id']) {
+        const game = await this._gamesService.readGame(gameId);
+        const rounds = game.rounds;
+        const lastRound = rounds[rounds.length - 1];
+
+        this._emitRoomEvent(gameId.toString(), EVENTS.ROUND, lastRound);
     }
 
     private async _handleBrokenPoint(data: EmitBrokenPointRound) {
