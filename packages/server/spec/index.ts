@@ -35,9 +35,9 @@ jasmine.loadConfig({
 // On complete callback function
 jasmine.onComplete((passed: boolean) => {
     if (passed) {
-        logger.info('All tests have passed :)');
+        logger.info('All tests have passed.');
     } else {
-        logger.error('At least one test has failed :(');
+        logger.error('At least one test has failed.');
     }
 });
 
