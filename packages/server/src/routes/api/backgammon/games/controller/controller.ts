@@ -32,7 +32,7 @@ import {
     InvalidDiceError,
     InvalidTriangleError,
 } from '@shared/error';
-import { OK } from 'http-status-codes';
+import { OK, CREATED } from 'http-status-codes';
 
 type GameParam = { id: string };
 
@@ -83,7 +83,7 @@ export default class GamesController extends Controller {
 
         const game = await this._gamesService.createGame({ players, stages });
 
-        res.send(game);
+        res.status(CREATED).json(game);
     });
 
     private _updateGame = withCatch<GameParam, Game, Pick<Game, 'players'>>(

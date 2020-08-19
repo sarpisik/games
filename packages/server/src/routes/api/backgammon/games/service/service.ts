@@ -42,16 +42,18 @@ export default class GamesService {
     async createGame(data: CreateGame) {
         const { players, stages } = data;
 
-        const id = Date.now();
-        const game: Game = {
+        const id = await customPromise(() => Date.now());
+        const game = await customPromise<Game>(() => ({
             id,
             players,
             stages,
             rounds: [],
             score: { [PLAYERS.WHITE]: 0, [PLAYERS.BLACK]: 0 },
-        };
+        }));
 
-        this._games.set(id, game);
+        await customPromise(() => {
+            this._games.set(id, game);
+        });
 
         return game;
     }
