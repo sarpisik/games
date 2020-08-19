@@ -7,6 +7,7 @@ import { Game, PLAYERS } from '@shared-types/backgammon';
 
 describe('backgammon/games api', () => {
     const gamesPath = '/api/backgammon/games';
+    const getGamePath = '/api/backgammon/games/:id';
     const games: Game[] = [
         {
             id: Date.now(),
@@ -113,6 +114,39 @@ describe('backgammon/games api', () => {
             spyOn(GamesService.prototype, 'createGame').and.throwError(errMsg);
 
             callApi(gameData).end((err, res) => {
+                pErr(err);
+                expect(res.status).toBe(BAD_REQUEST);
+                expect(res.body.error).toBe(errMsg);
+                done();
+            });
+        });
+    });
+
+    describe(`"GET:${getGamePath}"`, () => {
+        const url = getGamePath.replace(':id', '12345');
+        const callApi = () => agent.get(url);
+
+        it(`should return a JSON object with the game and a status code of "${OK}" if the request was successful.`, (done) => {
+            const game = games[1];
+
+            spyOn(GamesService.prototype, 'readGame').and.returnValue(
+                Promise.resolve(game)
+            );
+
+            callApi().end((err, res) => {
+                pErr(err);
+                expect(res.status).toBe(OK);
+                expect(res.body).toEqual(game);
+                expect(res.body.error).toBeUndefined();
+                done();
+            });
+        });
+
+        it(`should return a JSON object containing an error message and a status code of "${BAD_REQUEST}" if the request was unsuccessful.`, (done) => {
+            const errMsg = 'Something went wrong.';
+            spyOn(GamesService.prototype, 'readGame').and.throwError(errMsg);
+
+            callApi().end((err, res) => {
                 pErr(err);
                 expect(res.status).toBe(BAD_REQUEST);
                 expect(res.body.error).toBe(errMsg);
