@@ -46,7 +46,8 @@ app.use('/', routes(io));
 
 // Print API errors
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    logger.error(err.message, err);
+    const shouldLogError = process.env.NODE_ENV !== 'test';
+    shouldLogError && logger.error(err.message, err);
     return res.status(BAD_REQUEST).json({
         error: err.message,
     });
