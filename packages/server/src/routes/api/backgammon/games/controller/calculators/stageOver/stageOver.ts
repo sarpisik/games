@@ -1,32 +1,27 @@
 import { EmitStageOver, PLAYERS, Round } from '@shared-types/backgammon';
+import { customPromise } from '@shared/customPromise';
 
-export default function calculateStageOver(round: Round) {
-    return new Promise<EmitStageOver | null>((resolve, reject) => {
-        setImmediate(() => {
-            try {
-                const calculateWinner = handleWinner(round);
-                const whiteWinner = calculateWinner(PLAYERS.WHITE);
-                const blackWinner = calculateWinner(PLAYERS.BLACK);
+export default async function calculateStageOver(round: Round) {
+    const calculateWinner = handleWinner(round);
 
-                if (whiteWinner) resolve(createStageOverPayload(PLAYERS.WHITE));
-                else if (blackWinner)
-                    resolve(createStageOverPayload(PLAYERS.BLACK));
-                else resolve(null);
-            } catch (error) {
-                reject(error);
-            }
-        });
-    });
+    const winners = await Promise.all([
+        calculateWinner(PLAYERS.WHITE),
+        calculateWinner(PLAYERS.BLACK),
+    ]);
+    const [whiteWinner, blackWinner] = winners;
+
+    if (whiteWinner) return createStageOverPayload(PLAYERS.WHITE);
+    else if (blackWinner) return createStageOverPayload(PLAYERS.BLACK);
+    else return null;
 }
 
 function handleWinner(round: Round) {
-    return function calculateWinner(player: keyof Round['collected']) {
-        return round.collected[player] === 15;
-    };
+    return (player: keyof Round['collected']) =>
+        customPromise(() => round.collected[player] === 15);
 }
 
 function createStageOverPayload(
     winner: keyof Round['collected']
-): EmitStageOver {
-    return { winner };
+): Promise<EmitStageOver> {
+    return customPromise(() => ({ winner }));
 }

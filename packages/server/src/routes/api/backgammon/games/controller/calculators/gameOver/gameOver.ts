@@ -1,31 +1,20 @@
-import { Game, PLAYERS } from '@shared-types/backgammon';
+import { Game } from '@shared-types/backgammon';
+import { customPromise, customPromiseFind } from '@shared/customPromise';
 
-type Winner = [PLAYERS.WHITE | PLAYERS.BLACK, number];
+type Winner = [string, number];
 
-export default function calculateGameOver(
+export default async function calculateGameOver(
     stage: Game['stages'],
     score: Game['score']
 ) {
-    return new Promise<Winner | null>((resolve, reject) => {
-        setImmediate(() => {
-            try {
-                const scores = (Object.entries(score) as unknown) as Winner[];
+    const scores = await customPromise(
+        () => (Object.entries(score) as unknown) as Winner[]
+    );
 
-                setImmediate(() => {
-                    try {
-                        const winner = scores.find(
-                            ([, score]) => score === stage
-                        );
+    const winner = await customPromiseFind(
+        scores,
+        ([, score]) => score === stage
+    );
 
-                        if (winner) resolve(winner);
-                        else resolve(null);
-                    } catch (error) {
-                        reject(error);
-                    }
-                });
-            } catch (error) {
-                reject(error);
-            }
-        });
-    });
+    return winner || null;
 }

@@ -4,6 +4,7 @@ import {
     Round,
 } from '@shared-types/backgammon';
 import { rollDices } from '../utils';
+import { customPromise, customPromiseFindIndex } from '@shared/customPromise';
 
 export default async function brokenPointCalculator(
     data: EmitBrokenPointRound,
@@ -25,24 +26,37 @@ export default async function brokenPointCalculator(
     }
 
     // Decrese round player's broken points.
-    brokens[player] -= 1;
+    await customPromise(() => {
+        brokens[player] -= 1;
+    });
 
     // Print new layout
-    layout[toTriangleIndex] = [player, shouldCapture ? 1 : points + 1];
+    await customPromise(() => {
+        layout[toTriangleIndex] = [player, shouldCapture ? 1 : points + 1];
+    });
 
     // Generate new id
-    round.id = Date.now();
+    await customPromise(() => {
+        round.id = Date.now();
+    });
 
     // Convert triangle index into dice index.
-    const dice =
+    const dice = await customPromise(() =>
         color === 'BLACK'
             ? // Left bottom corner
               layout.length - toTriangleIndex
             : // Left top corner
-              toTriangleIndex + 1;
-    const usedDiceIndex = dices.indexOf(dice);
+              toTriangleIndex + 1
+    );
+    const usedDiceIndex = await customPromiseFindIndex(
+        dices,
+        (d) => d === dice
+    );
+
     // Delete used dice
-    round.dice.splice(usedDiceIndex, 1);
+    await customPromise(() => {
+        round.dice.splice(usedDiceIndex, 1);
+    });
 
     // Create new round if all dice used.
     const shouldJumpToNextRound = round.dice.length < 1;

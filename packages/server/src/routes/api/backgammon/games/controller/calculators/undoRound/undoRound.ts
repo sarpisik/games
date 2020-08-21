@@ -1,21 +1,21 @@
 import { Round } from '@shared-types/backgammon';
+import { customPromise } from '@shared/customPromise';
 
-export default function undoRoundCalculator(rounds: Round[]) {
-    return new Promise<typeof rounds>((resolve, reject) => {
-        setImmediate(() => {
-            try {
-                const length = rounds.length;
+export default async function undoRoundCalculator(rounds: Round[]) {
+    const length = rounds.length;
 
-                const shouldUndo =
-                    length > 0 &&
-                    rounds[length - 1]?.player === rounds[length - 2]?.player;
+    const roundsNotEmpty = length > 0;
 
-                shouldUndo && rounds.pop();
+    const playersAreSame = await customPromise(
+        () => rounds[length - 1]?.player === rounds[length - 2]?.player
+    );
 
-                resolve(rounds);
-            } catch (error) {
-                reject(error);
-            }
-        });
-    });
+    const shouldUndo = roundsNotEmpty && playersAreSame;
+
+    shouldUndo &&
+        (await customPromise(() => {
+            rounds.pop();
+        }));
+
+    return rounds;
 }

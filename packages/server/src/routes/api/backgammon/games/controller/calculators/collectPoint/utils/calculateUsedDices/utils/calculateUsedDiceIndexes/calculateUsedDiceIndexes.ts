@@ -19,7 +19,7 @@ export default async function calculateUsedDiceIndexes(
         const usedDice = possibleDices[i];
         const shouldBreak = isDouble
             ? usedDice > startIndex + 1
-            : usedDice >= startIndex;
+            : usedDice > startIndex;
 
         if (shouldBreak) return COMMANDS.BREAK;
 

@@ -1,15 +1,13 @@
 import { Round, PLAYERS } from '@shared-types/backgammon';
 
-const INDEX_MAP = {
-    [PLAYERS.BLACK]: generateIndexes(5, 0),
-    [PLAYERS.WHITE]: generateIndexes(18, 23),
-};
-
 export default function filterFarthestTriangle(
     triangles: Round['layout'],
     player: Round['player']
 ) {
-    const indexes = INDEX_MAP[player];
+    const isWhitePlayer = player === PLAYERS.WHITE;
+    const start = isWhitePlayer ? 18 : 5;
+    const end = isWhitePlayer ? 23 : 0;
+    const indexes = generateIndexes(start, end);
 
     return new Promise<number>((resolve, reject) => {
         recursivelyFilterFarthestTriangle({

@@ -1,6 +1,6 @@
 import { PLAYERS, Round } from '@shared-types/backgammon';
 import { customPromiseFilter } from '@shared/customPromise';
-import { calculatePossibleDices } from './utils';
+import { calculatePossibleDices } from '../../../utils/filterValidDice/utils';
 
 const DICES_MAP = {
     [PLAYERS.WHITE]: (limit: number, startIndex: number, digit: number) =>

@@ -10,7 +10,7 @@ const END_MAP = {
     [PLAYERS.WHITE]: (length: number) => length - 6,
 };
 
-export default async function calculateCollectArea(
+export default async function getAreaExcludedCollectArea(
     player: PLAYERS.WHITE | PLAYERS.BLACK,
     layout: Round['layout']
 ) {

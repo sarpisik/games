@@ -1,9 +1,13 @@
-import { recursivelyCalculateByDices } from './utils';
+import { OPPONENT, Round } from '@shared-types/backgammon';
+import { customPromiseSome } from '@shared/customPromise';
 
-type CalculateByDicesParams = Omit<
-    Parameters<typeof recursivelyCalculateByDices>[0],
-    'resolve' | 'i'
->;
+interface CalculateByDicesParams {
+    dices: Round['dice'];
+    fromTriangleIndex: number;
+    roundPlayer: Round['player'];
+    triangles: Round['layout'];
+    shouldCollect: boolean;
+}
 
 export default function calculateByDices(params: CalculateByDicesParams) {
     const {
@@ -14,14 +18,19 @@ export default function calculateByDices(params: CalculateByDicesParams) {
         triangles,
     } = params;
 
-    return new Promise<boolean>((resolve, reject) => {
-        recursivelyCalculateByDices({
-            dices,
-            fromTriangleIndex,
-            roundPlayer,
-            shouldCollect,
-            triangles,
-            resolve,
-        }).catch(reject);
+    return customPromiseSome(dices, function onDice(dice) {
+        let targetTriangleAvailable = shouldCollect;
+
+        const targetTriangleIndex = fromTriangleIndex + dice;
+        const targetTriangle = triangles[targetTriangleIndex];
+
+        if (targetTriangle) {
+            const [targetPlayer, targetPoints] = targetTriangle;
+
+            targetTriangleAvailable =
+                targetPlayer !== OPPONENT[roundPlayer] || targetPoints < 2;
+        }
+
+        return targetTriangleAvailable;
     });
 }
