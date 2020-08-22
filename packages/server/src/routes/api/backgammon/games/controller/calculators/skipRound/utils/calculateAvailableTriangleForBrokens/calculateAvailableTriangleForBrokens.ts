@@ -1,15 +1,18 @@
-import { OPPONENT, PLAYERS, Round } from '@shared-types/backgammon';
-import { customPromise, customPromiseSome } from '@shared/customPromise';
+import { OPPONENT, Round } from '@shared-types/backgammon';
+import { customPromiseSome } from '@shared/customPromise';
+import { generateArea, transformDices } from './utils';
 
 export default async function calculateAvailableTriangleForBrokens(
     round: Round
-) {
+): Promise<boolean> {
     const { layout, player, dice } = round;
-    const color = PLAYERS[player];
-    const triangles = await customPromise(() =>
-        color === 'BLACK' ? layout.slice(-6).reverse() : layout.slice(0, 6)
-    );
-    const dices = dice.length > 2 ? dice.slice(0, 2) : dice;
+
+    const resolves = await Promise.all([
+        generateArea(player, layout),
+        transformDices(dice),
+    ]);
+
+    const [triangles, dices] = resolves;
 
     return customPromiseSome(dices, function onDice(dice) {
         const targetTriangle = triangles[dice - 1];
