@@ -12,6 +12,7 @@ export default async function calculateIsStack(
 
     return customPromiseIncludes(possibleTriangleIndexes, -1);
 }
+
 function handleCalculatePossibleIndexes(fromTriangle: number) {
     return function calculatePossibleIndexes(dice: number) {
         return fromTriangle - dice;
