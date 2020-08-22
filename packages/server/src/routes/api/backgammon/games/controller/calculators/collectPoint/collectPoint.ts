@@ -1,9 +1,4 @@
-import {
-    EmitCollectPointRound,
-    EVENTS,
-    PLAYERS,
-    Round,
-} from '@shared-types/backgammon';
+import { EmitCollectPointRound, EVENTS, Round } from '@shared-types/backgammon';
 import { customPromise } from '@shared/customPromise';
 import { calculateShouldCollect } from '../utils';
 import {
