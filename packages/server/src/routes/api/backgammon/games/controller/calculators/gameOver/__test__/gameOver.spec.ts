@@ -28,6 +28,19 @@ describe('backgammon/calculators/gameOver', () => {
                 done();
             });
         });
+
+        it(`should consider mars and calculate the winner correctly then return the result`, (done) => {
+            const whitePlayer = PLAYERS.WHITE;
+            score[whitePlayer] = 4;
+
+            calculateGameOver(stage, score).then((result) => {
+                expect(result).toEqual([
+                    whitePlayer.toString(),
+                    score[whitePlayer],
+                ]);
+                done();
+            });
+        });
     });
 
     describe(`PLAYER: "${PLAYERS[PLAYERS.BLACK]}"`, () => {

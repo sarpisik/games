@@ -13,7 +13,7 @@ export default async function calculateGameOver(
 
     const winner = await customPromiseFind(
         scores,
-        ([, score]) => score === stage
+        ([, score]) => score >= stage
     );
 
     return winner || null;
