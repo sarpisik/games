@@ -1,5 +1,5 @@
 import { Game, PLAYERS } from '@shared-types/backgammon';
-import { calculateGameOver } from '@routes/api/backgammon/games/controller/calculators';
+import calculateGameOver from '../gameOver';
 
 describe('backgammon/calculators/gameOver', () => {
     let stage: Game['stages'], score: Game['score'];
