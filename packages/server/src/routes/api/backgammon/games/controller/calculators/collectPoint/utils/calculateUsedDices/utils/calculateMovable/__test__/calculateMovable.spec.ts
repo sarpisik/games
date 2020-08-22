@@ -1,8 +1,8 @@
 import { PLAYERS, OPPONENT } from '@shared-types/backgammon';
 import { layout } from '@routes/api/backgammon/games/constants';
 import calculateMovable from '../calculateMovable';
-import { generateDoubledDice } from '../utils/calculatedDoubleDiceMovable/__test__/calculatedDoubleDiceMovable.spec';
 import { generateValidDices } from '../utils/calculateDiceMovable/__test__/calculateDiceMovable.spec';
+import { generateDoubledDice } from 'spec/support/generateDoubleDice';
 
 type Params = Parameters<typeof calculateMovable>[0];
 

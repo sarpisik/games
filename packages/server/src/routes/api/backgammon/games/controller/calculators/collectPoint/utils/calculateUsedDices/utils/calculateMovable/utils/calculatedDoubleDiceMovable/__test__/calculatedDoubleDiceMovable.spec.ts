@@ -1,13 +1,9 @@
 import { layout } from '@routes/api/backgammon/games/constants';
-import { PLAYERS, OPPONENT } from '@shared-types/backgammon';
+import { OPPONENT, PLAYERS } from '@shared-types/backgammon';
+import { generateDoubledDice } from 'spec/support/generateDoubleDice';
 import calculatedDoubleDiceMovable from '../calculatedDoubleDiceMovable';
 
 type Params = Parameters<typeof calculatedDoubleDiceMovable>[0];
-
-export const generateDoubledDice = (dice: number) =>
-    Array(dice)
-        .fill(dice)
-        .map((dice, i) => dice * (i + 1));
 
 describe('calculatedDoubleDiceMovable', () => {
     const createArea = (
