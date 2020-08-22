@@ -1,8 +1,8 @@
 import { layout } from '@routes/api/backgammon/games/constants';
-import { roundCalculator } from '@routes/api/backgammon/games/controller/calculators';
 import { OPPONENT, PLAYERS } from '@shared-types/backgammon';
 import { InvalidTriangleError } from '@shared/error';
 import generateBrokens from 'spec/support/generateBrokens';
+import roundCalculator from '../round';
 
 describe('backgammon/calculators/skipRound/utils/roundCalculator', () => {
     describe(`Player: "${PLAYERS[PLAYERS.WHITE]}"`, () => {
