@@ -5,14 +5,16 @@
         "add": "lerna add",
         "bootstrap": "lerna bootstrap",
         "clean": "lerna clean -y",
-        "dev": "lerna run dev"
+        "dev": "lerna run dev",
+        "test": "lerna run test"
     },
     "devDependencies": {
         "lerna": "3.22.1"
     },
     "husky": {
         "hooks": {
-            "pre-commit": "npx lerna run --concurrency 1 precommit"
+            "pre-commit": "npx lerna run --concurrency 1 precommit",
+            "pre-push": "git diff HEAD --quiet && npm test"
         }
     }
 }
