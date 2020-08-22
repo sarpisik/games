@@ -1,12 +1,12 @@
-import { brokenPointCalculator } from '@routes/api/backgammon/games/controller/calculators';
+import { layout } from '@routes/api/backgammon/games/constants';
 import {
     EmitBrokenPointRound,
+    OPPONENT,
     PLAYERS,
     Round,
-    OPPONENT,
 } from '@shared-types/backgammon';
-import { layout } from '@routes/api/backgammon/games/constants';
 import generateBrokens from 'spec/support/generateBrokens';
+import brokenPointCalculator from '../brokenPoint';
 
 describe('backgammon/calculators/brokenPointCalculator', () => {
     const placePlayerPoint = (
