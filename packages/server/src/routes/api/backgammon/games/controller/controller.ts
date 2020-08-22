@@ -25,6 +25,7 @@ import {
     roundCalculator,
     shouldSkipRound,
     undoRoundCalculator,
+    calculateMars,
 } from './calculators';
 import { rollDices } from './calculators/utils';
 import {
@@ -257,7 +258,9 @@ export default class GamesController extends Controller {
         if (shouldStageOver) {
             const { winner } = shouldStageOver;
             const game = await this._gamesService.readGame(parseInt(roomName));
-            game.score[winner] += 1;
+            const shouldMars = await calculateMars(winner, round.collected);
+            const winnerPoint = shouldMars ? 2 : 1;
+            game.score[winner] += winnerPoint;
 
             const [shouldGameOver] = await Promise.all([
                 calculateGameOver(game.stages, game.score),
