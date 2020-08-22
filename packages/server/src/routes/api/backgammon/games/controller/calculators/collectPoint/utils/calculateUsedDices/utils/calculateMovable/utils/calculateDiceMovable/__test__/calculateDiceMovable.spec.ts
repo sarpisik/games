@@ -1,14 +1,9 @@
-import { PLAYERS, OPPONENT } from '@shared-types/backgammon';
 import { layout } from '@routes/api/backgammon/games/constants';
+import { OPPONENT, PLAYERS } from '@shared-types/backgammon';
+import { generateValidDices } from 'spec/support/generateValidDices';
 import calculateDiceMovable from '../calculateDiceMovable';
 
 type Params = Parameters<typeof calculateDiceMovable>[0];
-
-export const generateValidDices = (dice1: number, dice2: number) => [
-    dice1,
-    dice2,
-    dice1 + dice2,
-];
 
 export const createArea = (
     player: PLAYERS.WHITE | PLAYERS.BLACK,
