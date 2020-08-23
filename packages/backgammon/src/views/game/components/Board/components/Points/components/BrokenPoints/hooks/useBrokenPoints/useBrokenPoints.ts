@@ -20,8 +20,8 @@ export default function useBrokenPoints(): BrokenPointProps[] {
     const { paintTriangle, paintBrokenPointTriangles } = usePaintLayout();
 
     const onDragEnd: OnDragEnd = ({ target }) => {
-        const targetX = getUnit(target.attrs.x);
-        const targetY = getUnit(target.attrs.y);
+        const targetX = getUnit(target.attrs.x, 'x');
+        const targetY = getUnit(target.attrs.y, 'y');
         const color = target.attrs.fill.toUpperCase();
 
         paintTriangle(targetX, targetY, color);

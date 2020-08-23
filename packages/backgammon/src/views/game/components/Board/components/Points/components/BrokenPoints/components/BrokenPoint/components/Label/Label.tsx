@@ -24,12 +24,12 @@ export default function Label(props: LabelProps): React.ReactElement {
         },
         ...rest
     } = props;
-    const posX = useUnitMeasure(x);
-    const posY = useUnitMeasure(y);
-    const posRectX = useUnitMeasure(rectX);
-    const posRectY = useUnitMeasure(rectY);
-    const rectHeight = useUnitMeasure(height);
-    const rectWidth = useUnitMeasure(width);
+    const posX = useUnitMeasure(x, 'x');
+    const posY = useUnitMeasure(y, 'y');
+    const posRectX = useUnitMeasure(rectX, 'x');
+    const posRectY = useUnitMeasure(rectY, 'y');
+    const rectWidth = useUnitMeasure(width, 'x');
+    const rectHeight = useUnitMeasure(height, 'y');
 
     return (
         <React.Fragment>

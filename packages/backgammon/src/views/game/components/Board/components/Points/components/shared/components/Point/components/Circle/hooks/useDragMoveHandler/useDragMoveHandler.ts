@@ -17,8 +17,8 @@ export default function useDragMoveHandler(): OnDragMove {
     const { getUnit, getUnitReverse } = useUnit();
 
     const onDragMove: OnDragMove = ({ target }) => {
-        const targetX = getUnit(target.attrs.x);
-        const targetY = getUnit(target.attrs.y);
+        const targetX = getUnit(target.attrs.x, 'x');
+        const targetY = getUnit(target.attrs.y, 'y');
         const isOverLeft = targetX - POINT_SIZE < LEFT_CONTAINER_START_X;
         const isOverRight = targetX > RIGHT_BLOCK_END_X + POINT_SIZE;
         const isOverTop = targetY - POINT_SIZE < TOP_BLOCK_START_Y;
@@ -32,14 +32,16 @@ export default function useDragMoveHandler(): OnDragMove {
                     ? LEFT_CONTAINER_START_X + POINT_SIZE
                     : isOverRight
                     ? RIGHT_BLOCK_END_X + POINT_SIZE
-                    : targetX
+                    : targetX,
+                'x'
             );
             const y = getUnitReverse(
                 isOverTop
                     ? TOP_BLOCK_START_Y + POINT_SIZE
                     : isOverBottom
                     ? BOTTOM_BLOCK_START_Y - POINT_SIZE
-                    : targetY
+                    : targetY,
+                'y'
             );
 
             target.position({ x, y });

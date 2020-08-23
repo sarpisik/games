@@ -2,12 +2,13 @@ import React, { ReactElement } from 'react';
 import { useRound } from '../../../../../../app/slices';
 import { LAYOUTS } from '../../constants';
 import { TriangleEven, TriangleHighlight, TriangleOdd } from './components';
+import { useTriangles } from './hooks';
 import { isEven } from './lib';
 
 export default function Triangles(): ReactElement {
-    return (
-        <React.Fragment>{LAYOUTS.TRIANGLES.map(RenderTriangle)}</React.Fragment>
-    );
+    const triangles = useTriangles();
+
+    return <React.Fragment>{triangles.map(RenderTriangle)}</React.Fragment>;
 }
 
 function RenderTriangle(

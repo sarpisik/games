@@ -1,8 +1,10 @@
-import { useMeasures } from '../useMeasures';
+import { PIXEL } from '../../contants';
+import { calculateUnit } from '../../utils';
+import { useSizes } from '../useSizes';
 
 export default function useStoreUnit() {
-    const measures = useMeasures();
-    const { unit } = measures;
+    const sizes = useSizes();
+    const unit = calculateUnit(sizes, PIXEL.PIXEL);
 
     return unit;
 }

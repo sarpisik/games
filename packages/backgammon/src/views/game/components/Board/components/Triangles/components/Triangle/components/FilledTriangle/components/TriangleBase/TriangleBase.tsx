@@ -14,10 +14,10 @@ export default function TriangleBase({
     height = 1,
     ...rectProps
 }: TriangleProps): React.ReactElement {
-    const posX = useUnitMeasure(x);
-    const posY = useUnitMeasure(y);
-    const sizeX = useUnitMeasure(width);
-    const sizeY = useUnitMeasure(height);
+    const posX = useUnitMeasure(x, 'x');
+    const posY = useUnitMeasure(y, 'y');
+    const sizeX = useUnitMeasure(width, 'x');
+    const sizeY = useUnitMeasure(height, 'y');
     const points = React.useMemo(() => [0, 0, sizeX, 0, sizeX / 2, sizeY], [
         sizeX,
         sizeY,

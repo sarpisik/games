@@ -14,9 +14,9 @@ export default function Circle({
     y = 1,
     ...circleProps
 }: Omit<CircleProps, 'radius'>): React.ReactElement {
-    const posX = useUnitMeasure(x);
-    const posY = useUnitMeasure(y);
-    const radius = useUnitMeasure(CIRCLE_SIZE.RADIUS);
+    const posX = useUnitMeasure(x, 'x');
+    const posY = useUnitMeasure(y, 'y');
+    const radius = useUnitMeasure(CIRCLE_SIZE.RADIUS, 'x');
     const onDragMove = useDragMoveHandler();
 
     return (

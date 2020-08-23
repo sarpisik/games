@@ -13,10 +13,10 @@ export default function Rectangle({
     height = 1,
     ...rectProps
 }: RectangleProps): React.ReactElement {
-    const posX = useUnitMeasure(x);
-    const posY = useUnitMeasure(y);
-    const sizeX = useUnitMeasure(width);
-    const sizeY = useUnitMeasure(height);
+    const posX = useUnitMeasure(x, 'x');
+    const posY = useUnitMeasure(y, 'y');
+    const sizeX = useUnitMeasure(width, 'x');
+    const sizeY = useUnitMeasure(height, 'y');
 
     return (
         <Rect x={posX} y={posY} width={sizeX} height={sizeY} {...rectProps} />

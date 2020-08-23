@@ -5,12 +5,13 @@ export default function calculateSizes() {
     const windowHeight = window.innerHeight;
     const isLandscape = windowWidth > windowHeight;
 
-    const BOARD_WIDTH = isLandscape ? windowHeight : windowWidth;
+    const BOARD_WIDTH = windowWidth;
+    const BOARD_HEIGHT = isLandscape ? windowHeight : windowWidth;
 
     return {
         // board
         BOARD_WIDTH,
-        BOARD_HEIGHT: BOARD_WIDTH,
+        BOARD_HEIGHT,
 
         // container
         CONTAINER_WIDTH: 3,
@@ -19,6 +20,10 @@ export default function calculateSizes() {
         // block
         BLOCK_WIDTH: 18,
         BLOCK_HEIGHT: 48,
+
+        // triangle
+        TRIANGLE_WIDTH: 3,
+        TRIANGLE_HEIGHT: isLandscape ? 20 : 15,
 
         // point
         POINT_SIZE: TRIANGLE_WIDTH / 2,

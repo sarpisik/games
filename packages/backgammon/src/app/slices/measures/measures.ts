@@ -4,22 +4,26 @@ import {
     calculateSizes,
     calculateBlocks,
     calculateUnit,
+    calculateTriangles,
 } from './utils';
 import { PIXEL } from './contants';
 
 const sizes = calculateSizes();
 const blocks = calculateBlocks(sizes);
 const containers = calculateContainers(sizes);
+const triangles = calculateTriangles(sizes);
 const unit = calculateUnit(sizes, PIXEL.PIXEL);
 
 export type Blocks = typeof containers;
 export type Containers = typeof blocks;
+export type Triangles = typeof triangles;
 export type Unit = typeof unit;
 export type Pixel = typeof PIXEL['PIXEL'];
 
 interface Measures {
     blocks: Blocks;
     containers: Containers;
+    triangles: Triangles;
     pixel: Pixel;
     sizes: typeof sizes;
     unit: Unit;
@@ -28,6 +32,7 @@ interface Measures {
 const initialState: Measures = {
     blocks,
     containers,
+    triangles,
     pixel: PIXEL['PIXEL'],
     sizes,
     unit,
