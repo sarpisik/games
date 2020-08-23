@@ -12,6 +12,7 @@ export {
     useLayout,
     usePaintLayout,
     useRound,
+    useTimer,
     useUndoHistory,
 } from './game';
 export {

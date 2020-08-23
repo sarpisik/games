@@ -133,7 +133,7 @@ const socket: () => Middleware = () => {
                     // @ts-ignore
                     connection.on(EVENTS.GAME_OVER, onGameOver(store));
                     // @ts-ignore
-                    connection.on(EVENTS.TIMER, onTimer);
+                    connection.on(EVENTS.TIMER, onTimer(store));
                     // @ts-ignore
                     connection.on(EVENTS.ERROR, onError(store));
                     connection.on(
