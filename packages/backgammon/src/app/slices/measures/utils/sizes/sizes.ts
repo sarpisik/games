@@ -1,9 +1,13 @@
+import { calculateWindowDimension } from '../../../../../utils';
+
 const TRIANGLE_WIDTH = 3;
 
 export default function calculateSizes() {
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-    const isLandscape = windowWidth > windowHeight;
+    const {
+        isLandscape,
+        windowHeight,
+        windowWidth,
+    } = calculateWindowDimension();
 
     const BOARD_WIDTH = windowWidth;
     const BOARD_HEIGHT = isLandscape ? windowHeight : windowWidth;

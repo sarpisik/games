@@ -1,5 +1,6 @@
 import { CIRCLE_SIZE } from '../../../../../../shared/components/Point/components/Circle/constants';
 import { DIRECTIONS } from '../../../types';
+import { calculateWindowDimension } from '../../../../../../../../../../../../../utils';
 
 export function xOffsetCalculator(
     index: number,
@@ -17,7 +18,10 @@ export function yOffsetCalculator(
     pointsCount: number,
     yOffset: number
 ) {
-    const isBottomBlock = yOffset > 1;
+    const { isLandscape, orientation } = calculateWindowDimension();
+    const dynamicOffset = isLandscape ? orientation : 1;
+    const isBottomBlock = yOffset > 25;
+
     const startFrom = yOffset;
     const overPoints = calculateOverPoints(pointsCount);
     const overSize = calculateOverSize(overPoints);
@@ -26,13 +30,15 @@ export function yOffsetCalculator(
         pointsCount
     );
 
-    let skip = calculateSkip(index);
+    let skip = calculateSkip(index) * dynamicOffset;
+    const dynamicSkip = isBottomBlock ? skip * -1 : skip;
+
     if (overFlowPerEachPoint > 0) {
         // Overlay points on each other
         skip -= overFlowPerEachPoint * index;
     }
 
-    return startFrom + skip * (isBottomBlock ? -1 : 1);
+    return startFrom + dynamicSkip;
 }
 
 function calculateSkip(index: number) {
