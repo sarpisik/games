@@ -5,5 +5,4 @@ export { calculateMars } from './mars';
 export { roundCalculator } from './round';
 export { calculateSkipRound } from './skipRound';
 export { calculateStageOver } from './stageOver';
-export { recursivelySetTimer } from './timer';
 export { undoRoundCalculator } from './undoRound';

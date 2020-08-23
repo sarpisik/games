@@ -39,6 +39,11 @@ interface GameClientRound extends Round {
     availableTriangles: number[];
 }
 
+export interface GameServerSide extends Game {
+    t?: Round["player"];
+    tRef?: NodeJS.Timeout;
+}
+
 export interface Game {
     id: number;
     players: PlayersMap;
@@ -47,7 +52,6 @@ export interface Game {
     duration: number;
     timer: PlayersMap;
     rounds: Round[];
-    t?: Round["player"];
 }
 
 interface PlayersMap {

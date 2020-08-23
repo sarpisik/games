@@ -1,43 +1,43 @@
-import asyncParser from '@shared/asyncParser';
 import { Socket } from '@connection/socket';
 import { Controller, RouterType } from '@routes/api/shared/controller';
 import { withCatch } from '@routes/api/shared/middleware';
 import {
+    EmitBase,
     EmitBrokenPointRound,
     EmitCollectPointRound,
     EmitRound,
     EmitSignInUser,
+    EmitStageOver,
     EmitUndoRound,
     EVENTS,
     Game,
+    GameServerSide,
     OPPONENT,
     PLAYERS,
     Round,
-    EmitStageOver,
-    EmitBase,
 } from '@shared-types/backgammon';
+import asyncParser from '@shared/asyncParser';
+import { customPromise } from '@shared/customPromise';
+import {
+    GameNotFoundError,
+    InvalidDiceError,
+    InvalidTriangleError,
+} from '@shared/error';
+import { CREATED, OK } from 'http-status-codes';
 import { layout } from '../constants';
 import { GamesService } from '../service';
 import {
     brokenPointCalculator,
     calculateGameOver,
+    calculateMars,
     calculateSkipRound,
     calculateStageOver,
     collectPointCalculator,
     roundCalculator,
     shouldSkipRound,
     undoRoundCalculator,
-    calculateMars,
-    recursivelySetTimer,
 } from './calculators';
 import { rollDices, strToNmr } from './calculators/utils';
-import {
-    GameNotFoundError,
-    InvalidDiceError,
-    InvalidTriangleError,
-} from '@shared/error';
-import { OK, CREATED } from 'http-status-codes';
-import { customPromise } from '@shared/customPromise';
 
 type GameParam = { id: string };
 
@@ -338,7 +338,6 @@ export default class GamesController extends Controller {
     }
 
     private async _handleTimer(roomName: string) {
-        const socket = this._namespace.to(roomName);
         const gameId = await strToNmr(roomName);
         const game = await this._gamesService.readGame(gameId);
         const latestRound = await customPromise(
@@ -346,7 +345,41 @@ export default class GamesController extends Controller {
         );
         game.t = latestRound.player;
 
-        recursivelySetTimer(socket, game, this._handleGameOver.bind(this));
+        this._recursivelySetTimer(roomName, gameId, latestRound.player);
+    }
+
+    private async _recursivelySetTimer(
+        roomName: string,
+        gameId: number,
+        latestRoundPlayer: PLAYERS | undefined
+    ) {
+        const game = await this._gamesService.readGame(gameId);
+        const roundPlayer = game?.t;
+
+        if (roundPlayer === latestRoundPlayer) {
+            game.tRef && clearTimeout(game.tRef);
+
+            if (verifyRoundPlayer(roundPlayer)) {
+                game.timer[roundPlayer] -= 1;
+
+                if (game.timer[roundPlayer] < 1) {
+                    // Exit loop on game over.
+                    const winner = OPPONENT[roundPlayer];
+
+                    this._handleGameOver(roomName, gameId, { winner });
+                } else {
+                    this._namespace.to(roomName).emit(EVENTS.TIMER, game.timer);
+
+                    game.tRef = setTimeout(() => {
+                        this._recursivelySetTimer(
+                            roomName,
+                            gameId,
+                            latestRoundPlayer
+                        );
+                    }, 1000);
+                }
+            }
+        }
     }
 
     private _withBreakTimer<Data extends EmitBase>(
@@ -364,4 +397,10 @@ export default class GamesController extends Controller {
             return eventHandler.call(self, data);
         };
     }
+}
+
+function verifyRoundPlayer(
+    tested: GameServerSide['t']
+): tested is Round['player'] {
+    return typeof tested !== 'undefined';
 }

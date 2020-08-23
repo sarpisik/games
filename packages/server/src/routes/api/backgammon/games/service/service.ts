@@ -1,11 +1,16 @@
-import { CreateGame, Game, Round } from '@shared-types/backgammon';
+import {
+    CreateGame,
+    Game,
+    GameServerSide,
+    Round,
+} from '@shared-types/backgammon';
 import { customPromise, customPromiseMap } from '@shared/customPromise';
 import { BadRequestError, GameNotFoundError } from '@shared/error';
 import { rollDices } from '../controller/calculators/utils';
 import { findRoundById, generatePlayersMap } from './utils';
 
 export default class GamesService {
-    constructor(private _games: Map<number, Game>) {}
+    constructor(private _games: Map<number, GameServerSide>) {}
 
     async readGames() {
         const gamesMap = await customPromise(() => Array.from(this._games));
@@ -19,7 +24,7 @@ export default class GamesService {
     readGame(id: number) {
         const games = this._games;
 
-        return new Promise<Game>((resolve, reject) => {
+        return new Promise<GameServerSide>((resolve, reject) => {
             setImmediate(() => {
                 try {
                     if (games.has(id)) resolve(games.get(id));
@@ -34,12 +39,12 @@ export default class GamesService {
         });
     }
 
-    async readRound(gameId: Game['id'], roundId: Round['id']) {
+    async readRound(gameId: GameServerSide['id'], roundId: Round['id']) {
         const game = await this.readGame(gameId);
         return findRoundById(roundId, game.rounds);
     }
 
-    async readLatestRound(gameId: Game['id']) {
+    async readLatestRound(gameId: GameServerSide['id']) {
         const game = await this.readGame(gameId);
         const rounds = game.rounds;
 
@@ -69,13 +74,13 @@ export default class GamesService {
 
     async createRound(
         data: Pick<
-            Game['rounds'][number],
+            GameServerSide['rounds'][number],
             'player' | 'brokens' | 'collected' | 'layout'
         >
     ) {
         const { player, brokens, collected, layout } = data;
         const dice = await rollDices();
-        const newRound: Game['rounds'][number] = {
+        const newRound: GameServerSide['rounds'][number] = {
             player,
             brokens,
             collected,
@@ -109,7 +114,7 @@ export default class GamesService {
         });
     }
 
-    updateRounds(gameId: Game['id'], round: Round) {
+    updateRounds(gameId: GameServerSide['id'], round: Round) {
         const games = this._games;
 
         return new Promise<Game>((resolve, reject) => {
@@ -132,7 +137,7 @@ export default class GamesService {
         });
     }
 
-    deleteGame(id: Game['id']) {
+    deleteGame(id: GameServerSide['id']) {
         const games = this._games;
 
         return new Promise<boolean>((resolve, reject) => {
