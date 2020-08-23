@@ -6,6 +6,7 @@ export {
     resetCurrentRoundLayout,
     setGame,
     setRoundPlayer,
+    setTimer,
     undoRound,
     useGame,
     useLayout,

@@ -58,6 +58,9 @@ export const gameSlice = createSlice({
         ) {
             state.isRoundPlayer = action.payload;
         },
+        setTimer(state, action: PayloadAction<GameClient['timer']>) {
+            state.timer = action.payload;
+        },
         addRound(state, action: PayloadAction<GameClient['rounds'][number]>) {
             const round = action.payload;
             round.availableTriangles = [];
@@ -89,6 +92,7 @@ export const {
     setInitialGame,
     setRoundPlayer,
     undoRound,
+    setTimer,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

@@ -17,6 +17,7 @@ import {
     setGame,
     setNotification,
     setRoundPlayer,
+    setTimer,
     signIn,
     undoRound,
 } from '../../slices';
@@ -47,6 +48,10 @@ const socket: () => Middleware = () => {
 
     const onUpdateGame = (s: typeof store) => (game: Game) => {
         s.dispatch(setGame(game));
+    };
+
+    const onTimer = (s: typeof store) => (game: Game['timer']) => {
+        s.dispatch(setTimer(game));
     };
 
     const onUndoRound = (s: typeof store) => (rounds: UndoRound) => {
@@ -128,7 +133,7 @@ const socket: () => Middleware = () => {
                     // @ts-ignore
                     connection.on(EVENTS.GAME_OVER, onGameOver(store));
                     // @ts-ignore
-                    connection.on(EVENTS.TIMER, console.log);
+                    connection.on(EVENTS.TIMER, onTimer);
                     // @ts-ignore
                     connection.on(EVENTS.ERROR, onError(store));
                     connection.on(
