@@ -348,6 +348,38 @@ export default class GamesController extends Controller {
         this._recursivelySetTimer(roomName, gameId, latestRound.player);
     }
 
+    private async _recursivelySetShortTimer(
+        roomName: string,
+        gameId: number,
+        latestRoundPlayer: PLAYERS | undefined,
+        seconds = 15
+    ) {
+        const game = await this._gamesService.readGame(gameId);
+        const roundPlayer = game?.t;
+
+        if (
+            roundPlayer === latestRoundPlayer &&
+            verifyRoundPlayer(roundPlayer)
+        ) {
+            seconds -= 1;
+
+            if (seconds < 1) {
+                this._recursivelySetTimer(roomName, gameId, latestRoundPlayer);
+            } else {
+                this._namespace.to(roomName).emit(EVENTS.SHORT_TIMER, seconds);
+
+                game.tRef = setTimeout(() => {
+                    this._recursivelySetShortTimer(
+                        roomName,
+                        gameId,
+                        latestRoundPlayer,
+                        seconds
+                    );
+                }, 1000);
+            }
+        }
+    }
+
     private async _recursivelySetTimer(
         roomName: string,
         gameId: number,

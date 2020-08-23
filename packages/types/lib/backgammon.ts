@@ -88,6 +88,7 @@ export const OPPONENT = {
 export enum EVENTS {
     ROUND = "ROUND",
     TIMER = "TIMER",
+    SHORT_TIMER = "SHORT_TIMER",
     STAGE_OVER = "STAGE_OVER",
     GAME_OVER = "GAME_OVER",
     GAME_UPDATE = "GAME_UPDATE",
