@@ -1,6 +1,6 @@
 import React from 'react';
-import { Board, ScoreBoard, Undo } from './components';
-import { useInitializeGame, useDynamicLayout } from './hooks';
+import { Board, ScoreBoard, Sidebar, Undo } from './components';
+import { useDynamicLayout, useInitializeGame } from './hooks';
 
 export default function Game() {
     useInitializeGame();
@@ -9,8 +9,10 @@ export default function Game() {
     return (
         <div className="Game">
             <Board />
-            <ScoreBoard />
-            <Undo />
+            <Sidebar>
+                <ScoreBoard />
+                <Undo />
+            </Sidebar>
         </div>
     );
 }

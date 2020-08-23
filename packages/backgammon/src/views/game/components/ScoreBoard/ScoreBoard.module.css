@@ -1,8 +1,3 @@
-.scoreboard {
-    display: flex;
-    float: left;
-}
-
 .scoreboard > p {
     margin-right: 1rem;
 }
