@@ -1,8 +1,8 @@
-import { BadRequestError, GameNotFoundError } from '@shared/error';
-import { CreateGame, Game, Round, PLAYERS } from '@shared-types/backgammon';
-import { rollDices } from '../controller/calculators/utils';
-import { findRoundById } from './utils';
+import { CreateGame, Game, Round } from '@shared-types/backgammon';
 import { customPromise, customPromiseMap } from '@shared/customPromise';
+import { BadRequestError, GameNotFoundError } from '@shared/error';
+import { rollDices } from '../controller/calculators/utils';
+import { findRoundById, generatePlayersMap } from './utils';
 
 export default class GamesService {
     constructor(private _games: Map<number, Game>) {}
@@ -39,8 +39,15 @@ export default class GamesService {
         return findRoundById(roundId, game.rounds);
     }
 
+    async readLatestRound(gameId: Game['id']) {
+        const game = await this.readGame(gameId);
+        const rounds = game.rounds;
+
+        return customPromise(() => rounds[rounds.length - 1]);
+    }
+
     async createGame(data: CreateGame) {
-        const { players, stages } = data;
+        const { players, stages, duration } = data;
 
         const id = await customPromise(() => Date.now());
         const game = await customPromise<Game>(() => ({
@@ -48,7 +55,9 @@ export default class GamesService {
             players,
             stages,
             rounds: [],
-            score: { [PLAYERS.WHITE]: 0, [PLAYERS.BLACK]: 0 },
+            score: generatePlayersMap(0, 0),
+            duration,
+            timer: generatePlayersMap(duration, duration),
         }));
 
         await customPromise(() => {

@@ -1,4 +1,4 @@
-export type CreateGame = Pick<Game, "players" | "stages">;
+export type CreateGame = Pick<Game, "players" | "stages" | "duration">;
 
 export interface EmitError {
     message: string;
@@ -26,7 +26,7 @@ export interface EmitRound extends EmitBase {
     roundId: Round["id"];
 }
 
-interface EmitBase {
+export interface EmitBase {
     gameId: Game["id"];
 }
 
@@ -47,6 +47,7 @@ export interface Game {
     duration: number;
     timer: PlayersMap;
     rounds: Round[];
+    t?: Round["player"];
 }
 
 interface PlayersMap {
@@ -82,6 +83,7 @@ export const OPPONENT = {
 
 export enum EVENTS {
     ROUND = "ROUND",
+    TIMER = "TIMER",
     STAGE_OVER = "STAGE_OVER",
     GAME_OVER = "GAME_OVER",
     GAME_UPDATE = "GAME_UPDATE",

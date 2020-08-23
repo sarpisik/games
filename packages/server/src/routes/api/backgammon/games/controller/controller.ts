@@ -13,6 +13,8 @@ import {
     OPPONENT,
     PLAYERS,
     Round,
+    EmitStageOver,
+    EmitBase,
 } from '@shared-types/backgammon';
 import { layout } from '../constants';
 import { GamesService } from '../service';
@@ -26,14 +28,16 @@ import {
     shouldSkipRound,
     undoRoundCalculator,
     calculateMars,
+    recursivelySetTimer,
 } from './calculators';
-import { rollDices } from './calculators/utils';
+import { rollDices, strToNmr } from './calculators/utils';
 import {
     GameNotFoundError,
     InvalidDiceError,
     InvalidTriangleError,
 } from '@shared/error';
 import { OK, CREATED } from 'http-status-codes';
+import { customPromise } from '@shared/customPromise';
 
 type GameParam = { id: string };
 
@@ -80,9 +84,13 @@ export default class GamesController extends Controller {
         Game,
         Parameters<GamesService['createGame']>[0]
     >(async (req, res) => {
-        const { players, stages } = req.body;
+        const { players, stages, duration } = req.body;
 
-        const game = await this._gamesService.createGame({ players, stages });
+        const game = await this._gamesService.createGame({
+            players,
+            stages,
+            duration,
+        });
 
         res.status(CREATED).json(game);
     });
@@ -121,14 +129,17 @@ export default class GamesController extends Controller {
             roomSocket.on(EVENTS.SIGN_IN_USER, this._signInUser.bind(this));
 
             /* ROUND EVENTS */
-            roomSocket.on(EVENTS.ROUND, this._handleRoundCalculate.bind(this));
+            roomSocket.on(
+                EVENTS.ROUND,
+                this._withBreakTimer(this._handleRoundCalculate).bind(this)
+            );
             roomSocket.on(
                 EVENTS.BROKEN_POINT_ROUND,
-                this._handleBrokenPoint.bind(this)
+                this._withBreakTimer(this._handleBrokenPoint).bind(this)
             );
             roomSocket.on(
                 EVENTS.COLLECT_POINT_ROUND,
-                this._handleCollectPoint.bind(this)
+                this._withBreakTimer(this._handleCollectPoint).bind(this)
             );
             roomSocket.on(EVENTS.UNDO_ROUND, this._handleUndoRound.bind(this));
         } catch (error) {
@@ -248,8 +259,6 @@ export default class GamesController extends Controller {
     private async _handleNextRound(roomName: string, round: Round) {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const self = this;
-        const socket = this._namespace.to(roomName);
-
         const [shouldStageOver, shouldSkipRound] = await Promise.all([
             calculateStageOver(round),
             calculateSkipRound(round),
@@ -268,10 +277,13 @@ export default class GamesController extends Controller {
             ]);
 
             if (shouldGameOver) {
-                await this._gamesService.deleteGame(game.id);
-                socket.emit(EVENTS.GAME_OVER, shouldStageOver);
+                this._handleGameOver(roomName, game.id, shouldStageOver);
             } else {
-                socket.emit(EVENTS.STAGE_OVER, shouldStageOver);
+                self._emitRoomEvent(
+                    roomName,
+                    EVENTS.STAGE_OVER,
+                    shouldStageOver
+                );
                 game.rounds = [];
 
                 setTimeout(async function reHandleNextRound() {
@@ -281,7 +293,7 @@ export default class GamesController extends Controller {
                 }, 1500);
             }
         } else if (shouldSkipRound) {
-            socket.emit(EVENTS.SKIP_ROUND, {
+            self._emitRoomEvent(roomName, EVENTS.SKIP_ROUND, {
                 round,
                 message: 'You can not move. Skipping to next round.',
             });
@@ -295,8 +307,17 @@ export default class GamesController extends Controller {
             }, 1500);
         } else {
             // Send round.
-            socket.emit(EVENTS.ROUND, round);
+            self._emitRoomEvent(roomName, EVENTS.ROUND, round);
         }
+    }
+
+    private async _handleGameOver(
+        roomName: string,
+        gameId: number,
+        payload: EmitStageOver
+    ) {
+        await this._gamesService.deleteGame(gameId);
+        this._emitRoomEvent(roomName, EVENTS.GAME_OVER, payload);
     }
 
     private async _handleUndoRound(data: EmitUndoRound) {
@@ -312,5 +333,31 @@ export default class GamesController extends Controller {
 
     private _emitRoomEvent<P>(roomName: string, event: EVENTS, payload: P) {
         this._namespace.to(roomName).emit(event, payload);
+
+        if (event === EVENTS.ROUND) this._handleTimer(roomName);
+    }
+
+    private async _handleTimer(roomName: string) {
+        const socket = this._namespace.to(roomName);
+        const gameId = await strToNmr(roomName);
+        const game = await this._gamesService.readGame(gameId);
+
+        recursivelySetTimer(socket, game, this._handleGameOver.bind(this));
+    }
+
+    private _withBreakTimer<Data extends EmitBase>(
+        eventHandler: (data: Data) => unknown
+    ) {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        const self = this;
+
+        return async function breakTimer(data: Data) {
+            const game = await self._gamesService.readGame(data.gameId);
+
+            // Break timer
+            delete game.t;
+
+            return eventHandler.call(self, data);
+        };
     }
 }
