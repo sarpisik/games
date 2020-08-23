@@ -128,6 +128,8 @@ const socket: () => Middleware = () => {
                     // @ts-ignore
                     connection.on(EVENTS.GAME_OVER, onGameOver(store));
                     // @ts-ignore
+                    connection.on(EVENTS.TIMER, console.log);
+                    // @ts-ignore
                     connection.on(EVENTS.ERROR, onError(store));
                     connection.on(
                         EVENTS.COLLECT_POINT_ROUND,
