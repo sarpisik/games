@@ -17,9 +17,13 @@ export default function Timer(): React.ReactElement {
 }
 
 function getMinute(t: number) {
-    return Math.floor((t % 3600) / 60);
+    return leadZero(Math.floor((t % 3600) / 60));
 }
 
 function getSecond(t: number) {
-    return Math.floor((t % 3600) % 60);
+    return leadZero(Math.floor((t % 3600) % 60));
+}
+
+function leadZero(t: number) {
+    return t < 10 ? `0${t}` : t;
 }
