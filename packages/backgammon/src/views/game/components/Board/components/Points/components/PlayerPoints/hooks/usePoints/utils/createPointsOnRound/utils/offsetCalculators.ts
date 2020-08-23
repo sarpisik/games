@@ -13,32 +13,36 @@ export function xOffsetCalculator(
     return direction === 'forward' ? startFrom + skip : startFrom - skip;
 }
 
+const CIRCLE_SIZE_FULL = CIRCLE_SIZE.RADIUS * 2;
+
 export function yOffsetCalculator(
     index: number,
     pointsCount: number,
-    yOffset: number
+    yOffset: number,
+    heightLimit: number
 ) {
     const { isLandscape, orientation } = calculateWindowDimension();
     const dynamicOffset = isLandscape ? orientation : 1;
     const isBottomBlock = yOffset > 25;
 
-    const startFrom = yOffset;
-    const overPoints = calculateOverPoints(pointsCount);
-    const overSize = calculateOverSize(overPoints);
+    const pointSize = calculatePointSize(dynamicOffset);
+    const overPoints = calculateOverPoints(pointsCount, pointSize, heightLimit);
+    const overSize = isLandscape
+        ? overPoints
+        : calculateOverSize(overPoints, pointSize);
     const overFlowPerEachPoint = calculateOverFlowPerEachPoint(
         overSize,
         pointsCount
     );
 
     let skip = calculateSkip(index) * dynamicOffset;
-    const dynamicSkip = isBottomBlock ? skip * -1 : skip;
-
     if (overFlowPerEachPoint > 0) {
         // Overlay points on each other
         skip -= overFlowPerEachPoint * index;
     }
 
-    return startFrom + dynamicSkip;
+    const dynamicSkip = isBottomBlock ? skip * -1 : skip;
+    return yOffset + dynamicSkip;
 }
 
 function calculateSkip(index: number) {
@@ -48,13 +52,21 @@ function calculateSkip(index: number) {
     );
 }
 
-function calculateOverPoints(count: number) {
-    const limit = 5;
-    return count - limit;
+function calculatePointSize(dynamicOffset: number) {
+    return CIRCLE_SIZE_FULL * dynamicOffset;
 }
 
-function calculateOverSize(overPoints: number) {
-    const pointSize = CIRCLE_SIZE.RADIUS * 2;
+function calculateOverPoints(
+    count: number,
+    pointSize: number,
+    heightLimit: number
+) {
+    const pointsSize = count * pointSize;
+    const overPoints = pointsSize - heightLimit;
+    return overPoints;
+}
+
+function calculateOverSize(overPoints: number, pointSize: number) {
     return overPoints * pointSize;
 }
 

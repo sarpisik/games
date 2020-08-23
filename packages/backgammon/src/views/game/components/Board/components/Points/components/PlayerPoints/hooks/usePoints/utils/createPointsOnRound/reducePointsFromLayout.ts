@@ -18,12 +18,13 @@ type FillTriangleParams = Parameters<typeof fillTriangle>[0];
 interface Params {
     game: GameClient;
     round: Round;
+    triangleHeight: number;
     onDragEnd: FillTriangleParams['onDragEnd'];
     onDragStart: FillTriangleParams['onDragStart'];
 }
 
 export default function createPointsOnRound(params: Params) {
-    const { game, round, onDragEnd, onDragStart } = params;
+    const { game, round, triangleHeight, onDragEnd, onDragStart } = params;
 
     const roundPlayer = round?.player;
 
@@ -61,6 +62,7 @@ export default function createPointsOnRound(params: Params) {
                     direction
                 ),
                 yOffset: yBlock,
+                heightLimit: triangleHeight,
                 onDragEnd,
                 onDragStart,
             };
