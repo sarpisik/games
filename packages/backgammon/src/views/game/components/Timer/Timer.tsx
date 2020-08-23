@@ -1,17 +1,19 @@
 import React from 'react';
-import { useRound, useTimer } from '../../../../app/slices';
+import { useRound, useShortTimer, useTimer } from '../../../../app/slices';
 
 export default function Timer(): React.ReactElement {
+    const shortTimer = useShortTimer();
     const timer = useTimer();
     const round = useRound();
     const time = timer[round?.player];
 
+    const shortTimerSecond = leadZero(shortTimer.seconds);
     const minute = getMinute(time);
     const second = getSecond(time);
 
     return (
         <p>
-            {minute}:{second}
+            {minute}:{second} ({shortTimerSecond})
         </p>
     );
 }

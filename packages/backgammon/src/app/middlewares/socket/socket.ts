@@ -20,6 +20,7 @@ import {
     setTimer,
     signIn,
     undoRound,
+    setShortTimer,
 } from '../../slices';
 import { store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
@@ -52,6 +53,10 @@ const socket: () => Middleware = () => {
 
     const onTimer = (s: typeof store) => (game: Game['timer']) => {
         s.dispatch(setTimer(game));
+    };
+
+    const onShortTimer = (s: typeof store) => (seconds: number) => {
+        s.dispatch(setShortTimer({ seconds }));
     };
 
     const onUndoRound = (s: typeof store) => (rounds: UndoRound) => {
@@ -134,6 +139,8 @@ const socket: () => Middleware = () => {
                     connection.on(EVENTS.GAME_OVER, onGameOver(store));
                     // @ts-ignore
                     connection.on(EVENTS.TIMER, onTimer(store));
+                    // @ts-ignore
+                    connection.on(EVENTS.SHORT_TIMER, onShortTimer(store));
                     // @ts-ignore
                     connection.on(EVENTS.ERROR, onError(store));
                     connection.on(

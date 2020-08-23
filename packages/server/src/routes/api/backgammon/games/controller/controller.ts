@@ -16,6 +16,7 @@ import {
     PLAYERS,
     Round,
 } from '@shared-types/backgammon';
+import { SHORT_TIMER } from '@shared-types/constants';
 import asyncParser from '@shared/asyncParser';
 import { customPromise } from '@shared/customPromise';
 import {
@@ -345,14 +346,14 @@ export default class GamesController extends Controller {
         );
         game.t = latestRound.player;
 
-        this._recursivelySetTimer(roomName, gameId, latestRound.player);
+        this._recursivelySetShortTimer(roomName, gameId, latestRound.player);
     }
 
     private async _recursivelySetShortTimer(
         roomName: string,
         gameId: number,
         latestRoundPlayer: PLAYERS | undefined,
-        seconds = 15
+        seconds = SHORT_TIMER
     ) {
         const game = await this._gamesService.readGame(gameId);
         const roundPlayer = game?.t;
@@ -362,12 +363,11 @@ export default class GamesController extends Controller {
             verifyRoundPlayer(roundPlayer)
         ) {
             seconds -= 1;
+            this._namespace.to(roomName).emit(EVENTS.SHORT_TIMER, seconds);
 
             if (seconds < 1) {
                 this._recursivelySetTimer(roomName, gameId, latestRoundPlayer);
             } else {
-                this._namespace.to(roomName).emit(EVENTS.SHORT_TIMER, seconds);
-
                 game.tRef = setTimeout(() => {
                     this._recursivelySetShortTimer(
                         roomName,
