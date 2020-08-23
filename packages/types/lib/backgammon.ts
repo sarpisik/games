@@ -44,6 +44,8 @@ export interface Game {
     players: PlayersMap;
     score: PlayersMap;
     stages: number;
+    duration: number;
+    timer: PlayersMap;
     rounds: Round[];
 }
 
