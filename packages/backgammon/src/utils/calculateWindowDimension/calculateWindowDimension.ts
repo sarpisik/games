@@ -4,5 +4,5 @@ export default function calculateWindowDimension() {
     const orientation = windowWidth / windowHeight;
     const isLandscape = orientation > 1;
 
-    return { isLandscape, orientation, windowHeight, windowWidth };
+    return { isLandscape, windowHeight, windowWidth };
 }

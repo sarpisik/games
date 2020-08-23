@@ -1,6 +1,7 @@
 import { CIRCLE_SIZE } from '../../../../../../shared/components/Point/components/Circle/constants';
 import { DIRECTIONS } from '../../../types';
 import { calculateWindowDimension } from '../../../../../../../../../../../../../utils';
+import { MAX_WIDTH } from '../../../../../../../../../../../../../config';
 
 export function xOffsetCalculator(
     index: number,
@@ -21,7 +22,16 @@ export function yOffsetCalculator(
     yOffset: number,
     heightLimit: number
 ) {
-    const { isLandscape, orientation } = calculateWindowDimension();
+    const {
+        isLandscape,
+        windowWidth,
+        windowHeight,
+    } = calculateWindowDimension();
+    const orientation = calculateOrientation(
+        isLandscape,
+        windowWidth,
+        windowHeight
+    );
     const dynamicOffset = isLandscape ? orientation : 1;
     const isBottomBlock = yOffset > 25;
 
@@ -43,6 +53,16 @@ export function yOffsetCalculator(
 
     const dynamicSkip = isBottomBlock ? skip * -1 : skip;
     return yOffset + dynamicSkip;
+}
+
+function calculateOrientation(
+    isLandscape: boolean,
+    _width: number,
+    height: number,
+    maxWidth = MAX_WIDTH
+) {
+    const width = isLandscape ? _width * maxWidth : _width;
+    return width / height;
 }
 
 function calculateSkip(index: number) {

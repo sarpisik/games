@@ -1,3 +1,4 @@
+import { MAX_WIDTH } from '../../../../../config';
 import { calculateWindowDimension } from '../../../../../utils';
 
 const TRIANGLE_WIDTH = 3;
@@ -9,7 +10,7 @@ export default function calculateSizes() {
         windowWidth,
     } = calculateWindowDimension();
 
-    const BOARD_WIDTH = isLandscape ? windowWidth * 0.75 : windowWidth;
+    const BOARD_WIDTH = isLandscape ? windowWidth * MAX_WIDTH : windowWidth;
     const BOARD_HEIGHT = isLandscape ? windowHeight : windowWidth;
 
     return {
