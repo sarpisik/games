@@ -356,28 +356,27 @@ export default class GamesController extends Controller {
         const game = await this._gamesService.readGame(gameId);
         const roundPlayer = game?.t;
 
-        if (roundPlayer === latestRoundPlayer) {
-            game.tRef && clearTimeout(game.tRef);
+        if (
+            roundPlayer === latestRoundPlayer &&
+            verifyRoundPlayer(roundPlayer)
+        ) {
+            game.timer[roundPlayer] -= 1;
 
-            if (verifyRoundPlayer(roundPlayer)) {
-                game.timer[roundPlayer] -= 1;
+            if (game.timer[roundPlayer] < 1) {
+                // Exit loop on game over.
+                const winner = OPPONENT[roundPlayer];
 
-                if (game.timer[roundPlayer] < 1) {
-                    // Exit loop on game over.
-                    const winner = OPPONENT[roundPlayer];
+                this._handleGameOver(roomName, gameId, { winner });
+            } else {
+                this._namespace.to(roomName).emit(EVENTS.TIMER, game.timer);
 
-                    this._handleGameOver(roomName, gameId, { winner });
-                } else {
-                    this._namespace.to(roomName).emit(EVENTS.TIMER, game.timer);
-
-                    game.tRef = setTimeout(() => {
-                        this._recursivelySetTimer(
-                            roomName,
-                            gameId,
-                            latestRoundPlayer
-                        );
-                    }, 1000);
-                }
+                game.tRef = setTimeout(() => {
+                    this._recursivelySetTimer(
+                        roomName,
+                        gameId,
+                        latestRoundPlayer
+                    );
+                }, 1000);
             }
         }
     }
@@ -392,6 +391,7 @@ export default class GamesController extends Controller {
             const game = await self._gamesService.readGame(data.gameId);
 
             // Break timer
+            game.tRef && clearTimeout(game.tRef);
             delete game.t;
 
             return eventHandler.call(self, data);
