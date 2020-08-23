@@ -341,6 +341,10 @@ export default class GamesController extends Controller {
         const socket = this._namespace.to(roomName);
         const gameId = await strToNmr(roomName);
         const game = await this._gamesService.readGame(gameId);
+        const latestRound = await customPromise(
+            () => game.rounds[game.rounds.length - 1]
+        );
+        game.t = latestRound.player;
 
         recursivelySetTimer(socket, game, this._handleGameOver.bind(this));
     }

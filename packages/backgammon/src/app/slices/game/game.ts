@@ -13,6 +13,8 @@ const initialState: GameClient = {
     score: generatePlayers(0),
     isRoundPlayer: false,
     rounds: [],
+    duration: 0,
+    timer: generatePlayers(0),
 };
 
 export const gameSlice = createSlice({
@@ -20,12 +22,20 @@ export const gameSlice = createSlice({
     initialState,
     reducers: {
         setInitialGame(state, action: PayloadAction<GameClient>) {
-            const { id, players, stages, score, rounds } = action.payload;
+            const {
+                id,
+                players,
+                stages,
+                score,
+                rounds,
+                timer,
+            } = action.payload;
             state.id = id;
             state.players = players;
             state.rounds = rounds;
             state.score = score;
             state.stages = stages;
+            state.timer = timer;
         },
         resetCurrentRoundLayout(state) {
             const currentRound = state.rounds[state.rounds.length - 1];
