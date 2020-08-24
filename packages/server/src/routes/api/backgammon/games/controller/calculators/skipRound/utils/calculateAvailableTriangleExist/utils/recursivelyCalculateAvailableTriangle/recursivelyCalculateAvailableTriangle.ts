@@ -23,7 +23,7 @@ export default async function recursivelyCalculateAvailableTriangle(
     } = params;
 
     if (i >= triangles.length) {
-        resolve(shouldCollect);
+        resolve(false);
     } else {
         let targetTriangleAvailable = false;
 
