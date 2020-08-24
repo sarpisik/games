@@ -1,5 +1,12 @@
 import React from 'react';
-import { Board, ScoreBoard, Sidebar, Undo, Timer } from './components';
+import {
+    Board,
+    RoundBoard,
+    Sidebar,
+    Timer,
+    Undo,
+    ScoreBoard,
+} from './components';
 import { useDynamicLayout, useInitializeGame } from './hooks';
 
 export default function Game() {
@@ -11,7 +18,11 @@ export default function Game() {
             <Board />
             <Sidebar>
                 <ScoreBoard />
+                <hr />
+                <RoundBoard />
+                <hr />
                 <Timer />
+                <hr />
                 <Undo />
             </Sidebar>
         </div>

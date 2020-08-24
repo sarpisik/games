@@ -1,18 +1,15 @@
 import React from 'react';
-import { PLAYERS } from '../Board/constants';
-import { Player, Dice } from './components';
-import styles from './ScoreBoard.module.css';
-import { useRound } from '../../../../app/slices';
-
-type PlayerProps = React.ComponentProps<typeof Player>;
+import { PLAYERS } from 'types/lib/backgammon';
+import { useGame } from '../../../../app/slices';
 
 export default function ScoreBoard(): React.ReactElement {
-    const round = useRound();
+    const { game } = useGame();
 
     return (
-        <div className={styles.scoreboard}>
-            <Player player={PLAYERS[round?.player] as PlayerProps['player']} />
-            <Dice dice={round?.dice} />
-        </div>
+        <React.Fragment>
+            <p>Score: </p>
+            <p>BLACK: {game.score[PLAYERS.BLACK]}</p>
+            <p>WHITE: {game.score[PLAYERS.WHITE]}</p>
+        </React.Fragment>
     );
 }
