@@ -323,8 +323,12 @@ export default class GamesController extends Controller {
 
     private async _handleUndoRound(data: EmitUndoRound) {
         const { gameId } = data;
-        const game = await this._gamesService.readGame(gameId);
+
+        // exclude timer ref to prevent
+        // "TypeError: Converting circular structure to JSON"
+        const { tRef, ...game } = await this._gamesService.readGame(gameId);
         const _game = await asyncParser(game);
+
         const rounds = await undoRoundCalculator(_game.rounds);
         _game.rounds = rounds;
         await this._gamesService.updateGame(_game);
