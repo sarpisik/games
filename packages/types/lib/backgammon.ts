@@ -7,6 +7,8 @@ export interface EmitError {
 
 export type EmitGameOver = EmitStageOver;
 
+export type EmitScore = EmitStageOver & Pick<Game, "score" | "stages">;
+
 export interface EmitStageOver {
     winner: PLAYERS.BLACK | PLAYERS.WHITE;
 }

@@ -15,6 +15,8 @@ import {
     OPPONENT,
     PLAYERS,
     Round,
+    EmitGameOver,
+    EmitScore,
 } from '@shared-types/backgammon';
 import { SHORT_TIMER } from '@shared-types/constants';
 import asyncParser from '@shared/asyncParser';
@@ -280,11 +282,11 @@ export default class GamesController extends Controller {
             if (shouldGameOver) {
                 this._handleGameOver(roomName, game.id, shouldStageOver);
             } else {
-                self._emitRoomEvent(
-                    roomName,
-                    EVENTS.STAGE_OVER,
-                    shouldStageOver
-                );
+                const payload = shouldStageOver as EmitScore;
+                payload.score = game.score;
+                payload.stages = game.stages;
+                self._emitRoomEvent(roomName, EVENTS.STAGE_OVER, payload);
+
                 game.rounds = [];
 
                 setTimeout(async function reHandleNextRound() {

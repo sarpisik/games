@@ -8,6 +8,7 @@ import {
     EVENTS,
     PLAYERS,
     User,
+    EmitScore,
 } from 'types/lib/backgammon';
 import {
     addRound,
@@ -21,6 +22,7 @@ import {
     signIn,
     undoRound,
     setShortTimer,
+    setNextStage,
 } from '../../slices';
 import { store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
@@ -98,14 +100,14 @@ const socket: () => Middleware = () => {
         s.dispatch(setNotification(data));
     };
 
-    const onStageOver = (s: typeof store) => (data: EmitStageOver) => {
+    const onStageOver = (s: typeof store) => (data: EmitScore) => {
         const { game, user } = s.getState();
         const message = createWinnerMessage(game, user, data).concat(
             ' Preparing the next stage.'
         );
 
         s.dispatch(setNotification({ type: EVENTS.STAGE_OVER, message }));
-        s.dispatch(deleteRounds());
+        s.dispatch(setNextStage(data));
     };
 
     const onGameOver = (s: typeof store) => (data: EmitGameOver) => {

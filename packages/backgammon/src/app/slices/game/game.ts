@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { GameClient, PLAYERS } from 'types/lib/backgammon';
+import { GameClient, PLAYERS, EmitScore } from 'types/lib/backgammon';
 
 const generatePlayers = (value: number) => ({
     [PLAYERS.BLACK]: value,
@@ -66,6 +66,12 @@ export const gameSlice = createSlice({
             round.availableTriangles = [];
             state.rounds.push(round);
         },
+        setNextStage(state, action: PayloadAction<EmitScore>) {
+            const { score, stages } = action.payload;
+            state.score = score;
+            state.stages = stages;
+            state.rounds = [];
+        },
         deleteRounds(state) {
             state.rounds = [];
         },
@@ -92,6 +98,7 @@ export const {
     setInitialGame,
     setRoundPlayer,
     undoRound,
+    setNextStage,
     setTimer,
 } = gameSlice.actions;
 
