@@ -1,1 +1,1 @@
-export const SHORT_TIMER = 5;
+export const SHORT_TIMER = 15;
