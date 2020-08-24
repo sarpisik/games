@@ -6,7 +6,7 @@
         "build:manual": "tsc --build tsconfig.prod.json",
         "build:dist": "npm run build && npm run dist",
         "dist": "sh ./scripts/dist.sh",
-        "deploy": "npm run build:dist && eb deploy",
+        "deploy": "npm test && npm run build:dist && eb deploy",
         "lint:types": "tsc -p tsconfig.prod.json --noEmit",
         "start": "./node_modules/pm2/bin/pm2-runtime start ecosystem.config.js --env production",
         "dev": "nodemon",
