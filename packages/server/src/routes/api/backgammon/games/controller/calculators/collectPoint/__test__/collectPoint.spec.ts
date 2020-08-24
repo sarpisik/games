@@ -60,6 +60,33 @@ describe('collectPointCalculator', () => {
         };
     });
 
+    it('should collect only one of the dices', (done) => {
+        data.fromTriangleIndex = 22; // 2
+        round.dice = [2, 1];
+        round.layout = createCollectableLayout(layout).map((t, i) => {
+            if (i < data.fromTriangleIndex) return [PLAYERS.NONE, 0];
+
+            // Move WHITE points to 2nd
+            if (i === data.fromTriangleIndex) return [PLAYERS.WHITE, 2];
+            return t;
+        });
+        const resultRound = {
+            layout: createResultLayout(
+                round.layout,
+                data.fromTriangleIndex,
+                PLAYERS.WHITE
+            ),
+            dice: round.dice.slice(1),
+        };
+
+        collectPointCalculator(data, round).then((r) => {
+            const result = r as Round;
+            expect(result.layout).toEqual(resultRound.layout);
+            expect(result.dice).toEqual(resultRound.dice);
+            done();
+        });
+    });
+
     it('should not collect point', (done) => {
         const event = createEvent(round);
 
@@ -112,25 +139,6 @@ describe('collectPointCalculator', () => {
         round.dice = [4, 1];
         round.layout = createCollectableLayout(layout).map((t, i) => {
             // Move points from 6th triangle to 5th
-            if (i === 18) return [PLAYERS.NONE, 0];
-            if (i === 19) {
-                t[1] = t[1] + 3;
-            }
-            return t;
-        });
-        const event = createEvent(round);
-
-        collectPointCalculator(data, round).then((result) => {
-            expect(result).toEqual(event);
-            done();
-        });
-    });
-
-    it('should not collect, movable but the triangle is blocked', (done) => {
-        data.fromTriangleIndex = 19;
-        round.dice = [4, 1];
-        round.layout = createCollectableLayout(layout).map((t, i) => {
-            // Move points from 6th and 5th triangle to 4th
             if (i === 18) return [PLAYERS.NONE, 0];
             if (i === 19) {
                 t[1] = t[1] + 3;
