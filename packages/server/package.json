@@ -10,7 +10,8 @@
         "lint:types": "tsc -p tsconfig.prod.json --noEmit",
         "start": "./node_modules/pm2/bin/pm2-runtime start ecosystem.config.js --env production",
         "dev": "nodemon",
-        "test": "nodemon --config ./spec/nodemon.json",
+        "test": "nyc --reporter=html ts-node -r tsconfig-paths/register ./spec",
+        "test:dev": "nodemon --config ./spec/nodemon.json",
         "precommit": "npm run lint:types && lint-staged"
     },
     "engines": {
