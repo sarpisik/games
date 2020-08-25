@@ -2,15 +2,14 @@ import React from 'react';
 import {
     Board,
     RoundBoard,
+    ScoreBoard,
     Sidebar,
     Timer,
     Undo,
-    ScoreBoard,
 } from './components';
-import { useDynamicLayout, useInitializeGame } from './hooks';
+import { useDynamicLayout } from './hooks';
 
 export default function Game() {
-    useInitializeGame();
     useDynamicLayout();
 
     return (

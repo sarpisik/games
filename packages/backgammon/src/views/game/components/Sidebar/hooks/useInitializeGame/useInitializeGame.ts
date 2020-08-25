@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { EVENTS } from 'types/lib/backgammon';
-import { SOCKET_ACTIONS } from '../../../../app/middlewares/socket/actions';
-import { useUser, useGame } from '../../../../app/slices';
+import { useUser, useGame } from '../../../../../../app/slices';
+import { SOCKET_ACTIONS } from '../../../../../../app/middlewares/socket/actions';
 
 export default function useInitializeGame() {
     const params = useParams<{ id: string }>();
