@@ -1,0 +1,1 @@
+export { generatePlayersObj } from './generatePlayersObj';
