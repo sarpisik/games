@@ -10,12 +10,12 @@ export default class BackgammonGame implements GameServerSide {
     duration: GameServerSide['duration'];
     timer: GameServerSide['timer'];
     rounds: GameServerSide['rounds'];
-    private _roomName: string;
+    private _namespace: SocketIO.Namespace;
 
     constructor(
         public id: number,
         private _roomId: number,
-        private _namespace: SocketIO.Namespace
+        _io: SocketIO.Server
     ) {
         this.players = generatePlayersObj(-1, -1);
         this.score = generatePlayersObj(0, 0);
@@ -24,22 +24,14 @@ export default class BackgammonGame implements GameServerSide {
         this.timer = generatePlayersObj(60, 60);
         this.rounds = [];
 
-        this._roomName = generateBackgammonGamePath(this._roomId, id);
-        console.log(this._roomName);
-        this._namespace = _namespace.to(this._roomName);
-        this._namespace.on(
-            GAME_EVENTS.INITIALIZE_GAME,
-            this._onInitializeGame.bind(this)
-        );
+        this._namespace = _io.of(generateBackgammonGamePath(this._roomId, id));
+        this._namespace.on('connection', this._onClientConnection.bind(this));
     }
 
-    private _onInitializeGame() {
-        const payload = Object.assign({}, this.id, this.players);
-        console.log(payload);
-
-        this._namespace.emit(this._roomName, {
-            type: GAME_EVENTS.JOIN_GAME,
-            payload,
-        });
+    private _onClientConnection(socket: SocketIO.Socket) {
+        socket.emit(
+            GAME_EVENTS.JOIN_GAME,
+            Object.assign({}, this.id, this.players)
+        );
     }
 }
