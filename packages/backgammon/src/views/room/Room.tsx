@@ -13,8 +13,8 @@ function Room(): React.ReactElement {
     const { id, games } = room;
 
     return (
-        <Container>
-            <Row xs={1} sm={2} md={3}>
+        <Container className="h-100">
+            <Row xs={1} sm={2} md={3} className="h-100">
                 {games.map((game) => (
                     <Col key={game.id}>
                         <Link to={`/${id}/${game.id.toString()}`}>
