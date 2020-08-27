@@ -25,9 +25,11 @@ import {
     signIn,
     undoRound,
     setRooms,
+    setRoom,
 } from '../../slices';
 import { store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
+import { Room } from '../../slices/room/room';
 
 type SocketContextType = ReturnType<typeof socketIOClient> | null;
 type Game = Parameters<typeof setGame>[0];
@@ -57,6 +59,10 @@ const socket: () => Middleware = () => {
 
     const onJoinRooms = (s: typeof store) => (roomIds: EmitJoinRooms) => {
         s.dispatch(setRooms(roomIds));
+    };
+
+    const onJoinRoom = (s: typeof store) => (payload: Room) => {
+        s.dispatch(setRoom(payload));
     };
 
     const onTimer = (s: typeof store) => (game: Game['timer']) => {
@@ -130,9 +136,18 @@ const socket: () => Middleware = () => {
         } else {
             switch (action.type) {
                 case ROOM_EVENTS.JOIN_ROOMS:
+                    if (connection !== null) connection.disconnect();
                     connection = socketIOClient(REACT_APP_SOCKET_URL);
                     // @ts-ignore
                     connection.on(ROOM_EVENTS.JOIN_ROOMS, onJoinRooms(store));
+                    break;
+
+                case ROOM_EVENTS.JOIN_ROOM:
+                    if (connection !== null) connection.disconnect();
+                    connection = socketIOClient(REACT_APP_SOCKET_URL);
+                    connection.emit(EVENTS.JOIN_ROOM, action.payload);
+                    // @ts-ignore
+                    connection.on(ROOM_EVENTS.JOIN_ROOM, onJoinRoom(store));
                     break;
 
                 case EVENTS.JOIN_ROOM:

@@ -37,8 +37,11 @@ export default class Rooms {
     }
 
     private _onJoinRoom(socket: SocketIO.Socket) {
-        return (roomName: string) => {
-            socket.join(roomName);
+        return (roomName: number) => {
+            socket.join(roomName.toString());
+            const room = this._rooms.get(roomName);
+            const games = room?.games.map(({ id }) => ({ id }));
+            socket.emit(ROOM_EVENTS.JOIN_ROOM, { id: room?.id, games });
         };
     }
 }

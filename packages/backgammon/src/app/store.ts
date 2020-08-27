@@ -9,13 +9,14 @@ import {
     game,
     measures,
     notification,
+    room,
     rooms,
     shortTimer,
     user,
 } from './slices';
 
 export const store = configureStore({
-    reducer: { game, notification, user, measures, rooms, shortTimer },
+    reducer: { game, notification, user, measures, room, rooms, shortTimer },
     middleware: new MiddlewareArray().concat([socket]),
 });
 
