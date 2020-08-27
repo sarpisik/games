@@ -6,6 +6,7 @@ import {
 } from '@reduxjs/toolkit';
 import { socket } from './middlewares';
 import {
+    connection,
     game,
     measures,
     notification,
@@ -16,7 +17,16 @@ import {
 } from './slices';
 
 export const store = configureStore({
-    reducer: { game, notification, user, measures, room, rooms, shortTimer },
+    reducer: {
+        connection,
+        game,
+        notification,
+        user,
+        measures,
+        room,
+        rooms,
+        shortTimer,
+    },
     middleware: new MiddlewareArray().concat([socket]),
 });
 

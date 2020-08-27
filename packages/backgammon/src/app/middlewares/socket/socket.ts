@@ -11,6 +11,7 @@ import {
     User,
 } from 'types/lib/backgammon';
 import { ROOM_EVENTS, EmitJoinRooms } from 'types/lib/room';
+import { ROOMS_EVENTS } from 'types/lib/rooms';
 import {
     addRound,
     deleteNotification,
@@ -26,11 +27,13 @@ import {
     undoRound,
     setRooms,
     setRoom,
+    setConnectionStatus,
 } from '../../slices';
 import { store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
 import { Room } from '../../slices/room/room';
 import { GAME_EVENTS } from 'types/lib/game';
+import { CONNECTION_STATUS } from '../../slices/connection/connection';
 
 type SocketContextType = ReturnType<typeof socketIOClient> | null;
 type Game = Parameters<typeof setGame>[0];
@@ -59,7 +62,6 @@ const socket: () => Middleware = () => {
         payload: unknown;
     }) => {
         // s.dispatch(setGame(game));
-        debugger;
         console.log(action);
     };
 
@@ -69,6 +71,7 @@ const socket: () => Middleware = () => {
 
     const onJoinRooms = (s: typeof store) => (roomIds: EmitJoinRooms) => {
         s.dispatch(setRooms(roomIds));
+        s.dispatch(setConnectionStatus(CONNECTION_STATUS.CONNECTED));
     };
 
     const onJoinRoom = (s: typeof store) => (payload: Room) => {
@@ -145,6 +148,16 @@ const socket: () => Middleware = () => {
             action(store.dispatch, store.getState);
         } else {
             switch (action.type) {
+                case ROOMS_EVENTS.JOIN_ROOMS:
+                    if (connection !== null) connection.disconnect();
+                    store.dispatch(
+                        setConnectionStatus(CONNECTION_STATUS.CONNECTING)
+                    );
+                    connection = socketIOClient(action.payload);
+                    // @ts-ignore
+                    connection.on(ROOMS_EVENTS.JOIN_ROOMS, onJoinRooms(store));
+                    break;
+
                 case ROOM_EVENTS.JOIN_ROOMS:
                     if (connection !== null) connection.disconnect();
                     connection = socketIOClient(REACT_APP_SOCKET_URL);

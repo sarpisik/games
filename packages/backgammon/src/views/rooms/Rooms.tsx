@@ -1,12 +1,13 @@
 import React from 'react';
-import { useConnection } from './hooks';
-import { useRooms } from '../../app/slices';
 import { Link } from 'react-router-dom';
+import { useRooms } from '../../app/slices';
+import { withRoomsConnection } from './components';
 
-export default function Rooms(): React.ReactElement {
+export default withRoomsConnection(Rooms);
+
+function Rooms(): React.ReactElement {
     const rooms = useRooms();
     const { ids } = rooms;
-    useConnection();
 
     return (
         <ul>

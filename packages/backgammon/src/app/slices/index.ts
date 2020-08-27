@@ -1,4 +1,9 @@
 export {
+    connection,
+    setConnectionStatus,
+    useConnectionStatus,
+} from './connection';
+export {
     addRound,
     deleteRounds,
     game,
