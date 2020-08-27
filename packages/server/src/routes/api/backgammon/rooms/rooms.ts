@@ -2,6 +2,7 @@ import { SOCKET_BACKGAMMON } from '@shared-types/constants';
 import { ROOM_EVENTS } from '@shared-types/room';
 import { BackgammonRoom } from './room';
 import { RouterType } from '@routes/api/shared/controller';
+import { GAME_EVENTS } from '@shared-types/game';
 
 export default class Rooms {
     private _namespace: SocketIO.Namespace;
@@ -19,7 +20,7 @@ export default class Rooms {
         this._rooms = new Map();
 
         // Register rooms.
-        for (let i = 1; i <= 10; i++) {
+        for (let i = 1; i <= 1; i++) {
             this._rooms.set(
                 i,
                 new BackgammonRoom(
@@ -34,6 +35,7 @@ export default class Rooms {
     private _onClientConnection(socket: SocketIO.Socket) {
         socket.emit(ROOM_EVENTS.JOIN_ROOMS, [...this._rooms.keys()]);
         socket.on(ROOM_EVENTS.JOIN_ROOM, this._onJoinRoom.call(this, socket));
+        socket.on(GAME_EVENTS.JOIN_GAME, this._onJoinGame.call(this, socket));
     }
 
     private _onJoinRoom(socket: SocketIO.Socket) {
@@ -42,6 +44,15 @@ export default class Rooms {
             const room = this._rooms.get(roomName);
             const games = room?.games.map(({ id }) => ({ id }));
             socket.emit(ROOM_EVENTS.JOIN_ROOM, { id: room?.id, games });
+        };
+    }
+
+    private _onJoinGame(socket: SocketIO.Socket) {
+        return (roomName: number) => {
+            console.log(roomName);
+
+            socket.join(roomName.toString());
+            // socket.emit(GAME_EVENTS.JOIN_GAME, { id: room?.id, games });
         };
     }
 }

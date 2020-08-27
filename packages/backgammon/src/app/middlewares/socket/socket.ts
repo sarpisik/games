@@ -30,6 +30,7 @@ import {
 import { store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
 import { Room } from '../../slices/room/room';
+import { GAME_EVENTS } from 'types/lib/game';
 
 type SocketContextType = ReturnType<typeof socketIOClient> | null;
 type Game = Parameters<typeof setGame>[0];
@@ -51,6 +52,15 @@ const socket: () => Middleware = () => {
                 calculateIsRoundPlayer(user.id, game.players, round.player)
             )
         );
+    };
+
+    const onGameEvent = (s: typeof store) => (action: {
+        type: GAME_EVENTS;
+        payload: unknown;
+    }) => {
+        // s.dispatch(setGame(game));
+        debugger;
+        console.log(action);
     };
 
     const onUpdateGame = (s: typeof store) => (game: Game) => {
@@ -148,6 +158,23 @@ const socket: () => Middleware = () => {
                     connection.emit(EVENTS.JOIN_ROOM, action.payload);
                     // @ts-ignore
                     connection.on(ROOM_EVENTS.JOIN_ROOM, onJoinRoom(store));
+                    break;
+
+                case GAME_EVENTS.JOIN_GAME:
+                    if (connection !== null) connection.disconnect();
+                    connection = socketIOClient(REACT_APP_SOCKET_URL);
+                    connection.emit(GAME_EVENTS.JOIN_GAME, action.payload);
+                    break;
+
+                case GAME_EVENTS.INITIALIZE_GAME:
+                    // @ts-ignore
+                    connection.emit(GAME_EVENTS.INITIALIZE_GAME);
+                    // @ts-ignore
+                    connection.on(
+                        GAME_EVENTS.INITIALIZE_GAME,
+                        // @ts-ignore
+                        onGameEvent(store)
+                    );
                     break;
 
                 case EVENTS.JOIN_ROOM:

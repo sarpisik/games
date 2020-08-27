@@ -12,7 +12,7 @@ export default class BackgammonRoom implements RoomType {
 
         this.games = [];
         for (let i = 1; i <= 10; i++) {
-            this.games.push(new BackgammonGame(i, this._namespace));
+            this.games.push(new BackgammonGame(i, id, _namespace));
         }
     }
 }
