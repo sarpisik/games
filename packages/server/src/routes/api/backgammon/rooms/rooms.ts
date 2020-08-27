@@ -20,7 +20,7 @@ export default class Rooms {
         this._rooms = new Map();
 
         // Register rooms.
-        for (let i = 1; i <= 1; i++) {
+        for (let i = 1; i <= 10; i++) {
             this._rooms.set(
                 i,
                 new BackgammonRoom(
