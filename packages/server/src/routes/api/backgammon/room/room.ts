@@ -1,6 +1,9 @@
 import { RoomType } from './types';
 import { BackgammonGame } from './game';
-import { generateBackgammonRoomPath } from '@shared-types/helpers';
+import {
+    generateBackgammonRoomPath,
+    generateBackgammonGamePath,
+} from '@shared-types/helpers';
 import { ROOM_EVENTS } from '@shared-types/room';
 
 export default class BackgammonRoom implements RoomType {
@@ -25,7 +28,9 @@ export default class BackgammonRoom implements RoomType {
 
         this.games = [];
         for (let i = 1; i <= 10; i++) {
-            this.games.push(new BackgammonGame(i));
+            this.games.push(
+                new BackgammonGame(i, _io.of(generateBackgammonGamePath(id, i)))
+            );
         }
     }
 }

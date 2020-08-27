@@ -9,7 +9,7 @@ export default class BackgammonGame implements GameServerSide {
     timer: GameServerSide['timer'];
     rounds: GameServerSide['rounds'];
 
-    constructor(public id: number) {
+    constructor(public id: number, private _namespace: SocketIO.Namespace) {
         this.players = generatePlayersObj(-1, -1);
         this.score = generatePlayersObj(0, 0);
         this.stages = 1;
