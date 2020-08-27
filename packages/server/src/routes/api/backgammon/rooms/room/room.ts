@@ -1,7 +1,7 @@
 import { generateBackgammonRoomPath } from '@shared-types/helpers';
+import { ROOM_EVENTS } from '@shared-types/room';
 import { BackgammonGame } from './game';
 import { RoomType } from './types';
-import { ROOMS_EVENTS } from '@shared-types/rooms';
 
 export default class BackgammonRoom implements RoomType {
     private _namespace: SocketIO.Namespace;
@@ -20,6 +20,13 @@ export default class BackgammonRoom implements RoomType {
     }
 
     private _onClientConnection(socket: SocketIO.Socket) {
-        socket.emit(ROOMS_EVENTS.JOIN_ROOMS, [...this._games.keys()]);
+        const id = this.id;
+        const games = [...this._games.values()].map((value) => ({
+            id: value.id,
+            stages: value.stages,
+            duration: value.duration,
+            players: value.players,
+        }));
+        socket.emit(ROOM_EVENTS.JOIN_ROOM, { id, games });
     }
 }

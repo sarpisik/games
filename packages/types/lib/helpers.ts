@@ -6,6 +6,6 @@ export function generateBackgammonGamePath<T>(roomId: T, gameId: T) {
 export function generateBackgammonRoomPath<T>(roomId: T) {
     return mergePath(SOCKET_BACKGAMMON, roomId);
 }
-function mergePath<T>(pathPrefix: string, subPath: T) {
+export function mergePath<T>(pathPrefix: string, subPath: T) {
     return pathPrefix.concat(`/${subPath}`);
 }

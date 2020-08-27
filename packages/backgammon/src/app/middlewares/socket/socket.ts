@@ -76,6 +76,7 @@ const socket: () => Middleware = () => {
 
     const onJoinRoom = (s: typeof store) => (payload: Room) => {
         s.dispatch(setRoom(payload));
+        s.dispatch(setConnectionStatus(CONNECTION_STATUS.CONNECTED));
     };
 
     const onTimer = (s: typeof store) => (game: Game['timer']) => {
@@ -158,17 +159,12 @@ const socket: () => Middleware = () => {
                     connection.on(ROOMS_EVENTS.JOIN_ROOMS, onJoinRooms(store));
                     break;
 
-                case ROOM_EVENTS.JOIN_ROOMS:
-                    if (connection !== null) connection.disconnect();
-                    connection = socketIOClient(REACT_APP_SOCKET_URL);
-                    // @ts-ignore
-                    connection.on(ROOM_EVENTS.JOIN_ROOMS, onJoinRooms(store));
-                    break;
-
                 case ROOM_EVENTS.JOIN_ROOM:
                     if (connection !== null) connection.disconnect();
-                    connection = socketIOClient(REACT_APP_SOCKET_URL);
-                    connection.emit(EVENTS.JOIN_ROOM, action.payload);
+                    store.dispatch(
+                        setConnectionStatus(CONNECTION_STATUS.CONNECTING)
+                    );
+                    connection = socketIOClient(action.payload);
                     // @ts-ignore
                     connection.on(ROOM_EVENTS.JOIN_ROOM, onJoinRoom(store));
                     break;
