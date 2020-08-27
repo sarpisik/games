@@ -3,26 +3,28 @@ import socketIOClient from 'socket.io-client';
 import {
     EmitError,
     EmitGameOver,
+    EmitScore,
     EmitSignInUser,
     EmitStageOver,
     EVENTS,
     PLAYERS,
     User,
-    EmitScore,
 } from 'types/lib/backgammon';
+import { ROOM_EVENTS, EmitJoinRooms } from 'types/lib/room';
 import {
     addRound,
     deleteNotification,
     deleteRounds,
     replaceRound,
     setGame,
+    setNextStage,
     setNotification,
     setRoundPlayer,
+    setShortTimer,
     setTimer,
     signIn,
     undoRound,
-    setShortTimer,
-    setNextStage,
+    setRooms,
 } from '../../slices';
 import { store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
@@ -51,6 +53,10 @@ const socket: () => Middleware = () => {
 
     const onUpdateGame = (s: typeof store) => (game: Game) => {
         s.dispatch(setGame(game));
+    };
+
+    const onJoinRooms = (s: typeof store) => (roomIds: EmitJoinRooms) => {
+        s.dispatch(setRooms(roomIds));
     };
 
     const onTimer = (s: typeof store) => (game: Game['timer']) => {
@@ -123,6 +129,12 @@ const socket: () => Middleware = () => {
             action(store.dispatch, store.getState);
         } else {
             switch (action.type) {
+                case ROOM_EVENTS.JOIN_ROOMS:
+                    connection = socketIOClient(REACT_APP_SOCKET_URL);
+                    // @ts-ignore
+                    connection.on(ROOM_EVENTS.JOIN_ROOMS, onJoinRooms(store));
+                    break;
+
                 case EVENTS.JOIN_ROOM:
                     if (connection !== null) connection.disconnect();
                     connection = socketIOClient(REACT_APP_SOCKET_URL);

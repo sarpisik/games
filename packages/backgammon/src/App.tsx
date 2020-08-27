@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { Game, Home } from './views';
+import { Game, Rooms } from './views';
 
 /*
  * TODO:
@@ -17,7 +17,7 @@ export default function App() {
                 <Game />
             </Route>
             <Route exact path="/">
-                <Home />
+                <Rooms />
             </Route>
         </Switch>
     );

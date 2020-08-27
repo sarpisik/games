@@ -5,10 +5,17 @@ import {
     ThunkAction,
 } from '@reduxjs/toolkit';
 import { socket } from './middlewares';
-import { game, measures, notification, shortTimer, user } from './slices';
+import {
+    game,
+    measures,
+    notification,
+    rooms,
+    shortTimer,
+    user,
+} from './slices';
 
 export const store = configureStore({
-    reducer: { game, notification, user, measures, shortTimer },
+    reducer: { game, notification, user, measures, rooms, shortTimer },
     middleware: new MiddlewareArray().concat([socket]),
 });
 

@@ -4,6 +4,8 @@ export enum ROOM_EVENTS {
     JOIN_ROOMS = "JOIN_ROOMS",
 }
 
+export type EmitJoinRooms = number[];
+
 export interface EmitJoinRoom {
     type: ROOM_TYPE;
     id: number;
