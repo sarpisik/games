@@ -7,6 +7,7 @@ import {
 import { socket } from './middlewares';
 import {
     connection,
+    feedbacks,
     game,
     measures,
     notification,
@@ -19,6 +20,7 @@ import {
 export const store = configureStore({
     reducer: {
         connection,
+        feedbacks,
         game,
         notification,
         user,

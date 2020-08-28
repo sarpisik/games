@@ -226,6 +226,12 @@ const socket: () => Middleware = () => {
                     connection = null;
                     break;
 
+                /* ROOM EVENTS */
+                case ROOM_EVENTS.EDIT_GAME:
+                    connection?.emit(ROOM_EVENTS.EDIT_GAME, action.payload);
+                    break;
+
+                /* GAME EVENTS */
                 case EVENTS.SIGN_IN_USER:
                     {
                         const black = action.payload;
@@ -241,10 +247,6 @@ const socket: () => Middleware = () => {
 
                         connection?.emit(EVENTS.SIGN_IN_USER, data);
                     }
-                    break;
-
-                case ROOM_EVENTS.EDIT_GAME:
-                    connection?.emit(ROOM_EVENTS.EDIT_GAME, action.payload);
                     break;
 
                 case EVENTS.ROUND:

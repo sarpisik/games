@@ -3,6 +3,7 @@ export {
     setConnectionStatus,
     useConnectionStatus,
 } from './connection';
+export { feedbacks, setFeedback, useFeedbacks } from './feedbacks';
 export {
     addRound,
     deleteRounds,
