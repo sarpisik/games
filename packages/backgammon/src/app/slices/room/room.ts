@@ -22,9 +22,18 @@ export const roomSlice = createSlice({
             state.id = action.payload.id;
             state.games = action.payload.games;
         },
+        setRoomGame(state, action: PayloadAction<Room['games'][number]>) {
+            const _game = action.payload;
+            const gameId = state.games.findIndex(
+                (game) => game.id === _game.id
+            );
+            if (gameId >= 0) {
+                state.games[gameId] = _game;
+            }
+        },
     },
 });
 
-export const { setRoom } = roomSlice.actions;
+export const { setRoom, setRoomGame } = roomSlice.actions;
 
 export default roomSlice.reducer;

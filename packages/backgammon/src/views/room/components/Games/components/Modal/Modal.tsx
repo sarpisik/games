@@ -9,7 +9,13 @@ export default function Modal(): React.ReactElement {
     const { gameId, open, setClose } = context;
     const game = useGame(gameId);
     const body = validateGame(game) ? <Form game={game} /> : null;
-    body || setClose();
+
+    React.useEffect(
+        function handleCLose() {
+            body || setClose();
+        },
+        [body, setClose]
+    );
 
     // If the game is valid, render form.
     // Else, close modal.

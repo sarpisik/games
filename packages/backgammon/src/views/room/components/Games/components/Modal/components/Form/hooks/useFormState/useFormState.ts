@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { FormControlProps } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
 import { PLAYERS } from 'types/lib/backgammon';
 import { generatePlayers } from 'types/lib/helpers';
-import { useUser, useRoom } from '../../../../../../../../../../app/slices';
+import { ROOM_EVENTS } from 'types/lib/room';
+import { useUser } from '../../../../../../../../../../app/slices';
 import { Room } from '../../../../../../../../../../app/slices/room/room';
 import { valueReducer } from './utils';
 
@@ -14,22 +16,24 @@ export interface InitialState extends Pick<Game, 'id' | 'stages' | 'duration'> {
 
 export default function useFormState(initialState: InitialState) {
     const { user } = useUser();
-    const room = useRoom();
+    const dispatch = useDispatch();
     const [game, setGame] = useState(initialState);
 
     const onSubmit = (event: React.FormEvent<HTMLElement>) => {
         event.preventDefault();
+
         const players =
             game.color === 'BLACK'
                 ? generatePlayers(user.id, -1)
                 : generatePlayers(-1, user.id);
         const payload = {
             id: game.id,
-            duration: game.duration,
+            duration: game.duration * 60,
             stages: game.stages,
             players,
         };
-        console.log(payload, room.id);
+
+        dispatch({ type: ROOM_EVENTS.EDIT_GAME, payload });
     };
 
     const onChange: FormControlProps['onChange'] = (event) => {

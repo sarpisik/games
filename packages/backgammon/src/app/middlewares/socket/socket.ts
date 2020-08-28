@@ -10,30 +10,30 @@ import {
     PLAYERS,
     User,
 } from 'types/lib/backgammon';
-import { ROOM_EVENTS, EmitJoinRooms } from 'types/lib/room';
+import { GAME_EVENTS } from 'types/lib/game';
+import { EmitJoinRooms, OnEditGame, ROOM_EVENTS } from 'types/lib/room';
 import { ROOMS_EVENTS } from 'types/lib/rooms';
 import {
     addRound,
     deleteNotification,
     deleteRounds,
     replaceRound,
+    setConnectionStatus,
     setGame,
     setNextStage,
     setNotification,
+    setRoom,
+    setRooms,
     setRoundPlayer,
     setShortTimer,
     setTimer,
     signIn,
     undoRound,
-    setRooms,
-    setRoom,
-    setConnectionStatus,
 } from '../../slices';
+import { CONNECTION_STATUS } from '../../slices/connection/connection';
+import { Room, setRoomGame } from '../../slices/room/room';
 import { store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
-import { Room } from '../../slices/room/room';
-import { GAME_EVENTS } from 'types/lib/game';
-import { CONNECTION_STATUS } from '../../slices/connection/connection';
 
 type SocketContextType = ReturnType<typeof socketIOClient> | null;
 type Game = Parameters<typeof setGame>[0];
@@ -77,6 +77,10 @@ const socket: () => Middleware = () => {
     const onJoinRoom = (s: typeof store) => (payload: Room) => {
         s.dispatch(setRoom(payload));
         s.dispatch(setConnectionStatus(CONNECTION_STATUS.CONNECTED));
+    };
+
+    const onEditGame = (s: typeof store) => (payload: OnEditGame) => {
+        s.dispatch(setRoomGame(payload));
     };
 
     const onTimer = (s: typeof store) => (game: Game['timer']) => {
@@ -167,6 +171,8 @@ const socket: () => Middleware = () => {
                     connection = socketIOClient(action.payload);
                     // @ts-ignore
                     connection.on(ROOM_EVENTS.JOIN_ROOM, onJoinRoom(store));
+                    // @ts-ignore
+                    connection.on(ROOM_EVENTS.EDIT_GAME, onEditGame(store));
                     break;
 
                 case GAME_EVENTS.JOIN_GAME:
@@ -235,6 +241,10 @@ const socket: () => Middleware = () => {
 
                         connection?.emit(EVENTS.SIGN_IN_USER, data);
                     }
+                    break;
+
+                case ROOM_EVENTS.EDIT_GAME:
+                    connection?.emit(ROOM_EVENTS.EDIT_GAME, action.payload);
                     break;
 
                 case EVENTS.ROUND:
