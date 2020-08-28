@@ -7,10 +7,7 @@ interface Props {}
 
 export default function Modal(props: Props): React.ReactElement {
     const context = React.useContext(ModalContext);
-    const { open, setOpen } = context;
-    const setClose = () => {
-        setOpen(false);
-    };
+    const { open, setClose } = context;
 
     return (
         <ModalB

@@ -9,6 +9,7 @@ export default function Games(): React.ReactElement {
     const { id, games } = room;
     const gamesProps: React.ComponentProps<typeof Game>[] = games.map(
         (game) => ({
+            id: game.id,
             url: `/${id}/${game.id.toString()}`,
             children: `Game ${game.id}`,
         })
