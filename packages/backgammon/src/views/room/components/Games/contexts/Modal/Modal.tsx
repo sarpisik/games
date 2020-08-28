@@ -23,10 +23,10 @@ interface ModalProviderProps {
     children: React.ReactNode;
 }
 export function ModalProvider(props: ModalProviderProps): React.ReactElement {
-    const [open, _setOpen] = React.useState(true);
+    const [open, _setOpen] = React.useState(false);
     const [gameId, setGameId] = React.useState(-1);
 
-    const setOpen: ContextProps['setOpen'] = () => () => {
+    const setOpen: ContextProps['setOpen'] = (gameId) => () => {
         setGameId(gameId);
         _setOpen(true);
     };
