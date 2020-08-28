@@ -1,5 +1,5 @@
 import { SOCKET_BACKGAMMON } from '@shared-types/constants';
-import { ROOM_EVENTS } from '@shared-types/room';
+import { ROOMS_EVENTS } from '@shared-types/rooms';
 import { BackgammonRoom } from './room';
 import { RouterType } from '@routes/api/shared/controller';
 
@@ -32,6 +32,6 @@ export default class Rooms {
     }
 
     private _onClientConnection(socket: SocketIO.Socket) {
-        socket.emit(ROOM_EVENTS.JOIN_ROOMS, [...this._rooms.keys()]);
+        socket.emit(ROOMS_EVENTS.JOIN_ROOMS, [...this._rooms.keys()]);
     }
 }
