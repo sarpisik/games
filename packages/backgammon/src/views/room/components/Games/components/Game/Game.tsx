@@ -1,9 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
-import { FaUser, FaRegUser } from 'react-icons/fa';
-import { AiTwotoneSetting } from 'react-icons/ai';
+import Col from 'react-bootstrap/Col';
+import { FaRegUser, FaUser } from 'react-icons/fa';
+import { Header } from './components';
 
 interface GameProps {
     url: string;
@@ -17,8 +16,7 @@ export default function Game(props: GameProps): React.ReactElement {
         <Col key={url}>
             <Card>
                 <Card.Header className="d-flex align-items-center justify-content-between">
-                    <Link to={url}>{children}</Link>
-                    <AiTwotoneSetting />
+                    <Header url={url} title={children} />
                 </Card.Header>
                 <Card.Body className="d-flex align-items-center justify-content-between">
                     <FaUser />
