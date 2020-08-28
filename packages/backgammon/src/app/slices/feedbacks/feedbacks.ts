@@ -8,12 +8,12 @@ export enum FEEDBACK_STATUS {
 }
 
 interface Feedback {
-    status: FEEDBACK_STATUS | '';
+    status: FEEDBACK_STATUS;
     message?: unknown;
 }
 
 const initialFeedback: Feedback = {
-    status: '',
+    status: FEEDBACK_STATUS.UNFETCH,
     message: '',
 };
 
@@ -29,9 +29,7 @@ export const feedbacksSlice = createSlice({
     reducers: {
         setFeedback(
             state,
-            action: PayloadAction<
-                typeof initialState[keyof typeof initialState]
-            >
+            action: PayloadAction<Partial<typeof initialState>>
         ) {
             Object.assign(state, action.payload);
         },

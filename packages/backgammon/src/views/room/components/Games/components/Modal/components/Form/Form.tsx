@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import FormB from 'react-bootstrap/Form';
 import { PLAYERS } from 'types/lib/backgammon';
 import { Room } from '../../../../../../../../app/slices/room/room';
-import { useFormState } from './hooks';
+import { useDisabled, useFormState } from './hooks';
 import { generateInitialState } from './utils';
 
 interface FormProps {
@@ -14,12 +14,14 @@ export default function Form(props: FormProps): React.ReactElement {
     const { game, onChange, onSubmit } = useFormState(
         generateInitialState(props.game)
     );
+    const disabled = useDisabled();
 
     return (
         <FormB onSubmit={onSubmit}>
             <FormB.Group controlId="exampleForm.ControlInput1">
                 <FormB.Label>Stages</FormB.Label>
                 <FormB.Control
+                    disabled={disabled}
                     name="stages"
                     type="number"
                     value={game.stages}
@@ -29,6 +31,7 @@ export default function Form(props: FormProps): React.ReactElement {
             <FormB.Group controlId="exampleForm.ControlInput2">
                 <FormB.Label>Duration</FormB.Label>
                 <FormB.Control
+                    disabled={disabled}
                     name="duration"
                     type="number"
                     value={game.duration}
@@ -38,6 +41,7 @@ export default function Form(props: FormProps): React.ReactElement {
             <FormB.Group controlId="exampleForm.ControlSelect1">
                 <FormB.Label>Color</FormB.Label>
                 <FormB.Control
+                    disabled={disabled}
                     name="color"
                     as="select"
                     value={game.color}
@@ -51,8 +55,8 @@ export default function Form(props: FormProps): React.ReactElement {
                     </option>
                 </FormB.Control>
             </FormB.Group>
-            <Button type="submit" variant="primary">
-                Create Game
+            <Button disabled={disabled} type="submit" variant="primary">
+                {disabled ? 'Please wait...' : 'Create game'}
             </Button>
         </FormB>
     );

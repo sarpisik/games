@@ -13,6 +13,7 @@ import {
 import { GAME_EVENTS } from 'types/lib/game';
 import { EmitJoinRooms, OnEditGame, ROOM_EVENTS } from 'types/lib/room';
 import { ROOMS_EVENTS } from 'types/lib/rooms';
+import { history } from '../../../lib';
 import {
     addRound,
     deleteNotification,
@@ -31,6 +32,7 @@ import {
     undoRound,
 } from '../../slices';
 import { CONNECTION_STATUS } from '../../slices/connection/connection';
+import { FEEDBACK_STATUS, setFeedback } from '../../slices/feedbacks/feedbacks';
 import { Room, setRoomGame } from '../../slices/room/room';
 import { store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
@@ -80,7 +82,20 @@ const socket: () => Middleware = () => {
     };
 
     const onEditGame = (s: typeof store) => (payload: OnEditGame) => {
-        s.dispatch(setRoomGame(payload));
+        const user = s.getState().user;
+        const { id } = user;
+        const { roomId, ..._payload } = payload;
+
+        // If we emited edit game, navigate.
+        if (Object.values(payload.players).includes(id)) {
+            s.dispatch(
+                setFeedback({
+                    editRoomGame: { status: FEEDBACK_STATUS.SUCCESS },
+                })
+            );
+            history.push(`/${roomId}/${_payload.id}`);
+        }
+        s.dispatch(setRoomGame(_payload));
     };
 
     const onTimer = (s: typeof store) => (game: Game['timer']) => {
@@ -228,6 +243,12 @@ const socket: () => Middleware = () => {
 
                 /* ROOM EVENTS */
                 case ROOM_EVENTS.EDIT_GAME:
+                    // Display loading.
+                    store.dispatch(
+                        setFeedback({
+                            editRoomGame: { status: FEEDBACK_STATUS.FETCHING },
+                        })
+                    );
                     connection?.emit(ROOM_EVENTS.EDIT_GAME, action.payload);
                     break;
 

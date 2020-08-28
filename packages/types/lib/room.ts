@@ -9,7 +9,8 @@ export enum ROOM_EVENTS {
 
 export type EmitJoinRooms = EmitJoinRoom[];
 export type EmitJoinRoom = number;
-export type OnEditGame = EmitEditGame & Pick<GameClient, "score">;
+export type OnEditGame = EmitEditGame &
+    Pick<GameClient, "score"> & { roomId: number };
 export type EmitEditGame = Pick<
     GameClient,
     "id" | "duration" | "players" | "stages"

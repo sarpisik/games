@@ -1,5 +1,5 @@
 import { generateBackgammonRoomPath } from '@shared-types/helpers';
-import { EmitEditGame, ROOM_EVENTS } from '@shared-types/room';
+import { EmitEditGame, ROOM_EVENTS, OnEditGame } from '@shared-types/room';
 import { BackgammonGame } from './game';
 import { RoomType } from './types';
 import { customPromise } from '@shared/customPromise';
@@ -37,6 +37,7 @@ export default class BackgammonRoom implements RoomType {
 
     private _handleEditGame(socket: SocketIO.Socket) {
         return async (data: EmitEditGame) => {
+            const roomId = this.id;
             const game = this._games.get(data.id);
 
             if (!game) socket.emit(ROOM_EVENTS.GAME_NOT_FOUND, data.id);
@@ -44,8 +45,16 @@ export default class BackgammonRoom implements RoomType {
                 await customPromise(() => {
                     Object.assign(game, data);
                 });
+                const payload: OnEditGame = await customPromise(() => ({
+                    roomId,
+                    id: game.id,
+                    stages: game.stages,
+                    duration: game.duration,
+                    players: game.players,
+                    score: game.score,
+                }));
 
-                this._namespace.emit(ROOM_EVENTS.EDIT_GAME, data);
+                this._namespace.emit(ROOM_EVENTS.EDIT_GAME, payload);
             }
         };
     }
