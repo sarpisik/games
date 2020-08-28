@@ -2,12 +2,11 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 import ModalB from 'react-bootstrap/Modal';
 import { ModalContext } from '../../contexts/Modal';
+import { Form } from './components';
 
-interface Props {}
-
-export default function Modal(props: Props): React.ReactElement {
+export default function Modal(): React.ReactElement {
     const context = React.useContext(ModalContext);
-    const { open, setClose } = context;
+    const { gameId, open, setClose } = context;
 
     return (
         <ModalB
@@ -18,15 +17,11 @@ export default function Modal(props: Props): React.ReactElement {
             centered
         >
             <ModalB.Header closeButton>
-                <ModalB.Title>ModalB title</ModalB.Title>
+                <ModalB.Title>Set Game</ModalB.Title>
             </ModalB.Header>
             <ModalB.Body>
-                I will not close if you click outside me. Don't even try to
-                press escape key.
+                <Form gameId={gameId} />
             </ModalB.Body>
-            <ModalB.Footer>
-                <Button variant="primary">Understood</Button>
-            </ModalB.Footer>
         </ModalB>
     );
 }
