@@ -1,7 +1,7 @@
 import React from 'react';
 import Row from 'react-bootstrap/Row';
 import { useRoom } from '../../../../app/slices';
-import { Game } from './components';
+import { Game, Modal } from './components';
 
 export default function Games(): React.ReactElement {
     const room = useRoom();
@@ -14,8 +14,11 @@ export default function Games(): React.ReactElement {
     );
 
     return (
-        <Row xs={1} sm={2} md={3} className="h-100">
-            {gamesProps.map(Game)}
-        </Row>
+        <React.Fragment>
+            <Modal />
+            <Row xs={1} sm={2} md={3} className="h-100">
+                {gamesProps.map(Game)}
+            </Row>
+        </React.Fragment>
     );
 }
