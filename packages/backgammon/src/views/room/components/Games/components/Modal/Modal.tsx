@@ -1,14 +1,21 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
 import ModalB from 'react-bootstrap/Modal';
+import { ModalContext } from '../../contexts/Modal';
 
 interface Props {}
 
 export default function Modal(props: Props): React.ReactElement {
+    const context = React.useContext(ModalContext);
+    const { open, setOpen } = context;
+    const setClose = () => {
+        setOpen(false);
+    };
+
     return (
         <ModalB
-            show={true}
-            // onHide={handleClose}
+            show={open}
+            onHide={setClose}
             backdrop="static"
             keyboard={false}
             centered
@@ -21,7 +28,6 @@ export default function Modal(props: Props): React.ReactElement {
                 press escape key.
             </ModalB.Body>
             <ModalB.Footer>
-                <Button variant="secondary">Close</Button>
                 <Button variant="primary">Understood</Button>
             </ModalB.Footer>
         </ModalB>
