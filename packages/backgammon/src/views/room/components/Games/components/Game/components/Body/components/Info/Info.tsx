@@ -1,9 +1,9 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { GameClient, PLAYERS } from 'types/lib/backgammon';
 
 type InfoProps = Pick<GameClient, 'score' | 'stages'>;
 
-export default function Info(props: InfoProps): ReactElement {
+export default function Info(props: InfoProps): React.ReactElement {
     const { score, stages } = props;
 
     return (
