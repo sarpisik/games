@@ -3,7 +3,10 @@ import { GameClient } from 'types/lib/backgammon';
 
 export interface Room {
     id: number;
-    games: Pick<GameClient, 'id'>[];
+    games: Pick<
+        GameClient,
+        'id' | 'players' | 'duration' | 'score' | 'stages'
+    >[];
 }
 
 const initialState: Room = {

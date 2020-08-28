@@ -1,20 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { GameClient, PLAYERS, EmitScore } from 'types/lib/backgammon';
-
-const generatePlayers = (value: number) => ({
-    [PLAYERS.BLACK]: value,
-    [PLAYERS.WHITE]: value,
-});
+import { EmitScore, GameClient } from 'types/lib/backgammon';
+import { generatePlayers } from 'types/lib/helpers';
 
 const initialState: GameClient = {
     id: -1,
-    players: generatePlayers(-1),
+    players: generatePlayers(-1, -1),
     stages: 0,
-    score: generatePlayers(0),
+    score: generatePlayers(0, 0),
     isRoundPlayer: false,
     rounds: [],
     duration: 0,
-    timer: generatePlayers(0),
+    timer: generatePlayers(0, 0),
 };
 
 export const gameSlice = createSlice({
