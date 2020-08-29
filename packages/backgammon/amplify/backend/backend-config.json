@@ -1,16 +1,16 @@
 {
-	"hosting": {
-		"amplifyhosting": {
-			"service": "amplifyhosting",
-			"type": "cicd"
-		}
-	},
-	"auth": {
-		"backgammona72d0952": {
-			"service": "Cognito",
-			"providerPlugin": "awscloudformation",
-			"dependsOn": [],
-			"customAuth": false
-		}
-	}
+    "hosting": {
+        "amplifyhosting": {
+            "service": "amplifyhosting",
+            "type": "cicd"
+        }
+    },
+    "auth": {
+        "backgammona72d0952": {
+            "service": "Cognito",
+            "providerPlugin": "awscloudformation",
+            "dependsOn": [],
+            "customAuth": false
+        }
+    }
 }

@@ -33,7 +33,10 @@ export default function withAuthentication<Props>(
         function getUser() {
             return Auth.currentAuthenticatedUser()
                 .then((userData) => userData)
-                .catch(() => console.log('Not signed in'));
+                .catch((error) => {
+                    console.error(error);
+                    console.log('Not signed in');
+                });
         }
         return (
             <React.Fragment>

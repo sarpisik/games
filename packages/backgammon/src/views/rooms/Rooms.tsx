@@ -4,7 +4,7 @@ import { useRooms } from '../../app/slices';
 import { withRoomsConnection } from './components';
 import { withAuthentication } from '../../components';
 
-export default withAuthentication(withRoomsConnection(Rooms));
+export default withAuthentication<{}>(withRoomsConnection(Rooms));
 
 function Rooms(): React.ReactElement {
     const rooms = useRooms();
