@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Game, Room, Rooms } from './views';
+import { withAuthentication } from './components';
 
 /*
  * TODO:
@@ -10,7 +11,9 @@ import { Game, Room, Rooms } from './views';
  * - [] calculate mars.
  */
 
-export default function App() {
+export default withAuthentication(App);
+
+function App() {
     return (
         <Switch>
             <Route exact path="/:id/:gameId">

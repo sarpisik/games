@@ -3,21 +3,18 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type UserType = User;
 
-const initialState: UserType = { id: -1, name: '' };
+export const initialState: UserType = { id: -1, name: '', email: '' };
 
 export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        signIn(state, action: PayloadAction<User['id']>) {
-            state.id = action.payload;
-        },
-        signOut(state) {
-            state = initialState;
+        setUser(state, action: PayloadAction<User>) {
+            Object.assign(state, action.payload);
         },
     },
 });
 
-export const { signIn, signOut } = userSlice.actions;
+export const { setUser } = userSlice.actions;
 
 export default userSlice.reducer;

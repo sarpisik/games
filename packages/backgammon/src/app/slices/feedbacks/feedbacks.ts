@@ -19,6 +19,7 @@ const initialFeedback: Feedback = {
 
 const initialState = {
     editRoomGame: initialFeedback,
+    setUser: initialFeedback,
 };
 
 export type Feedbacks = typeof initialState;
