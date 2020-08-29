@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import './aws.config';
+
 import { Router } from 'react-router';
 import { history } from './lib';
 

@@ -1,8 +1,5 @@
 import React from 'react';
-import Amplify, { Auth, Hub } from 'aws-amplify';
-import awsconfig from '../../aws-exports';
-
-Amplify.configure(awsconfig);
+import { Auth, Hub } from 'aws-amplify';
 
 export default function withAuthentication<Props>(
     WrappedComponent: React.ComponentType<Props>
