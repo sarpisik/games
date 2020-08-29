@@ -16,14 +16,12 @@ export default function useGames() {
     const { id, games, users } = room;
 
     const _games = users.reduce(denormalizeUser, games) as rtn;
-    const gamesProps: GameProps[] = _games.map((game) => ({
-        id: game.id,
-        url: `/${id}/${game.id.toString()}`,
-        children: `Game ${game.id}`,
-        stages: 5,
-        score: { [PLAYERS.BLACK]: 3, [PLAYERS.WHITE]: 1 },
-        players: game.players,
-    }));
+    const gamesProps: GameProps[] = _games.map((game) =>
+        Object.assign({}, game, {
+            url: `/${id}/${game.id.toString()}`,
+            children: `Game ${game.id}`,
+        })
+    );
 
     return gamesProps;
 }
