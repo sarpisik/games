@@ -17,6 +17,11 @@
                     "appId": "d1xpbdejp6q0sh",
                     "type": "cicd"
                 }
+            },
+            "auth": {
+                "backgammona72d0952": {
+                    "hostedUIProviderCreds": "[{\"ProviderName\":\"Google\",\"client_id\":\"1094351678271-prqamsu9ooqnsjd3lom223m0k2h80na8.apps.googleusercontent.com\",\"client_secret\":\"zxZAPt6yRDL34dddn28Zo1Oc\"}]"
+                }
             }
         }
     }
