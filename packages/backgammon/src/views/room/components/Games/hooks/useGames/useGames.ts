@@ -30,12 +30,10 @@ export default function useGames() {
 
 function denormalizeUser(games: Room['games'], user: User): rtn {
     const { id, name } = user;
+
     return games.map((game) => {
-        // const players = Object.assign<
-        //     {},
-        //     Record<keyof G['players'], string | number>
-        // >({}, game.players);
         const players: GameProps['players'] = generatePlayers(null, null);
+
         if (game.players[PLAYERS.BLACK] === id) players[PLAYERS.BLACK] = name;
         else if (game.players[PLAYERS.WHITE] === id)
             players[PLAYERS.WHITE] = name;
