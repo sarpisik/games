@@ -16,7 +16,7 @@ export default function Game(props: GameProps): React.ReactElement {
     const { id, url, children, ...bodyProps } = props;
 
     return (
-        <Col key={url}>
+        <Col key={url} className="py-2">
             <Card>
                 <Card.Header className="d-flex align-items-center justify-content-between">
                     <Header gameId={id} url={url} title={children} />
