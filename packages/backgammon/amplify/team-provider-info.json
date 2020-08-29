@@ -10,6 +10,14 @@
             "StackName": "amplify-backgammon-dev-155823",
             "StackId": "arn:aws:cloudformation:eu-central-1:849999570621:stack/amplify-backgammon-dev-155823/b5546240-e9ff-11ea-8216-063da53eea2a",
             "AmplifyAppId": "d1xpbdejp6q0sh"
+        },
+        "categories": {
+            "hosting": {
+                "amplifyhosting": {
+                    "appId": "d1xpbdejp6q0sh",
+                    "type": "cicd"
+                }
+            }
         }
     }
 }
