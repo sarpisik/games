@@ -1,10 +1,10 @@
 import React, { ReactElement } from 'react';
 import { FaRegUser, FaUser } from 'react-icons/fa';
 import { PLAYERS } from 'types/lib/backgammon';
+import { Sit } from './components';
 
-interface UserProps {
-    color: keyof typeof PLAYERS;
-    name: string;
+interface UserProps extends React.ComponentProps<typeof Sit> {
+    name: string | null;
 }
 
 const ICONS_MAP = {
@@ -13,13 +13,15 @@ const ICONS_MAP = {
 };
 
 export default function User(props: UserProps): ReactElement {
-    const { color, name } = props;
-    const Icon = ICONS_MAP[color];
+    const { name, ...sitProps } = props;
+    const Icon = ICONS_MAP[sitProps.color];
+    const children =
+        typeof name === 'string' ? <p>{name}</p> : <Sit {...sitProps} />;
 
     return (
         <div className="text-center">
             <Icon />
-            <p>{name}</p>
+            {children}
         </div>
     );
 }

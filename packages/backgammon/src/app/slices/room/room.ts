@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { GameClient } from 'types/lib/backgammon';
+import { GameClient, User } from 'types/lib/backgammon';
 
 export interface Room {
     id: number;
@@ -7,11 +7,13 @@ export interface Room {
         GameClient,
         'id' | 'players' | 'duration' | 'score' | 'stages'
     >[];
+    users: User[];
 }
 
 const initialState: Room = {
     id: -1,
     games: [],
+    users: [],
 };
 
 export const roomSlice = createSlice({
@@ -19,8 +21,7 @@ export const roomSlice = createSlice({
     initialState,
     reducers: {
         setRoom(state, action: PayloadAction<Room>) {
-            state.id = action.payload.id;
-            state.games = action.payload.games;
+            Object.assign(state, action.payload);
         },
         setRoomGame(state, action: PayloadAction<Room['games'][number]>) {
             const _game = action.payload;

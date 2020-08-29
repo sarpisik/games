@@ -80,6 +80,7 @@ export enum PLAYERS {
 
 export interface User {
     id: number;
+    name: string;
 }
 
 export const OPPONENT = {

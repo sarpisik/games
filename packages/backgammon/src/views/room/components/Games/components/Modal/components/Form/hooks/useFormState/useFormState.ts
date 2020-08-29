@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { FormControlProps } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
 import { PLAYERS } from 'types/lib/backgammon';
 import { generatePlayers } from 'types/lib/helpers';
-import { ROOM_EVENTS } from 'types/lib/room';
 import { useUser } from '../../../../../../../../../../app/slices';
 import { Room } from '../../../../../../../../../../app/slices/room/room';
+import { useEditGame } from '../../../../../shared/hooks';
 import { valueReducer } from './utils';
 
 export type Game = Room['games'][number];
@@ -16,7 +15,7 @@ export interface InitialState extends Pick<Game, 'id' | 'stages' | 'duration'> {
 
 export default function useFormState(initialState: InitialState) {
     const { user } = useUser();
-    const dispatch = useDispatch();
+    const { editGame } = useEditGame(initialState.id);
     const [game, setGame] = useState(initialState);
 
     const onSubmit = (event: React.FormEvent<HTMLElement>) => {
@@ -33,7 +32,7 @@ export default function useFormState(initialState: InitialState) {
             players,
         };
 
-        dispatch({ type: ROOM_EVENTS.EDIT_GAME, payload });
+        editGame(payload);
     };
 
     const onChange: FormControlProps['onChange'] = (event) => {
