@@ -2,6 +2,7 @@ import React from 'react';
 import Amplify, { Auth, Hub } from 'aws-amplify';
 import awsconfig from '../../aws-exports';
 
+
 Amplify.configure(awsconfig);
 
 export default function withAuthentication<Props>(
