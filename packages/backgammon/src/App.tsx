@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { Game, Room, Rooms, Home, NotFound } from './views';
 import { withAuthentication } from './components';
+import { ROUTES } from './config';
 
 /*
  * TODO:
@@ -14,10 +15,10 @@ export default withAuthentication(App);
 function App() {
     return (
         <Switch>
-            <Redirect exact from="/signout" to="/" />
-            <Route path="/" component={Home} exact />
+            <Redirect exact from={ROUTES.SIGN_OUT} to={ROUTES.HOME} />
+            <Route path={ROUTES.HOME} component={Home} exact />
             <Route
-                path="/rooms"
+                path={ROUTES.ROOMS}
                 render={({ match: { path } }) => (
                     <React.Fragment>
                         <Route path={path} component={Rooms} exact />
