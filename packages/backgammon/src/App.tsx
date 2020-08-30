@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
-import { Game, Room, Rooms, Home } from './views';
+import { Game, Room, Rooms, Home, NotFound } from './views';
 import { withAuthentication } from './components';
 
 /*
@@ -29,6 +29,7 @@ function App() {
                     </React.Fragment>
                 )}
             />
+            <Route component={NotFound} />
         </Switch>
     );
 }
