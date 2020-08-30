@@ -1,15 +1,13 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button';
-import { useUser } from '../../app/slices';
+import { User } from './components';
+import { Link } from 'react-router-dom';
+import { ROUTES } from '../../config';
 
 export default function Home(): React.ReactElement {
-    const { signIn } = useUser();
-
     return (
         <React.Fragment>
-            <Button variant="primary" onClick={signIn}>
-                Sign in
-            </Button>
+            <Link to={ROUTES.ROOMS}>Rooms</Link>
+            <User />
         </React.Fragment>
     );
 }
