@@ -16,16 +16,17 @@ export default withAuthentication(App);
 function App() {
     return (
         <Switch>
-            <Route exact path="/:id/:gameId">
-                <Game />
-            </Route>
-            <Route exact path="/:id">
-                {/* <Game /> */}
-                <Room />
-            </Route>
-            <Route exact path="/">
-                <Rooms />
-            </Route>
+            <Route
+                exact
+                path="/rooms"
+                render={({ match: { url } }) => (
+                    <React.Fragment>
+                        <Route path={`${url}/`} component={Rooms} exact />
+                        <Route path={`${url}/:id`} component={Room} exact />
+                        <Route path={`${url}/:id/:gameId`} component={Game} />
+                    </React.Fragment>
+                )}
+            />
         </Switch>
     );
 }
