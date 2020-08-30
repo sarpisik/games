@@ -7,6 +7,9 @@ import { withAuthorization } from '../../components';
 export default withAuthorization(withRoomsConnection(Rooms));
 
 function Rooms(props: RouteComponentProps): React.ReactElement {
+    const {
+        match: { url },
+    } = props;
     const rooms = useRooms();
     const { ids } = rooms;
 
@@ -14,7 +17,7 @@ function Rooms(props: RouteComponentProps): React.ReactElement {
         <ul>
             {ids.map((id) => (
                 <li key={id}>
-                    <Link to={`/${id}`}>Room {id}</Link>
+                    <Link to={`${url}/${id}`}>Room {id}</Link>
                 </li>
             ))}
         </ul>
