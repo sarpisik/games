@@ -1,19 +1,15 @@
 import React from 'react';
-import { CreateGame } from './components';
+import Button from 'react-bootstrap/Button';
 import { useUser } from '../../app/slices';
 
 export default function Home(): React.ReactElement {
     const { signIn } = useUser();
 
-    React.useEffect(function signInUserOnMounted() {
-        signIn(Date.now());
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     return (
-        <div>
-            <CreateGame />
-        </div>
+        <React.Fragment>
+            <Button variant="primary" onClick={signIn}>
+                Sign in
+            </Button>
+        </React.Fragment>
     );
 }

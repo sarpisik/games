@@ -4,10 +4,8 @@ import {
     EmitError,
     EmitGameOver,
     EmitScore,
-    EmitSignInUser,
     EmitStageOver,
     EVENTS,
-    PLAYERS,
     User,
 } from 'types/lib/backgammon';
 import { GAME_EVENTS } from 'types/lib/game';
@@ -28,7 +26,6 @@ import {
     setRoundPlayer,
     setShortTimer,
     setTimer,
-    signIn,
     undoRound,
 } from '../../slices';
 import { CONNECTION_STATUS } from '../../slices/connection/connection';
@@ -250,24 +247,6 @@ const socket: () => Middleware = () => {
                         })
                     );
                     connection?.emit(ROOM_EVENTS.EDIT_GAME, action.payload);
-                    break;
-
-                /* GAME EVENTS */
-                case EVENTS.SIGN_IN_USER:
-                    {
-                        const black = action.payload;
-                        const { game } = store.getState();
-                        const { id } = game;
-
-                        signIn(black);
-                        const players = Object.assign({}, game.players, {
-                            [PLAYERS.BLACK]: black,
-                        });
-
-                        const data: EmitSignInUser = { id, players };
-
-                        connection?.emit(EVENTS.SIGN_IN_USER, data);
-                    }
                     break;
 
                 case EVENTS.ROUND:

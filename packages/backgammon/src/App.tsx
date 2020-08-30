@@ -1,6 +1,6 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-import { Game, Room, Rooms } from './views';
+import { Route, Switch, Redirect } from 'react-router-dom';
+import { Game, Room, Rooms, Home } from './views';
 import { withAuthentication } from './components';
 
 /*
@@ -16,6 +16,8 @@ export default withAuthentication(App);
 function App() {
     return (
         <Switch>
+            <Redirect exact from="/signout" to="/" />
+            <Route path="/" component={Home} exact />
             <Route
                 exact
                 path="/rooms"

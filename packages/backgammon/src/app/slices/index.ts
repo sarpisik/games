@@ -38,4 +38,4 @@ export {
 export { room, setRoom, useRoom } from './room';
 export { rooms, setRooms, useRooms } from './rooms';
 export { setShortTimer, shortTimer, useShortTimer } from './shortTimer';
-export { signIn, signOut, user, useUser } from './user';
+export { user, useUser } from './user';
