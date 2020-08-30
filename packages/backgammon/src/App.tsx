@@ -23,7 +23,7 @@ function App() {
                 render={({ match: { path } }) => (
                     <React.Fragment>
                         <Route path={path} component={Rooms} exact />
-                        <Route path={`${path}/:id`} component={Room} />
+                        <Route path={`${path}/:id`} component={Room} exact />
                         <Route path={`${path}/:id/:gameId`} component={Game} />
                     </React.Fragment>
                 )}
