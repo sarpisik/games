@@ -1,0 +1,8 @@
+type User @model {
+    id: ID!
+    name: String!
+    email: String!
+    wins: Int!
+    loses: Int!
+    escapes: Int!
+}

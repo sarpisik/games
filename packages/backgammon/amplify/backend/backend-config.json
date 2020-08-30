@@ -1,16 +1,34 @@
 {
-    "hosting": {
-        "amplifyhosting": {
-            "service": "amplifyhosting",
-            "type": "cicd"
-        }
-    },
-    "auth": {
-        "backgammona72d0952": {
-            "service": "Cognito",
-            "providerPlugin": "awscloudformation",
-            "dependsOn": [],
-            "customAuth": false
-        }
-    }
+	"hosting": {
+		"amplifyhosting": {
+			"service": "amplifyhosting",
+			"type": "cicd"
+		}
+	},
+	"auth": {
+		"backgammona72d0952": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [],
+			"customAuth": false
+		}
+	},
+	"api": {
+		"UsersAPI": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"authConfig": {
+					"additionalAuthenticationProviders": [],
+					"defaultAuthentication": {
+						"authenticationType": "API_KEY",
+						"apiKeyConfig": {
+							"description": "",
+							"apiKeyExpirationDays": 7
+						}
+					}
+				}
+			}
+		}
+	}
 }
