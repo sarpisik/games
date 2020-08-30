@@ -1,9 +1,16 @@
-import { User } from 'types/lib/backgammon';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { User } from '../../../types/user';
 
-type UserType = User;
-
-export const initialState: UserType = { id: -1, name: '', email: '' };
+export const initialState: User = {
+    id: '',
+    name: '',
+    email: '',
+    wins: 0,
+    loses: 0,
+    escapes: 0,
+    createdAt: '',
+    updatedAt: '',
+};
 
 export const userSlice = createSlice({
     name: 'user',
