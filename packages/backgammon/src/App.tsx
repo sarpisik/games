@@ -5,10 +5,8 @@ import { withAuthentication } from './components';
 
 /*
  * TODO:
- * - [] issue invalid available triangle calculation.
  * - [] display only round player related errors.
  * - [] add surrender button.
- * - [] calculate mars.
  */
 
 export default withAuthentication(App);
