@@ -21,14 +21,14 @@ const setGame: (game: GameClient) => AppThunk = (game) => (
         dispatch(setInitialGame(game));
 
         // Generate notification
-        if (players[PLAYERS.WHITE] === userId) {
+        if (players[PLAYERS.WHITE].id === userId) {
             dispatch(
                 setNotification({
                     type: NOTIFICATION.WHITE_PLAYER,
                     message: `You can invite opponent by sending this link: ${window.location.href}`,
                 })
             );
-        } else if (players[PLAYERS.BLACK] === userId) {
+        } else if (players[PLAYERS.BLACK].id === userId) {
             dispatch(
                 setNotification({
                     type: NOTIFICATION.BLACK_PLAYER,

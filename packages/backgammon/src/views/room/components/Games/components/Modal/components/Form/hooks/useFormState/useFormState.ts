@@ -23,8 +23,8 @@ export default function useFormState(initialState: InitialState) {
 
         const players =
             game.color === 'BLACK'
-                ? generatePlayers(user.id, -1)
-                : generatePlayers(-1, user.id);
+                ? generatePlayers(user, null)
+                : generatePlayers(null, user);
         const payload = {
             id: game.id,
             duration: game.duration * 60,

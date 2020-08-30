@@ -289,7 +289,7 @@ function createWinnerMessage(
     const { id } = user;
     const { players } = game;
     const { winner } = data;
-    const shouldWinner = players[winner] === id;
+    const shouldWinner = players[winner].id === id;
     const message = shouldWinner ? 'Congratulations! You won!' : 'You lose!';
 
     return message;
@@ -300,7 +300,7 @@ function calculateIsRoundPlayer(
     gamePlayers: Game['players'],
     roundPlayerIndex: Game['rounds'][number]['player']
 ) {
-    const roundPlayerId = gamePlayers[roundPlayerIndex];
+    const roundPlayerId = gamePlayers[roundPlayerIndex].id;
     const isRoundPlayer = userId === roundPlayerId;
 
     return isRoundPlayer;

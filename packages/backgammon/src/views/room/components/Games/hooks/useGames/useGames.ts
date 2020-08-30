@@ -32,8 +32,9 @@ function denormalizeUser(games: Room['games'], user: User): rtn {
     return games.map((game) => {
         const players: GameProps['players'] = generatePlayers(null, null);
 
-        if (game.players[PLAYERS.BLACK] === id) players[PLAYERS.BLACK] = name;
-        else if (game.players[PLAYERS.WHITE] === id)
+        if (game.players[PLAYERS.BLACK].id === id)
+            players[PLAYERS.BLACK] = name;
+        else if (game.players[PLAYERS.WHITE].id === id)
             players[PLAYERS.WHITE] = name;
 
         return Object.assign({}, game, { players });

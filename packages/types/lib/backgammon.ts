@@ -48,12 +48,17 @@ export interface GameServerSide extends Game {
 
 export interface Game {
     id: number;
-    players: PlayersMap;
+    players: UsersMap;
     score: PlayersMap;
     stages: number;
     duration: number;
     timer: PlayersMap;
     rounds: Round[];
+}
+
+interface UsersMap {
+    [PLAYERS.WHITE]: User;
+    [PLAYERS.BLACK]: User;
 }
 
 interface PlayersMap {
