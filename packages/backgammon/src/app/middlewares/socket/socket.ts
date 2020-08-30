@@ -33,6 +33,7 @@ import { FEEDBACK_STATUS, setFeedback } from '../../slices/feedbacks/feedbacks';
 import { Room, setRoomGame } from '../../slices/room/room';
 import { store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
+import { ROUTES } from '../../../config';
 
 type SocketContextType = ReturnType<typeof socketIOClient> | null;
 type Game = Parameters<typeof setGame>[0];
@@ -90,7 +91,8 @@ const socket: () => Middleware = () => {
                     editRoomGame: { status: FEEDBACK_STATUS.SUCCESS },
                 })
             );
-            history.push(`/${roomId}/${_payload.id}`);
+            const path = `${ROUTES.ROOMS}/${roomId}/${_payload.id}`;
+            history.push(path);
         }
         s.dispatch(setRoomGame(_payload));
     };
