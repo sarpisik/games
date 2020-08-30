@@ -19,13 +19,12 @@ function App() {
             <Redirect exact from="/signout" to="/" />
             <Route path="/" component={Home} exact />
             <Route
-                exact
                 path="/rooms"
-                render={({ match: { url } }) => (
+                render={({ match: { path } }) => (
                     <React.Fragment>
-                        <Route path={`${url}/`} component={Rooms} exact />
-                        <Route path={`${url}/:id`} component={Room} exact />
-                        <Route path={`${url}/:id/:gameId`} component={Game} />
+                        <Route path={path} component={Rooms} exact />
+                        <Route path={`${path}/:id`} component={Room} />
+                        <Route path={`${path}/:id/:gameId`} component={Game} />
                     </React.Fragment>
                 )}
             />
