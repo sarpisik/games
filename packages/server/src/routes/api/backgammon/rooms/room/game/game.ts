@@ -17,7 +17,7 @@ export default class BackgammonGame implements GameServerSide {
         private _roomId: number,
         _io: SocketIO.Server
     ) {
-        this.players = generatePlayersObj(-1, -1);
+        this.players = generatePlayersObj(null, null);
         this.score = generatePlayersObj(0, 0);
         this.stages = 1;
         this.duration = 60;

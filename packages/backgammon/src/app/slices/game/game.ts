@@ -4,7 +4,7 @@ import { generatePlayers } from 'types/lib/helpers';
 
 const initialState: GameClient = {
     id: -1,
-    players: generatePlayers(-1, -1),
+    players: generatePlayers(null, null),
     stages: 0,
     score: generatePlayers(0, 0),
     isRoundPlayer: false,

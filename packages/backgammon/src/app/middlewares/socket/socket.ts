@@ -182,7 +182,9 @@ const socket: () => Middleware = () => {
                     store.dispatch(
                         setConnectionStatus(CONNECTION_STATUS.CONNECTING)
                     );
-                    connection = socketIOClient(action.payload);
+                    connection = socketIOClient(action.payload, {
+                        query: { userId: store.getState().user?.id },
+                    });
                     // @ts-ignore
                     connection.on(ROOM_EVENTS.JOIN_ROOM, onJoinRoom(store));
                     // @ts-ignore
@@ -289,7 +291,7 @@ function createWinnerMessage(
     const { id } = user;
     const { players } = game;
     const { winner } = data;
-    const shouldWinner = players[winner].id === id;
+    const shouldWinner = players[winner]?.id === id;
     const message = shouldWinner ? 'Congratulations! You won!' : 'You lose!';
 
     return message;
@@ -300,7 +302,7 @@ function calculateIsRoundPlayer(
     gamePlayers: Game['players'],
     roundPlayerIndex: Game['rounds'][number]['player']
 ) {
-    const roundPlayerId = gamePlayers[roundPlayerIndex].id;
+    const roundPlayerId = gamePlayers[roundPlayerIndex]?.id;
     const isRoundPlayer = userId === roundPlayerId;
 
     return isRoundPlayer;

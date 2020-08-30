@@ -57,8 +57,8 @@ export interface Game {
 }
 
 interface UsersMap {
-    [PLAYERS.WHITE]: User;
-    [PLAYERS.BLACK]: User;
+    [PLAYERS.WHITE]: User | null;
+    [PLAYERS.BLACK]: User | null;
 }
 
 interface PlayersMap {
