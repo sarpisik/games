@@ -4,8 +4,12 @@ import { Game, Modal } from './components';
 import { ModalProvider } from './contexts/Modal';
 import { useGames } from './hooks';
 
-export default function Games(): React.ReactElement {
-    const games = useGames();
+interface Props {
+    url: string;
+}
+
+export default function Games(props: Props): React.ReactElement {
+    const games = useGames(props.url);
 
     return (
         <ModalProvider>

@@ -11,14 +11,14 @@ type rtn = (G & {
     players: GameProps['players'];
 })[];
 
-export default function useGames() {
+export default function useGames(urlPrefix: string) {
     const room = useRoom();
-    const { id, games, users } = room;
+    const { games, users } = room;
 
     const _games = users.reduce(denormalizeUser, games) as rtn;
     const gamesProps: GameProps[] = _games.map((game) =>
         Object.assign({}, game, {
-            url: `/${id}/${game.id.toString()}`,
+            url: `${urlPrefix}/${game.id.toString()}`,
             children: `Game ${game.id}`,
         })
     );
