@@ -96,15 +96,15 @@ export default class BackgammonGame implements GameServerSide {
                     self.players[PLAYERS.WHITE]
             );
 
+            socket.emit(
+                GAME_EVENTS.JOIN_GAME,
+                EMIT_GAME_KEYS.reduce((game, key) => {
+                    game[key] = self[key];
+                    return game;
+                }, {} as Record<keyof EmitGame, EmitGame[keyof EmitGame]>)
+            );
+
             if (shouldInitialize) self._initializeGame();
-            else
-                socket.emit(
-                    GAME_EVENTS.JOIN_GAME,
-                    EMIT_GAME_KEYS.reduce((game, key) => {
-                        game[key] = self[key];
-                        return game;
-                    }, {} as Record<keyof EmitGame, EmitGame[keyof EmitGame]>)
-                );
 
             // Disconnect events
             socket.on('disconnect', () => {
