@@ -6,13 +6,15 @@ import {
     EmitScore,
     EmitStageOver,
     EVENTS,
-    User,
 } from 'types/lib/backgammon';
 import { GAME_EVENTS } from 'types/lib/game';
 import { EmitJoinRooms, OnEditGame, ROOM_EVENTS } from 'types/lib/room';
 import { ROOMS_EVENTS } from 'types/lib/rooms';
+import { ROUTES } from '../../../config';
 import { history } from '../../../lib';
+import { User } from '../../../types/user';
 import {
+    addRoomUser,
     addRound,
     deleteNotification,
     deleteRounds,
@@ -33,7 +35,6 @@ import { FEEDBACK_STATUS, setFeedback } from '../../slices/feedbacks/feedbacks';
 import { Room, setRoomGame } from '../../slices/room/room';
 import { store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
-import { ROUTES } from '../../../config';
 
 type SocketContextType = ReturnType<typeof socketIOClient> | null;
 type Game = Parameters<typeof setGame>[0];
@@ -77,6 +78,10 @@ const socket: () => Middleware = () => {
     const onJoinRoom = (s: typeof store) => (payload: Room) => {
         s.dispatch(setRoom(payload));
         s.dispatch(setConnectionStatus(CONNECTION_STATUS.CONNECTED));
+    };
+
+    const onNewUser = (s: typeof store) => (payload: User) => {
+        s.dispatch(addRoomUser(payload));
     };
 
     const onEditGame = (s: typeof store) => (payload: OnEditGame) => {
@@ -187,6 +192,8 @@ const socket: () => Middleware = () => {
                     });
                     // @ts-ignore
                     connection.on(ROOM_EVENTS.JOIN_ROOM, onJoinRoom(store));
+                    // @ts-ignore
+                    connection.on(ROOM_EVENTS.NEW_USER, onNewUser(store));
                     // @ts-ignore
                     connection.on(ROOM_EVENTS.EDIT_GAME, onEditGame(store));
                     break;

@@ -35,7 +35,7 @@ export {
     setNotification,
     useNotification,
 } from './notification';
-export { room, setRoom, useRoom } from './room';
+export { room, setRoom, addRoomUser, useRoom } from './room';
 export { rooms, setRooms, useRooms } from './rooms';
 export { setShortTimer, shortTimer, useShortTimer } from './shortTimer';
 export { user, useUser } from './user';
