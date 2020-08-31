@@ -6,8 +6,9 @@ import {
     EmitScore,
     EmitStageOver,
     EVENTS,
+    GameClient,
 } from 'types/lib/backgammon';
-import { GAME_EVENTS } from 'types/lib/game';
+import { EmitGame, GAME_EVENTS } from 'types/lib/game';
 import { EmitJoinRooms, OnEditGame, ROOM_EVENTS } from 'types/lib/room';
 import { ROOMS_EVENTS } from 'types/lib/rooms';
 import { ROUTES } from '../../../config';
@@ -22,6 +23,7 @@ import {
     replaceRound,
     setConnectionStatus,
     setGame,
+    setInitialGame,
     setNextStage,
     setNotification,
     setRoom,
@@ -78,6 +80,11 @@ const socket: () => Middleware = () => {
 
     const onJoinRoom = (s: typeof store) => (payload: Room) => {
         s.dispatch(setRoom(payload));
+        s.dispatch(setConnectionStatus(CONNECTION_STATUS.CONNECTED));
+    };
+
+    const onJoinGame = (s: typeof store) => (payload: GameClient) => {
+        s.dispatch(setInitialGame(payload));
         s.dispatch(setConnectionStatus(CONNECTION_STATUS.CONNECTED));
     };
 
@@ -214,8 +221,14 @@ const socket: () => Middleware = () => {
 
                 case GAME_EVENTS.JOIN_GAME:
                     if (connection !== null) connection.disconnect();
-                    connection = socketIOClient(REACT_APP_SOCKET_URL);
-                    connection.emit(GAME_EVENTS.JOIN_GAME, action.payload);
+                    store.dispatch(
+                        setConnectionStatus(CONNECTION_STATUS.CONNECTING)
+                    );
+                    connection = socketIOClient(action.payload, {
+                        query: { userId: store.getState().user?.id },
+                    });
+                    // @ts-ignore
+                    connection.on(GAME_EVENTS.JOIN_GAME, onJoinGame(store));
                     break;
 
                 case GAME_EVENTS.INITIALIZE_GAME:

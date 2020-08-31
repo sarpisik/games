@@ -1,5 +1,5 @@
 import { GameServerSide, PLAYERS } from '@shared-types/backgammon';
-import { GAME_EVENTS } from '@shared-types/game';
+import { GAME_EVENTS, EmitGame } from '@shared-types/game';
 import { generateBackgammonGamePath } from '@shared-types/helpers';
 import { generatePlayersObj } from './helpers';
 import { fetchUser, validateUser } from '../utils';
@@ -8,6 +8,16 @@ type User = Exclude<
     GameServerSide['players'][keyof GameServerSide['players']],
     null
 >;
+
+const EMIT_GAME_KEYS: (keyof EmitGame)[] = [
+    'duration',
+    'id',
+    'players',
+    'rounds',
+    'score',
+    'stages',
+    'timer',
+];
 
 export default class BackgammonGame implements GameServerSide {
     players: GameServerSide['players'];
@@ -76,7 +86,13 @@ export default class BackgammonGame implements GameServerSide {
         return function _onClientConnection(socket: SocketIO.Socket) {
             const clientId = socket.client.id;
 
-            socket.emit(GAME_EVENTS.JOIN_GAME, self);
+            socket.emit(
+                GAME_EVENTS.JOIN_GAME,
+                EMIT_GAME_KEYS.reduce((game, key) => {
+                    game[key] = self[key];
+                    return game;
+                }, {} as Record<keyof EmitGame, EmitGame[keyof EmitGame]>)
+            );
 
             // Disconnect events
             socket.on('disconnect', () => {

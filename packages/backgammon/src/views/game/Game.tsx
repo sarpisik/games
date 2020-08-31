@@ -1,4 +1,6 @@
 import React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
+import { withAuthorization } from '../../components';
 import {
     Board,
     RoundBoard,
@@ -6,10 +8,13 @@ import {
     Sidebar,
     Timer,
     Undo,
+    withGameConnection,
 } from './components';
 import { useDynamicLayout } from './hooks';
 
-export default function Game() {
+export default withAuthorization(withGameConnection(Game));
+
+function Game(_props: RouteComponentProps) {
     useDynamicLayout();
 
     return (

@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Sidebar.module.css';
-import { useConnectGame } from './hooks';
+// import { useConnectGame } from './hooks';
 // import { useInitializeGame } from './hooks';
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
 
 export default function Sidebar(props: Props): React.ReactElement {
     const { children } = props;
-    useConnectGame();
+    // useConnectGame();
     // useInitializeGame();
 
     return <aside className={styles.sidebar}>{children}</aside>;

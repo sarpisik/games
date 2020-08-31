@@ -4,6 +4,7 @@ export {
     deleteRounds,
     replaceRound,
     resetCurrentRoundLayout,
+    setInitialGame,
     setNextStage,
     setRoundPlayer,
     setTimer,

@@ -11,6 +11,7 @@ export {
     replaceRound,
     resetCurrentRoundLayout,
     setGame,
+    setInitialGame,
     setNextStage,
     setRoundPlayer,
     setTimer,
@@ -35,7 +36,7 @@ export {
     setNotification,
     useNotification,
 } from './notification';
-export { room, setRoom, addRoomUser, deleteRoomUser, useRoom } from './room';
+export { addRoomUser, deleteRoomUser, room, setRoom, useRoom } from './room';
 export { rooms, setRooms, useRooms } from './rooms';
 export { setShortTimer, shortTimer, useShortTimer } from './shortTimer';
 export { user, useUser } from './user';
