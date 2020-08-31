@@ -12,8 +12,6 @@ export default class BackgammonRoom implements RoomType {
     private _users: Map<string, User>;
 
     constructor(public id: number, _io: SocketIO.Server) {
-        // const users = new Set();
-
         this._namespace = _io.of(generateBackgammonRoomPath(id));
         this._namespace.use(this._authMiddleware.bind(this));
         this._namespace.on('connection', this._onClientConnection.bind(this));
