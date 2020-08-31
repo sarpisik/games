@@ -3,6 +3,8 @@ import { GAME_EVENTS, EmitGame } from '@shared-types/game';
 import { generateBackgammonGamePath } from '@shared-types/helpers';
 import { generatePlayersObj } from './helpers';
 import { fetchUser, validateUser } from '../utils';
+import { Round } from './round';
+import { layout } from '@routes/api/backgammon/games/constants';
 
 type User = Exclude<
     GameServerSide['players'][keyof GameServerSide['players']],
@@ -28,6 +30,7 @@ export default class BackgammonGame implements GameServerSide {
     rounds: GameServerSide['rounds'];
     private _namespace: SocketIO.Namespace;
     private _connectedUsers: Map<string, User>;
+    private _status: 'UNINITIALIZED' | 'INITIALIZED' | 'OVER';
 
     constructor(
         public id: number,
@@ -43,6 +46,7 @@ export default class BackgammonGame implements GameServerSide {
         this.rounds = [];
 
         this._connectedUsers = new Map();
+        this._status = 'UNINITIALIZED';
 
         this._namespace = _io.of(generateBackgammonGamePath(this._roomId, id));
         this._namespace.use(this._authMiddleware.bind(this));
@@ -85,14 +89,22 @@ export default class BackgammonGame implements GameServerSide {
 
         return function _onClientConnection(socket: SocketIO.Socket) {
             const clientId = socket.client.id;
-
-            socket.emit(
-                GAME_EVENTS.JOIN_GAME,
-                EMIT_GAME_KEYS.reduce((game, key) => {
-                    game[key] = self[key];
-                    return game;
-                }, {} as Record<keyof EmitGame, EmitGame[keyof EmitGame]>)
+            const gameUninitialized = self._status === 'UNINITIALIZED';
+            const shouldInitialize = Boolean(
+                gameUninitialized &&
+                    self.players[PLAYERS.BLACK] &&
+                    self.players[PLAYERS.WHITE]
             );
+
+            if (shouldInitialize) self._initializeGame();
+            else
+                socket.emit(
+                    GAME_EVENTS.JOIN_GAME,
+                    EMIT_GAME_KEYS.reduce((game, key) => {
+                        game[key] = self[key];
+                        return game;
+                    }, {} as Record<keyof EmitGame, EmitGame[keyof EmitGame]>)
+                );
 
             // Disconnect events
             socket.on('disconnect', () => {
@@ -149,5 +161,31 @@ export default class BackgammonGame implements GameServerSide {
             players[PLAYERS.BLACK] = null;
         else if (players[PLAYERS.WHITE]?.id === userId)
             players[PLAYERS.WHITE] = null;
+    }
+
+    // GAME LOGICS
+    private _initializeGame() {
+        this._status = 'INITIALIZED';
+        this.rounds = [];
+        this._initializeRound();
+    }
+
+    private _initializeRound() {
+        const brokens = generatePlayersObj(0, 0);
+        const collected = generatePlayersObj(0, 0);
+        const round = new Round(
+            0,
+            1,
+            PLAYERS.WHITE,
+            brokens,
+            collected,
+            layout
+        );
+        this.rounds.push(round);
+        this._emitNamespace(GAME_EVENTS.ROUND, round);
+    }
+
+    private _emitNamespace<P>(event: string, payload: P) {
+        this._namespace.emit(event, payload);
     }
 }
