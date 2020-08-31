@@ -15,7 +15,7 @@ export default function usePlayer(params: UsePlayerParams): () => void {
 
     const setPlayer = () => {
         const players = Object.assign({}, game.players, {
-            [PLAYERS[color]]: user.id,
+            [PLAYERS[color]]: user,
         });
         const payload = Object.assign({}, game, { players });
 
