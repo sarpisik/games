@@ -19,7 +19,15 @@ export default class BackgammonRoom implements RoomType {
         this._users = new Map();
         this._games = new Map();
         for (let i = 1; i <= 10; i++) {
-            this._games.set(i, new BackgammonGame(i, id, _io));
+            this._games.set(
+                i,
+                new BackgammonGame(
+                    i,
+                    id,
+                    _io,
+                    this._handleGameUpdate.bind(this)
+                )
+            );
         }
     }
 
@@ -54,12 +62,7 @@ export default class BackgammonRoom implements RoomType {
         const _users = this._users;
         const users = [..._users.values()];
         const _games = this._games;
-        const games = [..._games.values()].map((value) => ({
-            id: value.id,
-            stages: value.stages,
-            duration: value.duration,
-            players: value.players,
-        }));
+        const games = [..._games.values()].map(this._parseGame);
         // Send room details to connected client.
         socket.emit(ROOM_EVENTS.JOIN_ROOM, { id, games, users });
 
@@ -96,17 +99,33 @@ export default class BackgammonRoom implements RoomType {
                 await customPromise(() => {
                     Object.assign(game, data);
                 });
-                const payload: OnEditGame = await customPromise(() => ({
-                    roomId,
-                    id: game.id,
-                    stages: game.stages,
-                    duration: game.duration,
-                    players: game.players,
-                    score: game.score,
-                }));
+                const parsedGame = this._parseGame(game);
+                const payload: OnEditGame = await customPromise(() =>
+                    Object.assign({}, parsedGame, { roomId })
+                );
 
-                this._namespace.emit(ROOM_EVENTS.EDIT_GAME, payload);
+                this._emitEditGame(payload);
             }
+        };
+    }
+
+    private _handleGameUpdate(gameId: number) {
+        const _game = this._games.get(gameId) as BackgammonGame;
+        const game = this._parseGame(_game);
+        this._emitEditGame(game);
+    }
+
+    private _emitEditGame<P>(payload: P) {
+        this._namespace.emit(ROOM_EVENTS.EDIT_GAME, payload);
+    }
+
+    private _parseGame(game: BackgammonGame) {
+        return {
+            id: game.id,
+            stages: game.stages,
+            duration: game.duration,
+            players: game.players,
+            score: game.score,
         };
     }
 }
