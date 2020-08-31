@@ -31,7 +31,19 @@ export default class BackgammonRoom implements RoomType {
         const response = await fetchUser(userId);
         const user = response?.data?.getUser;
         if (validateUser(user)) {
-            this._users.set(socket.client.id, user);
+            let userExistWithDifferentId = false;
+
+            const users = this._users.values();
+            for (const _user of users) {
+                if (_user.id === user.id) {
+                    userExistWithDifferentId = true;
+                    break;
+                }
+            }
+
+            if (!userExistWithDifferentId)
+                this._users.set(socket.client.id, user);
+
             next();
         } else next(new Error('User does not exist.'));
     }
