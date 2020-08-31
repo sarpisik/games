@@ -27,6 +27,12 @@ export const roomSlice = createSlice({
         addRoomUser(state, action: PayloadAction<User>) {
             state.users.push(action.payload);
         },
+        deleteRoomUser(state, action: PayloadAction<User['id']>) {
+            const userIndex = state.users.findIndex(
+                (user) => user.id === action.payload
+            );
+            state.users.splice(userIndex, 1);
+        },
         setRoomGame(state, action: PayloadAction<Room['games'][number]>) {
             const _game = action.payload;
             const gameId = state.games.findIndex(
@@ -39,6 +45,11 @@ export const roomSlice = createSlice({
     },
 });
 
-export const { setRoom, addRoomUser, setRoomGame } = roomSlice.actions;
+export const {
+    setRoom,
+    addRoomUser,
+    deleteRoomUser,
+    setRoomGame,
+} = roomSlice.actions;
 
 export default roomSlice.reducer;

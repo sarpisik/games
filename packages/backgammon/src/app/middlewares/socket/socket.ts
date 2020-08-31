@@ -17,6 +17,7 @@ import {
     addRoomUser,
     addRound,
     deleteNotification,
+    deleteRoomUser,
     deleteRounds,
     replaceRound,
     setConnectionStatus,
@@ -82,6 +83,10 @@ const socket: () => Middleware = () => {
 
     const onNewUser = (s: typeof store) => (payload: User) => {
         s.dispatch(addRoomUser(payload));
+    };
+
+    const onDeleteUser = (s: typeof store) => (payload: User['id']) => {
+        s.dispatch(deleteRoomUser(payload));
     };
 
     const onEditGame = (s: typeof store) => (payload: OnEditGame) => {
@@ -194,6 +199,11 @@ const socket: () => Middleware = () => {
                     connection.on(ROOM_EVENTS.JOIN_ROOM, onJoinRoom(store));
                     // @ts-ignore
                     connection.on(ROOM_EVENTS.NEW_USER, onNewUser(store));
+                    connection.on(
+                        ROOM_EVENTS.DISCONNECT_USER,
+                        // @ts-ignore
+                        onDeleteUser(store)
+                    );
                     // @ts-ignore
                     connection.on(ROOM_EVENTS.EDIT_GAME, onEditGame(store));
                     break;
