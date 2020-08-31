@@ -229,6 +229,8 @@ const socket: () => Middleware = () => {
                     });
                     // @ts-ignore
                     connection.on(GAME_EVENTS.JOIN_GAME, onJoinGame(store));
+                    // @ts-ignore
+                    connection.on(GAME_EVENTS.ROUND, onRound(store));
                     break;
 
                 case GAME_EVENTS.INITIALIZE_GAME:
