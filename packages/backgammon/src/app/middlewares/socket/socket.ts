@@ -95,7 +95,11 @@ const socket: () => Middleware = () => {
         const { roomId, ..._payload } = payload;
 
         // If we emited edit game, navigate.
-        if (Object.values(payload.players).includes(id)) {
+        if (
+            (Object.values(payload.players) as (User | null)[]).some(
+                (player) => player?.id === id
+            )
+        ) {
             s.dispatch(
                 setFeedback({
                     editRoomGame: { status: FEEDBACK_STATUS.SUCCESS },
