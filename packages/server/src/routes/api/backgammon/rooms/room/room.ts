@@ -48,14 +48,30 @@ export default class BackgammonRoom implements RoomType {
             duration: value.duration,
             players: value.players,
         }));
+        // Send room details to connected client.
         socket.emit(ROOM_EVENTS.JOIN_ROOM, { id, games, users });
-        socket.on('disconnect', () => {
-            if (_users.has(clientId)) _users.delete(clientId);
-        });
+
+        // Send details of the joined client
+        socket.broadcast.emit(ROOM_EVENTS.NEW_USER, this._users.get(clientId));
+
         socket.on(
             ROOM_EVENTS.EDIT_GAME,
             this._handleEditGame.call(this, socket)
         );
+
+        // Disconnect events
+        socket.on('disconnect', () => {
+            if (_users.has(clientId)) {
+                // Broadcast disconnected client.
+                socket.broadcast.emit(
+                    ROOM_EVENTS.DISCONNECT_USER,
+                    _users.get(clientId)?.id
+                );
+
+                // Delete client from the users list.
+                _users.delete(clientId);
+            }
+        });
     }
 
     private _handleEditGame(socket: SocketIO.Socket) {
