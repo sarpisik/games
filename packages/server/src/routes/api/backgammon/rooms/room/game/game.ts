@@ -1,5 +1,4 @@
 import {
-    EmitBase,
     EmitBrokenPointRound,
     EmitCollectPointRound,
     EmitRound,
@@ -30,6 +29,7 @@ import {
     generatePlayersObj,
     verifyRoundPlayer,
 } from './helpers';
+import { withBreakTimer } from './methods';
 import { Round } from './round';
 
 /*
@@ -62,9 +62,10 @@ export default class BackgammonGame extends SocketConnection
     timer: GameServerSide['timer'];
     rounds: Round[];
 
-    private _t?: GameServerSide['rounds'][number]['player'];
-    private _tRef?: NodeJS.Timeout;
+    _t?: GameServerSide['rounds'][number]['player'];
+    _tRef?: NodeJS.Timeout;
     private _status: 'UNINITIALIZED' | 'INITIALIZED' | 'OVER';
+    private _withBreakTimer: typeof withBreakTimer;
 
     constructor(
         public id: number,
@@ -74,6 +75,7 @@ export default class BackgammonGame extends SocketConnection
     ) {
         super(_io, generateBackgammonGamePath(_roomId, id));
 
+        // properties
         this.players = generatePlayersObj(null, null);
         this.score = generatePlayersObj(0, 0);
         this.stages = 1;
@@ -81,6 +83,11 @@ export default class BackgammonGame extends SocketConnection
         this.timer = generatePlayersObj(60, 60);
         this.rounds = [];
         this._status = 'UNINITIALIZED';
+
+        // methods
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        this._withBreakTimer = withBreakTimer.bind(this);
 
         this._namespace.on(
             'connection',
@@ -439,20 +446,5 @@ export default class BackgammonGame extends SocketConnection
                 }, ONE_SECOND);
             }
         }
-    }
-
-    private _withBreakTimer<Data extends EmitBase>(
-        eventHandler: (data: Data) => unknown
-    ) {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const self = this;
-
-        return async function breakTimer(data: Data) {
-            // Break timer
-            self._tRef && clearTimeout(self._tRef);
-            delete self._t;
-
-            return eventHandler.call(self, data);
-        };
     }
 }
