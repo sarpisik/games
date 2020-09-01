@@ -208,7 +208,16 @@ export default class BackgammonGame implements GameServerSide {
             players[PLAYERS.WHITE] = null;
     }
 
-    // GAME LOGICS
+    /*
+     * * * * * *
+     * * * * * *
+     *
+     * GAME LOGICS
+     *
+     * * * * * *
+     * * * * * *
+     */
+
     private _initializeGame(roundPlayer: Round['player'] = PLAYERS.WHITE) {
         this._status = 'INITIALIZED';
         this.rounds = [];
@@ -317,7 +326,16 @@ export default class BackgammonGame implements GameServerSide {
         }
     }
 
-    // UTILITIES
+    /*
+     * * * * * *
+     * * * * * *
+     *
+     * UTILITIES
+     *
+     * * * * * *
+     * * * * * *
+     */
+
     private _emitNextRound(round: Round) {
         this.rounds.push(round);
         this._emitNamespace(GAME_EVENTS.ROUND, round);
