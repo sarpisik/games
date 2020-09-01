@@ -29,6 +29,7 @@ import {
     checkCollectedExist,
 } from './helpers';
 import { Round } from './round';
+import { customPromise } from '@shared/customPromise';
 
 type User = Exclude<
     GameServerSide['players'][keyof GameServerSide['players']],
@@ -145,6 +146,7 @@ export default class BackgammonGame implements GameServerSide {
                 GAME_EVENTS.COLLECT_POINT_ROUND,
                 self._withBreakTimer(self._handleCollectPoint).bind(self)
             );
+            socket.on(GAME_EVENTS.UNDO_ROUND, self._handleUndoRound.bind(self));
 
             // Disconnect event
             socket.on(
@@ -363,6 +365,30 @@ export default class BackgammonGame implements GameServerSide {
             // Send round.
             this._emitNextRound(round);
         }
+    }
+
+    private async _handleUndoRound() {
+        await this._undoRound();
+
+        this._emitNamespace(GAME_EVENTS.UNDO_ROUND, this.rounds);
+    }
+
+    private async _undoRound() {
+        const { rounds } = this;
+        const length = rounds.length;
+
+        const roundsNotEmpty = length > 0;
+
+        const playersAreSame = await customPromise(
+            () => rounds[length - 1]?.player === rounds[length - 2]?.player
+        );
+
+        const shouldUndo = roundsNotEmpty && playersAreSame;
+
+        shouldUndo &&
+            (await customPromise(() => {
+                rounds.pop();
+            }));
     }
 
     /*
