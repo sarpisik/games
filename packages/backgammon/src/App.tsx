@@ -7,6 +7,7 @@ import { ROUTES } from './config';
 /*
  * TODO:
  * - [] display only round player related errors.
+ * - [] display only round player related errors.
  * - [] add surrender button.
  */
 
