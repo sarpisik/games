@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { EmitScore, GameClient } from 'types/lib/backgammon';
 import { generatePlayers } from 'types/lib/helpers';
-import { EmitGame } from 'types/lib/game';
 
 const initialState: GameClient = {
     id: -1,
