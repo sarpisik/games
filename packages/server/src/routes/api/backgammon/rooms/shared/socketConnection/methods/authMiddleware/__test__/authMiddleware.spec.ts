@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import authMiddleware from '../authMiddleware';
 
 describe('authMiddleware', () => {
@@ -37,7 +38,6 @@ describe('authMiddleware', () => {
         const rejectWith = 'Api request failed.';
         socketConnection._userApi.fetchUser.and.rejectWith(rejectWith);
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         authMiddleware.call(socketConnection, socket, next).then(() => {
             expect(next).toHaveBeenCalledWith(rejectWith);
@@ -50,7 +50,6 @@ describe('authMiddleware', () => {
         socketConnection._userApi.fetchUser.and.resolveTo(null);
         socketConnection._userApi.validateUser.and.returnValue(false);
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         authMiddleware.call(socketConnection, socket, next).then(() => {
             expect(next).toHaveBeenCalledWith(new Error(exception));
@@ -65,7 +64,6 @@ describe('authMiddleware', () => {
         socketConnection._userApi.fetchUser.and.resolveTo(mockUser);
         socketConnection._userApi.validateUser.and.returnValue(true);
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         authMiddleware.call(socketConnection, socket, next).then(() => {
             expect(next).toHaveBeenCalled();
@@ -85,7 +83,6 @@ describe('authMiddleware', () => {
             mockUser.data.getUser
         );
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         authMiddleware.call(socketConnection, socket, next).then(() => {
             expect(next).toHaveBeenCalled();
