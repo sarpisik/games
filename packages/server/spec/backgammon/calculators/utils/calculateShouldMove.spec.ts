@@ -1,5 +1,5 @@
-import { layout } from '@routes/api/backgammon/games/constants';
-import { calculateShouldMove } from '@routes/api/backgammon/games/controller/calculators/utils';
+import { layout } from '@routes/api/backgammon/rooms/room/game/constants';
+import { calculateShouldMove } from '@routes/api/backgammon/rooms/room/game/round/utils/calculateShouldMove';
 import { PLAYERS } from '@shared-types/backgammon';
 
 describe('backgammon/calculators/utils/calculateShouldMove', () => {

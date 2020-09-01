@@ -1,1 +1,0 @@
-export { recursivelyCalculateAvailableTriangle } from './recursivelyCalculateAvailableTriangle';

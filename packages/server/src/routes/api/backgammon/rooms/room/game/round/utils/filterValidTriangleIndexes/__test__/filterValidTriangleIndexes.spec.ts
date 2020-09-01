@@ -1,8 +1,8 @@
-import { generateDoubledDice } from 'spec/support/generateDoubleDice';
 import { PLAYERS } from '@shared-types/backgammon';
-import { layout } from '@routes/api/backgammon/games/constants';
-import filterValidTriangleIndexes from '../filterValidTriangleIndexes';
+import { generateDoubledDice } from 'spec/support/generateDoubleDice';
 import { generateValidDices } from 'spec/support/generateValidDices';
+import { layout } from '../../../../constants';
+import filterValidTriangleIndexes from '../filterValidTriangleIndexes';
 
 describe('filterValidTriangleIndexes', () => {
     describe(`"${PLAYERS[PLAYERS.WHITE]}" player`, () => {

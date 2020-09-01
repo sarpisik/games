@@ -1,4 +1,4 @@
-import { layout } from '@routes/api/backgammon/games/constants';
+import { layout } from '@routes/api/backgammon/rooms/room/game/constants';
 import { Round } from '@shared-types/backgammon';
 import generateBrokens from './generateBrokens';
 

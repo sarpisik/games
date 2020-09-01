@@ -1,4 +1,3 @@
-import { layout } from '@routes/api/backgammon/games/constants';
 import {
     EmitBase,
     EmitBrokenPointRound,
@@ -20,6 +19,7 @@ import { generateBackgammonGamePath } from '@shared-types/helpers';
 import { customPromise } from '@shared/customPromise';
 import { InvalidDiceError, InvalidTriangleError } from '@shared/error';
 import { fetchUser, validateUser } from '../utils';
+import { layout } from './constants';
 import {
     calculateGameOver,
     calculateMars,

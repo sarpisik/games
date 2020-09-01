@@ -1,6 +1,6 @@
-import { layout } from '@routes/api/backgammon/games/constants';
 import { PLAYERS, Round } from '@shared-types/backgammon';
 import generateBrokens from 'spec/support/generateBrokens';
+import { layout } from '../../../constants';
 import calculateStageOver from '../stageOver';
 
 describe('backgammon/calculators/calculateStageOver', () => {

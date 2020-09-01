@@ -1,5 +1,5 @@
 import { PLAYERS } from '@shared-types/backgammon';
-import { layout } from '@routes/api/backgammon/games/constants';
+import { layout } from '../../../../constants';
 import calculateUsedDices from '../calculateUsedDices';
 import { createArea } from '../utils/calculateMovable/utils/calculateDiceMovable/__test__/calculateDiceMovable.spec';
 

@@ -1,5 +1,5 @@
-import { layout } from '@routes/api/backgammon/games/constants';
 import { PLAYERS } from '@shared-types/backgammon';
+import { layout } from '../../../../constants';
 import calculateShouldMove from '../calculateShouldMove';
 
 describe('calculateShouldMove', () => {

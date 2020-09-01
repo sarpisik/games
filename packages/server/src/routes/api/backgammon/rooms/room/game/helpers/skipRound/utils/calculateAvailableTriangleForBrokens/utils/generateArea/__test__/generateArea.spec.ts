@@ -1,6 +1,6 @@
-import { OPPONENT, PLAYERS } from '@shared-types/backgammon';
+import { layout } from '@routes/api/backgammon/rooms/room/game/constants';
+import { PLAYERS } from '@shared-types/backgammon';
 import generateArea from '../generateArea';
-import { layout } from '@routes/api/backgammon/games/constants';
 
 describe('generateArea', () => {
     it(`should return collectable are of ${

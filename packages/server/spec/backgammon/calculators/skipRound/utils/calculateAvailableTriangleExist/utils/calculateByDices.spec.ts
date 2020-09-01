@@ -1,5 +1,5 @@
-import { layout } from '@routes/api/backgammon/games/constants';
-import { calculateByDices } from '@routes/api/backgammon/games/controller/calculators/skipRound/utils/calculateAvailableTriangleExist/utils/recursivelyCalculateAvailableTriangle/utils';
+import { layout } from '@routes/api/backgammon/rooms/room/game/constants';
+import { calculateByDices } from '@routes/api/backgammon/rooms/room/game/helpers/skipRound/utils/calculateAvailableTriangleExist/utils/recursivelyCalculateAvailableTriangle/utils';
 import { PLAYERS } from '@shared-types/backgammon';
 
 describe('backgammon/calculators/skipRound/utils/calculateAvailableTriangleExist/utils/recursivelyCalculateAvailableTriangle/utils/calculateByDices', () => {

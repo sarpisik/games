@@ -1,5 +1,5 @@
 import { PLAYERS } from '@shared-types/backgammon';
-import { layout } from '@routes/api/backgammon/games/constants';
+import { layout } from '../../../../constants';
 import getAreaExcludedCollectArea from '../getAreaExcludedCollectArea';
 
 describe('getAreaExcludedCollectArea', () => {

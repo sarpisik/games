@@ -1,1 +1,0 @@
-export { recursivelyFilterFarthestTriangle } from './recursivelyFilterFarthestTriangle';

@@ -1,5 +1,5 @@
-import { layout } from '@routes/api/backgammon/games/constants';
-import { getAreaExcludedCollectArea } from '@routes/api/backgammon/games/controller/calculators/utils';
+import { layout } from '@routes/api/backgammon/rooms/room/game/constants';
+import { getAreaExcludedCollectArea } from '@routes/api/backgammon/rooms/room/game/round/utils/getAreaExcludedCollectArea';
 import { PLAYERS } from '@shared-types/backgammon';
 
 describe('backgammon/calculators/utils/getAreaExcludedCollectArea', () => {

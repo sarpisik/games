@@ -1,5 +1,5 @@
-import { layout } from '@routes/api/backgammon/games/constants';
-import { calculateAvailableTriangleExist } from '@routes/api/backgammon/games/controller/calculators/skipRound/utils';
+import { layout } from '@routes/api/backgammon/rooms/room/game/constants';
+import { calculateAvailableTriangleExist } from '@routes/api/backgammon/rooms/room/game/helpers/skipRound/utils';
 import { PLAYERS } from '@shared-types/backgammon';
 import generateBrokens from 'spec/support/generateBrokens';
 

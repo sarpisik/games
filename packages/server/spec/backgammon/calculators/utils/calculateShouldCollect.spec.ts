@@ -1,5 +1,5 @@
-import { layout } from '@routes/api/backgammon/games/constants';
-import { calculateShouldCollect } from '@routes/api/backgammon/games/controller/calculators/utils';
+import { layout } from '@routes/api/backgammon/rooms/room/game/constants';
+import { calculateShouldCollect } from '@routes/api/backgammon/rooms/room/game/round/utils';
 import { PLAYERS } from '@shared-types/backgammon';
 
 describe('backgammon/calculators/utils/calculateShouldCollect', () => {

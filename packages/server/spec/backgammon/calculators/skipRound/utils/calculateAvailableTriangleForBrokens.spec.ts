@@ -1,6 +1,6 @@
-import { layout } from '@routes/api/backgammon/games/constants';
-import { calculateAvailableTriangleForBrokens } from '@routes/api/backgammon/games/controller/calculators/skipRound/utils';
-import { PLAYERS, OPPONENT } from '@shared-types/backgammon';
+import { layout } from '@routes/api/backgammon/rooms/room/game/constants';
+import { calculateAvailableTriangleForBrokens } from '@routes/api/backgammon/rooms/room/game/helpers/skipRound/utils';
+import { OPPONENT, PLAYERS } from '@shared-types/backgammon';
 import generateBrokens from 'spec/support/generateBrokens';
 
 describe('backgammon/calculators/skipRound/utils/calculateAvailableTriangleForBrokens', () => {

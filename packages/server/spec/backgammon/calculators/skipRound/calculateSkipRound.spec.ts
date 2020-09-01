@@ -1,5 +1,5 @@
-import { layout } from '@routes/api/backgammon/games/constants';
-import { calculateSkipRound } from '@routes/api/backgammon/games/controller/calculators';
+import { layout } from '@routes/api/backgammon/rooms/room/game/constants';
+import { calculateSkipRound } from '@routes/api/backgammon/rooms/room/game/helpers';
 import { PLAYERS } from '@shared-types/backgammon';
 import generateBrokens from 'spec/support/generateBrokens';
 

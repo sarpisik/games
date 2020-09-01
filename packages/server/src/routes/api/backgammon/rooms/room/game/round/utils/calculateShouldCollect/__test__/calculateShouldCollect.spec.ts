@@ -1,6 +1,6 @@
-import calculateShouldCollect from '../calculateShouldCollect';
 import { PLAYERS } from '@shared-types/backgammon';
-import { layout } from '@routes/api/backgammon/games/constants';
+import { layout } from '../../../../constants';
+import calculateShouldCollect from '../calculateShouldCollect';
 
 describe('calculateShouldCollect', () => {
     it('should return false', (done) => {

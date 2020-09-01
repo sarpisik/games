@@ -1,4 +1,4 @@
-import { layout } from '@routes/api/backgammon/games/constants';
+import { layout } from '@routes/api/backgammon/rooms/room/game/constants';
 import { OPPONENT, PLAYERS } from '@shared-types/backgammon';
 import { generateValidDices } from 'spec/support/generateValidDices';
 import calculateDiceMovable from '../calculateDiceMovable';
