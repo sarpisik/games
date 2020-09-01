@@ -1,6 +1,6 @@
-import { calculateShouldCollect } from '@routes/api/backgammon/games/controller/calculators/utils';
 import { PLAYERS, Round } from '@shared-types/backgammon';
 import { customPromise } from '@shared/customPromise';
+import { calculateShouldCollect } from '../../../../round/utils';
 import { recursivelyCalculateAvailableTriangle } from './utils';
 
 export default async function calculateAvailableTriangleExist(round: Round) {

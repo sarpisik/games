@@ -1,6 +1,6 @@
-import calculateByDices from '../calculateByDices';
+import { layout as triangles } from '@routes/api/backgammon/rooms/room/game/constants';
 import { PLAYERS } from '@shared-types/backgammon';
-import { layout as triangles } from '@routes/api/backgammon/games/constants';
+import calculateByDices from '../calculateByDices';
 
 describe('calculateByDices', () => {
     let _params: Parameters<typeof calculateByDices>[0];

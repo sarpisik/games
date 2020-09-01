@@ -8,8 +8,8 @@ import { fetchUser, validateUser } from './utils';
 
 export default class BackgammonRoom implements RoomType {
     private _namespace: SocketIO.Namespace;
-    private _games: Map<BackgammonGame['id'], BackgammonGame>;
-    private _users: Map<string, User>;
+    _games: Map<BackgammonGame['id'], BackgammonGame>;
+    _users: Map<string, User>;
 
     constructor(public id: number, _io: SocketIO.Server) {
         this._namespace = _io.of(generateBackgammonRoomPath(id));

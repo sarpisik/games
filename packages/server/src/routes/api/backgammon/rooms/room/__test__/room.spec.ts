@@ -4,11 +4,20 @@ import { BackgammonGame } from '../game';
 describe('BackgammonRoom', () => {
     it('should create games when constructed.', () => {
         const roomId = 0;
-        const room = new BackgammonRoom(roomId);
+
+        const io = jasmine.createSpyObj('io', ['of']);
+        const ofSpy = jasmine.createSpyObj('of', ['use', 'on']);
+        (io.of as jasmine.Spy).and.callFake(() => ofSpy);
+
+        const room = new BackgammonRoom(roomId, io);
 
         expect(room.id).toBe(roomId);
-        expect(room.games.length).toBe(10);
-        room.games.forEach((game) => {
+        expect(room._games.size).toBe(10);
+
+        expect(ofSpy.use).toHaveBeenCalled();
+        expect(ofSpy.on).toHaveBeenCalled();
+
+        room._games.forEach((game) => {
             expect(game).toBeInstanceOf(BackgammonGame);
         });
     });
