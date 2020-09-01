@@ -1,15 +1,19 @@
 import {
+    EmitBrokenPointRound,
     EmitRound,
     OPPONENT,
     PLAYERS,
     Round as R,
 } from '@shared-types/backgammon';
 import asyncParser from '@shared/asyncParser';
+import { customPromise, customPromiseFindIndex } from '@shared/customPromise';
 import { InvalidTriangleError } from '@shared/error';
 import {
     deleteUsedDice,
     filterValidDice,
     filterValidTriangleIndexes,
+    generateAsyncObj,
+    handleTriangleLayout,
     rollDice,
     validateTargetTriangle,
 } from './utils';
@@ -68,7 +72,53 @@ export default class Round implements R {
             validDice
         );
 
-        return { brokens, dice, layout };
+        return generateAsyncObj(brokens, dice, layout);
+    }
+
+    async calculateBrokenPoint(data: EmitBrokenPointRound) {
+        const { color, toTriangleIndex } = data;
+        const { dice: dices, player } = this;
+
+        const triangle = this.layout[toTriangleIndex];
+        const [owner, points] = triangle;
+        const shouldCapture = owner !== player;
+
+        // Increase opponent broken points
+        const brokens = await this.handleBrokens(shouldCapture, owner, player);
+
+        // Decrese round player's broken points.
+        brokens[player] -= 1;
+
+        // Paint placed point's triangle
+        const layout = await asyncParser(this.layout);
+        handleTriangleLayout(
+            layout,
+            toTriangleIndex,
+            player,
+            shouldCapture,
+            points
+        );
+
+        // Convert triangle index into dice index.
+        const dice = await customPromise(() =>
+            color === 'BLACK'
+                ? // Left bottom corner
+                  layout.length - toTriangleIndex
+                : // Left top corner
+                  toTriangleIndex + 1
+        );
+        const usedDiceIndex = await customPromiseFindIndex(
+            dices,
+            (d) => d === dice
+        );
+
+        // Delete used dice
+        const _dice = await asyncParser(this.dice);
+        await customPromise(() => {
+            _dice.splice(usedDiceIndex, 1);
+        });
+
+        return generateAsyncObj(brokens, _dice, layout);
     }
 
     async validateTarget(
@@ -140,7 +190,13 @@ export default class Round implements R {
         ];
 
         // Update target triangle
-        layout[toTriangleIndex] = [player, shouldCapture ? 1 : points + 1];
+        handleTriangleLayout(
+            layout,
+            toTriangleIndex,
+            player,
+            shouldCapture,
+            points
+        );
 
         return layout;
     }

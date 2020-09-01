@@ -1,6 +1,7 @@
 import { layout } from '@routes/api/backgammon/games/constants';
 import {
     EmitBase,
+    EmitBrokenPointRound,
     EmitRound,
     EmitScore,
     GameServerSide,
@@ -134,6 +135,10 @@ export default class BackgammonGame implements GameServerSide {
                 GAME_EVENTS.ROUND,
                 self._withBreakTimer(self._handleRoundCalculate).bind(self)
             );
+            socket.on(
+                GAME_EVENTS.BROKEN_POINT_ROUND,
+                self._withBreakTimer(self._handleBrokenPoint).bind(self)
+            );
 
             // Disconnect event
             socket.on(
@@ -209,13 +214,9 @@ export default class BackgammonGame implements GameServerSide {
     }
 
     /*
-     * * * * * *
-     * * * * * *
-     *
+     * * * * * * * * * * * *
      * GAME LOGICS
-     *
-     * * * * * *
-     * * * * * *
+     * * * * * * * * * * * *
      */
 
     private _initializeGame(roundPlayer: Round['player'] = PLAYERS.WHITE) {
@@ -236,26 +237,7 @@ export default class BackgammonGame implements GameServerSide {
             const { roundId } = data;
             const latestRound = await findRoundById(roundId, this.rounds);
             const result = await latestRound.calculate(data);
-
-            const { brokens, dice, layout } = result;
-            const shouldJumpToNextRound = dice.length < 1;
-
-            const nextRoundPlayer = shouldJumpToNextRound
-                ? OPPONENT[latestRound.player]
-                : latestRound.player;
-            const nextRoundDice = shouldJumpToNextRound ? undefined : dice;
-
-            const nextRound = new Round(
-                1,
-                latestRound.turn + 1,
-                nextRoundPlayer,
-                brokens,
-                latestRound.collected,
-                layout,
-                nextRoundDice
-            );
-            this._handleNextRound(nextRound);
-            this._emitNextRound(nextRound);
+            this._handleRoundResult(result, latestRound);
         } catch (error) {
             if (
                 error instanceof InvalidDiceError ||
@@ -270,6 +252,38 @@ export default class BackgammonGame implements GameServerSide {
                 }, NOTIFY_DURATION);
             } else this._emitNamespace(GAME_EVENTS.BAD_REQUEST, error.message);
         }
+    }
+
+    private async _handleBrokenPoint(data: EmitBrokenPointRound) {
+        const { roundId } = data;
+        const latestRound = await findRoundById(roundId, this.rounds);
+        const result = await latestRound.calculateBrokenPoint(data);
+        this._handleRoundResult(result, latestRound);
+    }
+
+    private _handleRoundResult(
+        result: Pick<Round, 'brokens' | 'dice' | 'layout'>,
+        round: Round
+    ) {
+        const { brokens, dice, layout } = result;
+        const shouldJumpToNextRound = dice.length < 1;
+
+        const nextRoundPlayer = shouldJumpToNextRound
+            ? OPPONENT[round.player]
+            : round.player;
+        const nextRoundDice = shouldJumpToNextRound ? undefined : dice;
+
+        const nextRound = new Round(
+            1,
+            round.turn + 1,
+            nextRoundPlayer,
+            brokens,
+            round.collected,
+            layout,
+            nextRoundDice
+        );
+        this._handleNextRound(nextRound);
+        this._emitNextRound(nextRound);
     }
 
     private async _handleNextRound(round: Round) {
@@ -327,13 +341,9 @@ export default class BackgammonGame implements GameServerSide {
     }
 
     /*
-     * * * * * *
-     * * * * * *
-     *
+     * * * * * * * * * * * *
      * UTILITIES
-     *
-     * * * * * *
-     * * * * * *
+     * * * * * * * * * * * *
      */
 
     private _emitNextRound(round: Round) {
