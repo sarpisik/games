@@ -2,12 +2,13 @@ import { layout } from '@routes/api/backgammon/games/constants';
 import {
     EmitBase,
     EmitBrokenPointRound,
+    EmitCollectPointRound,
     EmitRound,
     EmitScore,
+    EmitStageOver,
     GameServerSide,
     OPPONENT,
     PLAYERS,
-    EmitCollectPointRound,
 } from '@shared-types/backgammon';
 import {
     NOTIFY_DURATION,
@@ -16,6 +17,7 @@ import {
 } from '@shared-types/constants';
 import { EmitGame, GAME_EVENTS } from '@shared-types/game';
 import { generateBackgammonGamePath } from '@shared-types/helpers';
+import { customPromise } from '@shared/customPromise';
 import { InvalidDiceError, InvalidTriangleError } from '@shared/error';
 import { fetchUser, validateUser } from '../utils';
 import {
@@ -23,13 +25,12 @@ import {
     calculateMars,
     calculateSkipRound,
     calculateStageOver,
+    checkCollectedExist,
     findRoundById,
     generatePlayersObj,
     verifyRoundPlayer,
-    checkCollectedExist,
 } from './helpers';
 import { Round } from './round';
-import { customPromise } from '@shared/customPromise';
 
 type User = Exclude<
     GameServerSide['players'][keyof GameServerSide['players']],
@@ -330,10 +331,8 @@ export default class BackgammonGame implements GameServerSide {
                 this.score
             );
 
-            if (shouldGameOver) {
-                // TODO
-                // this._handleGameOver(roomName, game.id, shouldStageOver);
-            } else {
+            if (shouldGameOver) this._handleGameOver(shouldStageOver);
+            else {
                 const payload = shouldStageOver as EmitScore;
                 payload.score = this.score;
                 payload.stages = this.stages;
@@ -389,6 +388,11 @@ export default class BackgammonGame implements GameServerSide {
             (await customPromise(() => {
                 rounds.pop();
             }));
+    }
+
+    private _handleGameOver(payload: EmitStageOver) {
+        this._status = 'OVER';
+        this._emitNamespace(GAME_EVENTS.GAME_OVER, payload);
     }
 
     /*
@@ -450,8 +454,7 @@ export default class BackgammonGame implements GameServerSide {
             if (this.timer[roundPlayer] < 1) {
                 // Exit loop on game over.
                 const winner = OPPONENT[roundPlayer];
-                // TODO
-                // this._handleGameOver(roomName, gameId, { winner });
+                this._handleGameOver({ winner });
             } else {
                 this._emitNamespace(GAME_EVENTS.TIMER, this.timer);
 
