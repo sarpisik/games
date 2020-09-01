@@ -1,0 +1,1 @@
+export { calculatePossibleDices } from './calculatePossibleDices';
