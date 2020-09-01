@@ -1,22 +1,19 @@
-import { User } from '@shared-backgammon/src/types/user';
 import { generateBackgammonRoomPath } from '@shared-types/helpers';
 import { EmitEditGame, OnEditGame, ROOM_EVENTS } from '@shared-types/room';
 import { customPromise } from '@shared/customPromise';
+import { SocketConnection } from '../shared/socketConnection';
 import { BackgammonGame } from './game';
 import { RoomType } from './types';
-import { fetchUser, validateUser } from './utils';
 
-export default class BackgammonRoom implements RoomType {
-    private _namespace: SocketIO.Namespace;
+export default class BackgammonRoom extends SocketConnection
+    implements RoomType {
     _games: Map<BackgammonGame['id'], BackgammonGame>;
-    _users: Map<string, User>;
 
     constructor(public id: number, _io: SocketIO.Server) {
-        this._namespace = _io.of(generateBackgammonRoomPath(id));
-        this._namespace.use(this._authMiddleware.bind(this));
+        super(_io, generateBackgammonRoomPath(id));
+
         this._namespace.on('connection', this._onClientConnection.bind(this));
 
-        this._users = new Map();
         this._games = new Map();
         for (let i = 1; i <= 10; i++) {
             this._games.set(
@@ -29,31 +26,6 @@ export default class BackgammonRoom implements RoomType {
                 )
             );
         }
-    }
-
-    private async _authMiddleware(
-        socket: SocketIO.Socket,
-        next: (err?: any) => void
-    ) {
-        const userId = socket.handshake.query.userId;
-        const response = await fetchUser(userId);
-        const user = response?.data?.getUser;
-        if (validateUser(user)) {
-            let userExistWithDifferentId = false;
-
-            const users = this._users.values();
-            for (const _user of users) {
-                if (_user.id === user.id) {
-                    userExistWithDifferentId = true;
-                    break;
-                }
-            }
-
-            if (!userExistWithDifferentId)
-                this._users.set(socket.client.id, user);
-
-            next();
-        } else next(new Error('User does not exist.'));
     }
 
     private _onClientConnection(socket: SocketIO.Socket) {

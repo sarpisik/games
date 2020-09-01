@@ -18,7 +18,7 @@ import { EmitGame, GAME_EVENTS } from '@shared-types/game';
 import { generateBackgammonGamePath } from '@shared-types/helpers';
 import { customPromise } from '@shared/customPromise';
 import { InvalidDiceError, InvalidTriangleError } from '@shared/error';
-import { fetchUser, validateUser } from '../utils';
+import { SocketConnection } from '../../shared/socketConnection';
 import { layout } from './constants';
 import {
     calculateGameOver,
@@ -53,7 +53,8 @@ const EMIT_GAME_KEYS: (keyof EmitGame)[] = [
     'timer',
 ];
 
-export default class BackgammonGame implements GameServerSide {
+export default class BackgammonGame extends SocketConnection
+    implements GameServerSide {
     players: GameServerSide['players'];
     score: GameServerSide['score'];
     stages: GameServerSide['stages'];
@@ -63,58 +64,28 @@ export default class BackgammonGame implements GameServerSide {
 
     private _t?: GameServerSide['rounds'][number]['player'];
     private _tRef?: NodeJS.Timeout;
-    private _namespace: SocketIO.Namespace;
-    private _users: Map<string, User>;
     private _status: 'UNINITIALIZED' | 'INITIALIZED' | 'OVER';
 
     constructor(
         public id: number,
-        private _roomId: number,
+        _roomId: number,
         _io: SocketIO.Server,
         disconnectCb: (id: number) => void
     ) {
+        super(_io, generateBackgammonGamePath(_roomId, id));
+
         this.players = generatePlayersObj(null, null);
         this.score = generatePlayersObj(0, 0);
         this.stages = 1;
         this.duration = 60;
         this.timer = generatePlayersObj(60, 60);
         this.rounds = [];
-
-        this._users = new Map();
         this._status = 'UNINITIALIZED';
 
-        this._namespace = _io.of(generateBackgammonGamePath(this._roomId, id));
-        this._namespace.use(this._authMiddleware.bind(this));
         this._namespace.on(
             'connection',
             this._handleClientConnection.call(this, disconnectCb)
         );
-    }
-
-    private async _authMiddleware(
-        socket: SocketIO.Socket,
-        next: (err?: any) => void
-    ) {
-        const userId = socket.handshake.query.userId;
-
-        const response = await fetchUser(userId);
-        const user = response?.data?.getUser;
-        if (validateUser(user)) {
-            let userExistWithDifferentId = false;
-
-            const users = this._users.values();
-            for (const _user of users) {
-                if (_user?.id === user.id) {
-                    userExistWithDifferentId = true;
-                    break;
-                }
-            }
-
-            if (!userExistWithDifferentId)
-                this._users.set(socket.client.id, user);
-
-            next();
-        } else next(new Error('User does not exist.'));
     }
 
     private _handleClientConnection(disconnectCb: (id: number) => void) {
