@@ -5,3 +5,4 @@ export { calculateMars } from './mars';
 export { calculateSkipRound } from './skipRound';
 export { calculateStageOver } from './stageOver';
 export { strToNmr } from './strToNmr';
+export { verifyRoundPlayer } from './verifyRoundPlayer';

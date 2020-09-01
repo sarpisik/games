@@ -23,6 +23,7 @@ import {
     calculateStageOver,
     findRoundById,
     generatePlayersObj,
+    verifyRoundPlayer,
 } from './helpers';
 import { Round } from './round';
 
@@ -396,10 +397,4 @@ export default class BackgammonGame implements GameServerSide {
             return eventHandler.call(self, data);
         };
     }
-}
-
-function verifyRoundPlayer(
-    tested: GameServerSide['t']
-): tested is Round['player'] {
-    return typeof tested !== 'undefined';
 }
