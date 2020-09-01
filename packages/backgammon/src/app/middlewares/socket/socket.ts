@@ -262,6 +262,11 @@ const socket: () => Middleware = () => {
                     connection.on(GAME_EVENTS.STAGE_OVER, onStageOver(store));
                     // @ts-ignore
                     connection.on(GAME_EVENTS.SKIP_ROUND, onSkipRound(store));
+                    connection.on(
+                        GAME_EVENTS.COLLECT_POINT_ROUND,
+                        // @ts-ignore
+                        onReplaceRound(store)
+                    );
                     break;
 
                 case GAME_EVENTS.INITIALIZE_GAME:
@@ -287,11 +292,6 @@ const socket: () => Middleware = () => {
                     connection.on(EVENTS.UNDO_ROUND, onUndoRound(store));
                     // @ts-ignore
                     connection.on(EVENTS.GAME_OVER, onGameOver(store));
-                    connection.on(
-                        EVENTS.COLLECT_POINT_ROUND,
-                        // @ts-ignore
-                        onReplaceRound(store)
-                    );
                     break;
 
                 case SOCKET_ACTIONS.DISCONNECT:
