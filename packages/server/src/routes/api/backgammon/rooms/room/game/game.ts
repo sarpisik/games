@@ -29,7 +29,7 @@ import {
     generatePlayersObj,
     verifyRoundPlayer,
 } from './helpers';
-import { withBreakTimer } from './methods';
+import { handleDisconnect, withBreakTimer } from './methods';
 import { Round } from './round';
 
 /*
@@ -65,6 +65,7 @@ export default class BackgammonGame extends SocketConnection
     _t?: GameServerSide['rounds'][number]['player'];
     _tRef?: NodeJS.Timeout;
     private _status: 'UNINITIALIZED' | 'INITIALIZED' | 'OVER';
+    private _handleDisconnect: typeof handleDisconnect;
     private _withBreakTimer: typeof withBreakTimer;
 
     constructor(
@@ -88,6 +89,7 @@ export default class BackgammonGame extends SocketConnection
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this._withBreakTimer = withBreakTimer.bind(this);
+        this._handleDisconnect = handleDisconnect.bind(this);
 
         this._namespace.on(
             'connection',
@@ -143,66 +145,6 @@ export default class BackgammonGame extends SocketConnection
                 )
             );
         };
-    }
-
-    private _handleDisconnect(
-        clientId: string,
-        socket: SocketIO.Socket,
-        disconnectCb: (arg0: number) => void
-    ) {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const self = this;
-
-        return function onDisconnect() {
-            const connectedUsers = self._users;
-
-            if (connectedUsers.has(clientId)) {
-                const user = connectedUsers.get(clientId) as User;
-                const userId = user.id;
-                const userName = user.name;
-
-                const wasPlayer = self._checkIsPlayer(userId);
-
-                // Delete client from the users list.
-                connectedUsers.delete(clientId);
-
-                // Broadcast disconnected client.
-                socket.broadcast.emit(GAME_EVENTS.DISCONNECT_USER, userName);
-
-                // If disconnected user was one of the players...
-                if (wasPlayer) {
-                    // Delete the player.
-                    self._deletePlayer(userId);
-
-                    // Notify the game users.
-                    socket.broadcast.emit(
-                        GAME_EVENTS.DISCONNECT_PLAYER,
-                        self.players
-                    );
-
-                    // Notify the room users.
-                    disconnectCb(self.id);
-                }
-            }
-        };
-    }
-
-    private _checkIsPlayer(userId: string) {
-        const players = this.players;
-
-        return (
-            players[PLAYERS.BLACK]?.id === userId ||
-            players[PLAYERS.WHITE]?.id === userId
-        );
-    }
-
-    private _deletePlayer(userId: User['id']) {
-        const players = this.players;
-
-        if (players[PLAYERS.BLACK]?.id === userId)
-            players[PLAYERS.BLACK] = null;
-        else if (players[PLAYERS.WHITE]?.id === userId)
-            players[PLAYERS.WHITE] = null;
     }
 
     /*

@@ -5,7 +5,7 @@ import { authMiddleware } from './methods';
 export default class SocketConnection {
     protected _namespace: SocketIO.Namespace;
     protected _userApi: UserApi;
-    protected _users: Map<string, User>;
+    _users: Map<string, User>;
     private _authMiddleware: typeof authMiddleware;
 
     constructor(_io: SocketIO.Server, _path: string) {
