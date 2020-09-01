@@ -13,6 +13,7 @@ export {
     setGame,
     setInitialGame,
     setNextStage,
+    setPlayers,
     setRoundPlayer,
     setTimer,
     undoRound,

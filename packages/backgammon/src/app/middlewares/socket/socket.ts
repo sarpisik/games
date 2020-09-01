@@ -8,7 +8,7 @@ import {
     EVENTS,
     GameClient,
 } from 'types/lib/backgammon';
-import { EmitGame, GAME_EVENTS } from 'types/lib/game';
+import { GAME_EVENTS } from 'types/lib/game';
 import { EmitJoinRooms, OnEditGame, ROOM_EVENTS } from 'types/lib/room';
 import { ROOMS_EVENTS } from 'types/lib/rooms';
 import { ROUTES } from '../../../config';
@@ -26,6 +26,7 @@ import {
     setInitialGame,
     setNextStage,
     setNotification,
+    setPlayers,
     setRoom,
     setRooms,
     setRoundPlayer,
@@ -88,6 +89,12 @@ const socket: () => Middleware = () => {
         s.dispatch(setConnectionStatus(CONNECTION_STATUS.CONNECTED));
     };
 
+    const onPlayerDisconnect = (s: typeof store) => (
+        players: GameClient['players']
+    ) => {
+        s.dispatch(setPlayers({ players }));
+    };
+
     const onNewUser = (s: typeof store) => (payload: User) => {
         s.dispatch(addRoomUser(payload));
     };
@@ -134,6 +141,10 @@ const socket: () => Middleware = () => {
     const onReplaceRound = (s: typeof store) => (round: ReplaceRound) => {
         onSetRoundPlayer(s, round);
         s.dispatch(replaceRound(round));
+    };
+
+    const onUserDisconnect = (s: typeof store) => (payload: string) => {
+        console.log(`${payload} disconnected.`);
     };
 
     const onRound = (s: typeof store) => (round: AddRound) => {
@@ -229,8 +240,28 @@ const socket: () => Middleware = () => {
                     });
                     // @ts-ignore
                     connection.on(GAME_EVENTS.JOIN_GAME, onJoinGame(store));
+                    connection.on(
+                        GAME_EVENTS.DISCONNECT_PLAYER,
+                        // @ts-ignore
+                        onPlayerDisconnect(store)
+                    );
+                    connection.on(
+                        GAME_EVENTS.DISCONNECT_USER,
+                        // @ts-ignore
+                        onUserDisconnect(store)
+                    );
+                    // @ts-ignore
+                    connection.on(GAME_EVENTS.ERROR, onError(store));
+                    // @ts-ignore
+                    connection.on(GAME_EVENTS.TIMER, onTimer(store));
+                    // @ts-ignore
+                    connection.on(GAME_EVENTS.SHORT_TIMER, onShortTimer(store));
                     // @ts-ignore
                     connection.on(GAME_EVENTS.ROUND, onRound(store));
+                    // @ts-ignore
+                    connection.on(GAME_EVENTS.STAGE_OVER, onStageOver(store));
+                    // @ts-ignore
+                    connection.on(GAME_EVENTS.SKIP_ROUND, onSkipRound(store));
                     break;
 
                 case GAME_EVENTS.INITIALIZE_GAME:
@@ -242,6 +273,8 @@ const socket: () => Middleware = () => {
                         // @ts-ignore
                         onGameEvent(store)
                     );
+                    // @ts-ignore
+                    connection.on(GAME_EVENTS.ROUND, onRound(store));
                     break;
 
                 case EVENTS.JOIN_ROOM:
@@ -251,21 +284,9 @@ const socket: () => Middleware = () => {
                     // @ts-ignore
                     connection.on(EVENTS.GAME_UPDATE, onUpdateGame(store));
                     // @ts-ignore
-                    connection.on(EVENTS.ROUND, onRound(store));
-                    // @ts-ignore
-                    connection.on(EVENTS.SKIP_ROUND, onSkipRound(store));
-                    // @ts-ignore
                     connection.on(EVENTS.UNDO_ROUND, onUndoRound(store));
                     // @ts-ignore
-                    connection.on(EVENTS.STAGE_OVER, onStageOver(store));
-                    // @ts-ignore
                     connection.on(EVENTS.GAME_OVER, onGameOver(store));
-                    // @ts-ignore
-                    connection.on(EVENTS.TIMER, onTimer(store));
-                    // @ts-ignore
-                    connection.on(EVENTS.SHORT_TIMER, onShortTimer(store));
-                    // @ts-ignore
-                    connection.on(EVENTS.ERROR, onError(store));
                     connection.on(
                         EVENTS.COLLECT_POINT_ROUND,
                         // @ts-ignore

@@ -6,6 +6,7 @@ export {
     resetCurrentRoundLayout,
     setInitialGame,
     setNextStage,
+    setPlayers,
     setRoundPlayer,
     setTimer,
     undoRound,

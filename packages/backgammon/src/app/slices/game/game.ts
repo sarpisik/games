@@ -33,6 +33,9 @@ export const gameSlice = createSlice({
             state.stages = stages;
             state.timer = timer;
         },
+        setPlayers(state, action: PayloadAction<Pick<GameClient, 'players'>>) {
+            Object.assign(state, action.payload);
+        },
         resetCurrentRoundLayout(state) {
             const currentRound = state.rounds[state.rounds.length - 1];
             const newLayout = JSON.parse(JSON.stringify(currentRound.layout));
@@ -92,10 +95,11 @@ export const {
     resetCurrentRoundLayout,
     setAvailableTriangles,
     setInitialGame,
-    setRoundPlayer,
-    undoRound,
     setNextStage,
+    setPlayers,
+    setRoundPlayer,
     setTimer,
+    undoRound,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;
