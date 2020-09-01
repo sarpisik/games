@@ -7,7 +7,7 @@ import { ROUTES } from './config';
 /*
  * TODO:
  * - [] display only round player related errors.
- * - [] add surrender button. 
+ * - [] add surrender button.
  */
 
 export default withAuthentication(App);

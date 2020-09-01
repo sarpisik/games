@@ -3,12 +3,17 @@ import Button from 'react-bootstrap/Button';
 import FormB from 'react-bootstrap/Form';
 import { PLAYERS } from 'types/lib/backgammon';
 import { Room } from '../../../../../../../../app/slices/room/room';
+import { Option } from './components';
 import { useDisabled, useFormState } from './hooks';
 import { generateInitialState } from './utils';
 
 interface FormProps {
     game: Room['games'][number];
 }
+
+const OPTIONS = Array(10)
+    .fill(1)
+    .map((n, i) => n + i);
 
 export default function Form(props: FormProps): React.ReactElement {
     const { game, onChange, onSubmit } = useFormState(
@@ -23,20 +28,24 @@ export default function Form(props: FormProps): React.ReactElement {
                 <FormB.Control
                     disabled={disabled}
                     name="stages"
-                    type="number"
+                    as="select"
                     value={game.stages}
                     onChange={onChange}
-                />
+                >
+                    {OPTIONS.map(Option)}
+                </FormB.Control>
             </FormB.Group>
             <FormB.Group controlId="exampleForm.ControlInput2">
                 <FormB.Label>Duration</FormB.Label>
                 <FormB.Control
                     disabled={disabled}
                     name="duration"
-                    type="number"
+                    as="select"
                     value={game.duration}
                     onChange={onChange}
-                />
+                >
+                    {OPTIONS.map(Option)}
+                </FormB.Control>
             </FormB.Group>
             <FormB.Group controlId="exampleForm.ControlSelect1">
                 <FormB.Label>Color</FormB.Label>
