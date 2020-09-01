@@ -283,7 +283,6 @@ export default class BackgammonGame implements GameServerSide {
             nextRoundDice
         );
         this._handleNextRound(nextRound);
-        this._emitNextRound(nextRound);
     }
 
     private async _handleNextRound(round: Round) {
@@ -336,7 +335,7 @@ export default class BackgammonGame implements GameServerSide {
             }, NOTIFY_DURATION);
         } else {
             // Send round.
-            this._emitNamespace(GAME_EVENTS.ROUND, round);
+            this._emitNextRound(round);
         }
     }
 
