@@ -32,6 +32,12 @@ import {
 } from './helpers';
 import { Round } from './round';
 
+/*
+ * TODO:
+ * - [] reset game on both players disconnected.
+ * - [] handle restart game event.
+ */
+
 type User = Exclude<
     GameServerSide['players'][keyof GameServerSide['players']],
     null
@@ -58,7 +64,7 @@ export default class BackgammonGame implements GameServerSide {
     private _t?: GameServerSide['rounds'][number]['player'];
     private _tRef?: NodeJS.Timeout;
     private _namespace: SocketIO.Namespace;
-    private _connectedUsers: Map<string, User>;
+    private _users: Map<string, User>;
     private _status: 'UNINITIALIZED' | 'INITIALIZED' | 'OVER';
 
     constructor(
@@ -74,7 +80,7 @@ export default class BackgammonGame implements GameServerSide {
         this.timer = generatePlayersObj(60, 60);
         this.rounds = [];
 
-        this._connectedUsers = new Map();
+        this._users = new Map();
         this._status = 'UNINITIALIZED';
 
         this._namespace = _io.of(generateBackgammonGamePath(this._roomId, id));
@@ -89,7 +95,6 @@ export default class BackgammonGame implements GameServerSide {
         socket: SocketIO.Socket,
         next: (err?: any) => void
     ) {
-        const clientId = socket.client.id;
         const userId = socket.handshake.query.userId;
 
         const response = await fetchUser(userId);
@@ -97,7 +102,7 @@ export default class BackgammonGame implements GameServerSide {
         if (validateUser(user)) {
             let userExistWithDifferentId = false;
 
-            const users = this._connectedUsers.values();
+            const users = this._users.values();
             for (const _user of users) {
                 if (_user?.id === user.id) {
                     userExistWithDifferentId = true;
@@ -106,7 +111,7 @@ export default class BackgammonGame implements GameServerSide {
             }
 
             if (!userExistWithDifferentId)
-                this._connectedUsers.set(clientId, user);
+                this._users.set(socket.client.id, user);
 
             next();
         } else next(new Error('User does not exist.'));
@@ -171,7 +176,7 @@ export default class BackgammonGame implements GameServerSide {
         const self = this;
 
         return function onDisconnect() {
-            const connectedUsers = self._connectedUsers;
+            const connectedUsers = self._users;
 
             if (connectedUsers.has(clientId)) {
                 const user = connectedUsers.get(clientId) as User;
