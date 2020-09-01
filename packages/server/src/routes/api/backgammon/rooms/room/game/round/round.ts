@@ -4,6 +4,7 @@ import {
     OPPONENT,
     PLAYERS,
     Round as R,
+    EmitCollectPointRound,
 } from '@shared-types/backgammon';
 import asyncParser from '@shared/asyncParser';
 import { customPromise, customPromiseFindIndex } from '@shared/customPromise';
@@ -16,7 +17,21 @@ import {
     handleTriangleLayout,
     rollDice,
     validateTargetTriangle,
+    calculateShouldCollect,
+    transformCollectAreaIndex,
+    filterValidDiceIndex,
+    filterFarthestTriangle,
+    filterMaxDice,
+    calculateCollectArea,
+    calculateUsedDices,
 } from './utils';
+
+type CalculateMovableParams = Parameters<typeof calculateUsedDices>[0];
+
+const INDEX_MAP = {
+    [PLAYERS.BLACK]: (index: number) => index,
+    [PLAYERS.WHITE]: (index: number) => 23 - index,
+};
 
 export default class Round implements R {
     id: R['id'];
@@ -113,12 +128,113 @@ export default class Round implements R {
         );
 
         // Delete used dice
-        const _dice = await asyncParser(this.dice);
-        await customPromise(() => {
-            _dice.splice(usedDiceIndex, 1);
-        });
+        const _dice = await this.deleteDice(usedDiceIndex);
 
         return generateAsyncObj(brokens, _dice, layout);
+    }
+
+    async calculateCollectPoint(data: EmitCollectPointRound) {
+        const { fromTriangleIndex } = data;
+        const { player, layout, dice: dices } = this;
+
+        const shouldCollect = await calculateShouldCollect(player, layout);
+        if (shouldCollect) {
+            const triangleIndex = await transformCollectAreaIndex(
+                player,
+                fromTriangleIndex
+            );
+
+            const results = await Promise.all([
+                filterValidDiceIndex(triangleIndex, dices),
+                filterFarthestTriangle(layout, player),
+                filterMaxDice(dices),
+            ]);
+            const [
+                validDiceIndex,
+                farthestTriangleIndex,
+                maxDiceIndex,
+            ] = results;
+
+            const diceAndTriangleAreEqual = validDiceIndex > -1;
+            const shouldPickable = await customPromise(() => {
+                const isFarthestTriangle =
+                    fromTriangleIndex === farthestTriangleIndex;
+                const collectableByHigherDice =
+                    dices[maxDiceIndex] > triangleIndex + 1;
+                const collectable =
+                    isFarthestTriangle && collectableByHigherDice;
+
+                return diceAndTriangleAreEqual || collectable;
+            });
+
+            if (shouldPickable) {
+                const deleteDicesFrom = diceAndTriangleAreEqual
+                    ? validDiceIndex
+                    : maxDiceIndex;
+
+                const tIndex = diceAndTriangleAreEqual
+                    ? triangleIndex
+                    : await transformCollectAreaIndex(
+                          player,
+                          farthestTriangleIndex
+                      );
+
+                return this._handleCollect(deleteDicesFrom, 1, tIndex);
+            }
+
+            const collectArea = await calculateCollectArea(player, layout);
+            const calculateMovableParams = await customPromise(
+                (): CalculateMovableParams => ({
+                    dices,
+                    layout: collectArea,
+                    player,
+                    startIndex: triangleIndex,
+                })
+            );
+            const usedIndexes = await calculateUsedDices(
+                calculateMovableParams
+            );
+
+            const deleteDicesCount = usedIndexes.length;
+            const shouldMoveAndPick = deleteDicesCount > 0;
+            if (shouldMoveAndPick)
+                return this._handleCollect(0, deleteDicesCount, triangleIndex);
+
+            return this._handleNotCollected();
+        }
+
+        return this._handleNotCollected();
+    }
+
+    private async _handleCollect(
+        deleteDicesFrom: number,
+        deleteDicesCount: number,
+        _triangleIndex: number
+    ) {
+        const triangleIndex = INDEX_MAP[this.player](_triangleIndex);
+        const triangle = this.layout[triangleIndex];
+        const [owner, points] = triangle;
+        const newPoints = points - 1;
+
+        const resolves = await Promise.all([
+            asyncParser(this.brokens),
+            asyncParser(this.layout),
+        ]);
+        const [brokens, layout] = resolves;
+
+        // Paint new layout
+        layout[triangleIndex] = [
+            newPoints < 1 ? PLAYERS.NONE : owner,
+            newPoints,
+        ];
+
+        // Delete used dice
+        const dice = await this.deleteDice(deleteDicesFrom, deleteDicesCount);
+
+        // Increase collected points
+        const collected = await this._increaseCollected(this.player);
+
+        return generateAsyncObj(brokens, dice, layout, collected);
     }
 
     async validateTarget(
@@ -210,5 +326,25 @@ export default class Round implements R {
         const usedDice = Math.abs(toTriangleIndex - fromTriangleIndex);
         await deleteUsedDice(dice, validDice, usedDice);
         return dice;
+    }
+
+    async deleteDice(deleteDicesFrom: number, deleteDicesCount = 1) {
+        const dice = await asyncParser(this.dice);
+
+        await customPromise(() => {
+            dice.splice(deleteDicesFrom, deleteDicesCount);
+        });
+
+        return dice;
+    }
+
+    private async _increaseCollected(player: Round['player']) {
+        const collected = await asyncParser(this.collected);
+        collected[player] += 1;
+        return collected;
+    }
+
+    private _handleNotCollected() {
+        return customPromise(() => null);
     }
 }

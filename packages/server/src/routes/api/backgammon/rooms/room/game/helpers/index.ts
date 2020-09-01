@@ -1,3 +1,4 @@
+export { checkCollectedExist } from './checkCollectedExist';
 export { findRoundById } from './findRoundById';
 export { calculateGameOver } from './gameOver';
 export { generatePlayersObj } from './generatePlayersObj';

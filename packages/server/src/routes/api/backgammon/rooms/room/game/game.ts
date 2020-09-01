@@ -7,6 +7,7 @@ import {
     GameServerSide,
     OPPONENT,
     PLAYERS,
+    EmitCollectPointRound,
 } from '@shared-types/backgammon';
 import {
     NOTIFY_DURATION,
@@ -25,6 +26,7 @@ import {
     findRoundById,
     generatePlayersObj,
     verifyRoundPlayer,
+    checkCollectedExist,
 } from './helpers';
 import { Round } from './round';
 
@@ -138,6 +140,10 @@ export default class BackgammonGame implements GameServerSide {
             socket.on(
                 GAME_EVENTS.BROKEN_POINT_ROUND,
                 self._withBreakTimer(self._handleBrokenPoint).bind(self)
+            );
+            socket.on(
+                GAME_EVENTS.COLLECT_POINT_ROUND,
+                self._withBreakTimer(self._handleCollectPoint).bind(self)
             );
 
             // Disconnect event
@@ -261,8 +267,24 @@ export default class BackgammonGame implements GameServerSide {
         this._handleRoundResult(result, latestRound);
     }
 
+    private async _handleCollectPoint(data: EmitCollectPointRound) {
+        const { roundId } = data;
+        const latestRound = await findRoundById(roundId, this.rounds);
+        const result = await latestRound.calculateCollectPoint(data);
+
+        // If any point(s) collected, follow the next step.
+        // Else, re-send round.
+        if (result) {
+            this._handleRoundResult(result, latestRound);
+        } else {
+            this._emitNamespace(GAME_EVENTS.COLLECT_POINT_ROUND, latestRound);
+        }
+    }
+
     private _handleRoundResult(
-        result: Pick<Round, 'brokens' | 'dice' | 'layout'>,
+        result: Pick<Round, 'brokens' | 'dice' | 'layout'> & {
+            collected?: Round['collected'];
+        },
         round: Round
     ) {
         const { brokens, dice, layout } = result;
@@ -273,12 +295,16 @@ export default class BackgammonGame implements GameServerSide {
             : round.player;
         const nextRoundDice = shouldJumpToNextRound ? undefined : dice;
 
+        const collected = checkCollectedExist(result.collected)
+            ? result.collected
+            : round.collected;
+
         const nextRound = new Round(
             1,
             round.turn + 1,
             nextRoundPlayer,
             brokens,
-            round.collected,
+            collected,
             layout,
             nextRoundDice
         );
