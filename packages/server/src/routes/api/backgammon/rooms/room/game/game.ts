@@ -20,6 +20,7 @@ import {
     initializeGame,
     initializeRound,
     withBreakTimer,
+    handleUndoRound,
 } from './methods';
 import { Round } from './round';
 
@@ -62,6 +63,7 @@ export default class BackgammonGame extends SocketConnection
     _handleNextRound: typeof handleNextRound;
     _handleRoundCalculate: typeof handleRoundCalculate;
     _handleRoundResult: typeof handleRoundResult;
+    _handleUndoRound: typeof handleUndoRound;
     _initializeGame: typeof initializeGame;
     _initializeRound: typeof initializeRound;
     _withBreakTimer: typeof withBreakTimer;
@@ -93,6 +95,7 @@ export default class BackgammonGame extends SocketConnection
         this._handleNextRound = handleNextRound.bind(this);
         this._handleRoundCalculate = handleRoundCalculate.bind(this);
         this._handleRoundResult = handleRoundResult.bind(this);
+        this._handleUndoRound = handleUndoRound.bind(this);
         this._initializeGame = initializeGame.bind(this);
         this._initializeRound = initializeRound.bind(this);
 
@@ -158,13 +161,7 @@ export default class BackgammonGame extends SocketConnection
      * * * * * * * * * * * *
      */
 
-    private async _handleUndoRound() {
-        await this._undoRound();
-
-        this._emitNamespace(GAME_EVENTS.UNDO_ROUND, this.rounds);
-    }
-
-    private async _undoRound() {
+    async _undoRound() {
         const { rounds } = this;
         const length = rounds.length;
 

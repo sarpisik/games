@@ -4,6 +4,7 @@ export { handleDisconnect } from './handleDisconnect';
 export { handleNextRound } from './handleNextRound';
 export { handleRoundCalculate } from './handleRoundCalculate';
 export { handleRoundResult } from './handleRoundResult';
+export { handleUndoRound } from './handleUndoRound';
 export { initializeGame } from './initializeGame';
 export { initializeRound } from './initializeRound';
 export { withBreakTimer } from './withBreakTimer';
