@@ -1,7 +1,6 @@
 import {
     EmitBrokenPointRound,
     EmitCollectPointRound,
-    EmitRound,
     EmitScore,
     EmitStageOver,
     GameServerSide,
@@ -16,9 +15,7 @@ import {
 import { EmitGame, GAME_EVENTS } from '@shared-types/game';
 import { generateBackgammonGamePath } from '@shared-types/helpers';
 import { customPromise } from '@shared/customPromise';
-import { InvalidDiceError, InvalidTriangleError } from '@shared/error';
 import { SocketConnection } from '../../shared/socketConnection';
-import { layout } from './constants';
 import {
     calculateGameOver,
     calculateMars,
@@ -31,9 +28,10 @@ import {
 } from './helpers';
 import {
     handleDisconnect,
+    handleRoundCalculate,
     initializeGame,
-    withBreakTimer,
     initializeRound,
+    withBreakTimer,
 } from './methods';
 import { Round } from './round';
 
@@ -71,6 +69,7 @@ export default class BackgammonGame extends SocketConnection
     _tRef?: NodeJS.Timeout;
     _status: 'UNINITIALIZED' | 'INITIALIZED' | 'OVER';
     _handleDisconnect: typeof handleDisconnect;
+    _handleRoundCalculate: typeof handleRoundCalculate;
     _initializeGame: typeof initializeGame;
     _initializeRound: typeof initializeRound;
     _withBreakTimer: typeof withBreakTimer;
@@ -99,6 +98,7 @@ export default class BackgammonGame extends SocketConnection
         this._initializeGame = initializeGame.bind(this);
         this._initializeRound = initializeRound.bind(this);
         this._handleDisconnect = handleDisconnect.bind(this);
+        this._handleRoundCalculate = handleRoundCalculate.bind(this);
 
         this._namespace.on(
             'connection',
@@ -161,29 +161,6 @@ export default class BackgammonGame extends SocketConnection
      * GAME LOGICS
      * * * * * * * * * * * *
      */
-
-    private async _handleRoundCalculate(data: EmitRound) {
-        try {
-            const { roundId } = data;
-            const latestRound = await findRoundById(roundId, this.rounds);
-            const result = await latestRound.calculate(data);
-            this._handleRoundResult(result, latestRound);
-        } catch (error) {
-            if (
-                error instanceof InvalidDiceError ||
-                error instanceof InvalidTriangleError
-            ) {
-                this._emitNamespace(GAME_EVENTS.ERROR, error.payload);
-                setTimeout(() => {
-                    this._emitNamespace(
-                        GAME_EVENTS.ROUND,
-                        this.rounds[this.rounds.length - 1]
-                    );
-                }, NOTIFY_DURATION);
-            } else this._emitNamespace(GAME_EVENTS.BAD_REQUEST, error.message);
-        }
-    }
-
     private async _handleBrokenPoint(data: EmitBrokenPointRound) {
         const { roundId } = data;
         const latestRound = await findRoundById(roundId, this.rounds);
@@ -205,7 +182,7 @@ export default class BackgammonGame extends SocketConnection
         }
     }
 
-    private _handleRoundResult(
+    _handleRoundResult(
         result: Pick<Round, 'brokens' | 'dice' | 'layout'> & {
             collected?: Round['collected'];
         },
@@ -327,7 +304,7 @@ export default class BackgammonGame extends SocketConnection
         this._emitNamespace(GAME_EVENTS.ROUND, round);
     }
 
-    private _emitNamespace<P>(event: string, payload: P) {
+    _emitNamespace<P>(event: string, payload: P) {
         this._namespace.emit(event, payload);
 
         if (event === GAME_EVENTS.ROUND) this._handleTimer();
