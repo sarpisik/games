@@ -8,7 +8,8 @@ export default function useUser() {
     return {
         user,
         signIn() {
-            Auth.federatedSignIn();
+            // @ts-ignore
+            Auth.federatedSignIn({ provider: 'Google' });
         },
         signOut() {
             Auth.signOut();
