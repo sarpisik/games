@@ -17,6 +17,7 @@ import {
     initializeRound,
     undoRound,
     withBreakTimer,
+    emitNextRound,
 } from './methods';
 import { Round } from './round';
 
@@ -53,6 +54,7 @@ export default class BackgammonGame extends SocketConnection
     _t?: GameServerSide['rounds'][number]['player'];
     _tRef?: NodeJS.Timeout;
     _status: 'UNINITIALIZED' | 'INITIALIZED' | 'OVER';
+    _emitNextRound: typeof emitNextRound;
     _handleBrokenPoint: typeof handleBrokenPoint;
     _handleCollectPoint: typeof handleCollectPoint;
     _handleDisconnect: typeof handleDisconnect;
@@ -87,6 +89,7 @@ export default class BackgammonGame extends SocketConnection
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this._withBreakTimer = withBreakTimer.bind(this);
+        this._emitNextRound = emitNextRound.bind(this);
         this._handleBrokenPoint = handleBrokenPoint.bind(this);
         this._handleCollectPoint = handleCollectPoint.bind(this);
         this._handleDisconnect = handleDisconnect.bind(this);
@@ -160,11 +163,6 @@ export default class BackgammonGame extends SocketConnection
      * UTILITIES
      * * * * * * * * * * * *
      */
-
-    _emitNextRound(round: Round) {
-        this.rounds.push(round);
-        this._emitNamespace(GAME_EVENTS.ROUND, round);
-    }
 
     _emitNamespace<P>(event: string, payload: P) {
         this._namespace.emit(event, payload);
