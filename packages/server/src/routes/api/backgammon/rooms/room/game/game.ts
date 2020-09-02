@@ -1,9 +1,4 @@
-import {
-    EmitStageOver,
-    GameServerSide,
-    OPPONENT,
-    PLAYERS,
-} from '@shared-types/backgammon';
+import { GameServerSide, OPPONENT, PLAYERS } from '@shared-types/backgammon';
 import { ONE_SECOND, SHORT_TIMER } from '@shared-types/constants';
 import { EmitGame, GAME_EVENTS } from '@shared-types/game';
 import { generateBackgammonGamePath } from '@shared-types/helpers';
@@ -13,6 +8,7 @@ import {
     handleBrokenPoint,
     handleCollectPoint,
     handleDisconnect,
+    handleGameOver,
     handleNextRound,
     handleRoundCalculate,
     handleRoundResult,
@@ -60,6 +56,7 @@ export default class BackgammonGame extends SocketConnection
     _handleBrokenPoint: typeof handleBrokenPoint;
     _handleCollectPoint: typeof handleCollectPoint;
     _handleDisconnect: typeof handleDisconnect;
+    _handleGameOver: typeof handleGameOver;
     _handleNextRound: typeof handleNextRound;
     _handleRoundCalculate: typeof handleRoundCalculate;
     _handleRoundResult: typeof handleRoundResult;
@@ -93,6 +90,7 @@ export default class BackgammonGame extends SocketConnection
         this._handleBrokenPoint = handleBrokenPoint.bind(this);
         this._handleCollectPoint = handleCollectPoint.bind(this);
         this._handleDisconnect = handleDisconnect.bind(this);
+        this._handleGameOver = handleGameOver.bind(this);
         this._handleNextRound = handleNextRound.bind(this);
         this._handleRoundCalculate = handleRoundCalculate.bind(this);
         this._handleRoundResult = handleRoundResult.bind(this);
@@ -155,17 +153,6 @@ export default class BackgammonGame extends SocketConnection
                 )
             );
         };
-    }
-
-    /*
-     * * * * * * * * * * * *
-     * GAME LOGICS
-     * * * * * * * * * * * *
-     */
-
-    _handleGameOver(payload: EmitStageOver) {
-        this._status = 'OVER';
-        this._emitNamespace(GAME_EVENTS.GAME_OVER, payload);
     }
 
     /*
