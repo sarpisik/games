@@ -1,5 +1,5 @@
 import { GameServerSide, OPPONENT, PLAYERS } from '@shared-types/backgammon';
-import { ONE_SECOND, SHORT_TIMER } from '@shared-types/constants';
+import { ONE_SECOND } from '@shared-types/constants';
 import { EmitGame, GAME_EVENTS } from '@shared-types/game';
 import { generateBackgammonGamePath } from '@shared-types/helpers';
 import { SocketConnection } from '../../shared/socketConnection';
@@ -18,6 +18,7 @@ import {
     handleUndoRound,
     initializeGame,
     initializeRound,
+    recursivelySetShortTimer,
     undoRound,
     withBreakTimer,
 } from './methods';
@@ -69,6 +70,7 @@ export default class BackgammonGame extends SocketConnection
     _handleUndoRound: typeof handleUndoRound;
     _initializeGame: typeof initializeGame;
     _initializeRound: typeof initializeRound;
+    _recursivelySetShortTimer: typeof recursivelySetShortTimer;
     _undoRound: typeof undoRound;
     _withBreakTimer: typeof withBreakTimer;
 
@@ -106,6 +108,7 @@ export default class BackgammonGame extends SocketConnection
         this._handleUndoRound = handleUndoRound.bind(this);
         this._initializeGame = initializeGame.bind(this);
         this._initializeRound = initializeRound.bind(this);
+        this._recursivelySetShortTimer = recursivelySetShortTimer.bind(this);
         this._undoRound = undoRound.bind(this);
 
         this._namespace.on(
@@ -170,30 +173,7 @@ export default class BackgammonGame extends SocketConnection
      * * * * * * * * * * * *
      */
 
-    async _recursivelySetShortTimer(
-        latestRoundPlayer: PLAYERS | undefined,
-        seconds = SHORT_TIMER
-    ) {
-        const roundPlayer = this._t;
-
-        if (
-            roundPlayer === latestRoundPlayer &&
-            verifyRoundPlayer(roundPlayer)
-        ) {
-            seconds -= 1;
-            this._emitNamespace(GAME_EVENTS.SHORT_TIMER, seconds);
-
-            if (seconds < 1) {
-                this._recursivelySetTimer(latestRoundPlayer);
-            } else {
-                this._tRef = setTimeout(() => {
-                    this._recursivelySetShortTimer(latestRoundPlayer, seconds);
-                }, ONE_SECOND);
-            }
-        }
-    }
-
-    private async _recursivelySetTimer(latestRoundPlayer: PLAYERS | undefined) {
+    async _recursivelySetTimer(latestRoundPlayer: PLAYERS | undefined) {
         const roundPlayer = this._t;
 
         if (
