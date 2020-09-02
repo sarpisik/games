@@ -1,6 +1,5 @@
 import { OPPONENT } from '@shared-types/backgammon';
 import BackgammonGame from '../../game';
-import { checkCollectedExist } from '../../helpers';
 import { Round } from '../../round';
 
 export default async function handleRoundResult(
@@ -32,4 +31,10 @@ export default async function handleRoundResult(
         nextRoundDice
     );
     this._handleNextRound(nextRound);
+}
+
+function checkCollectedExist(
+    tested?: Round['collected']
+): tested is Round['collected'] {
+    return typeof tested !== 'undefined';
 }
