@@ -29,7 +29,7 @@ import {
     generatePlayersObj,
     verifyRoundPlayer,
 } from './helpers';
-import { handleDisconnect, withBreakTimer } from './methods';
+import { handleDisconnect, initializeGame, withBreakTimer } from './methods';
 import { Round } from './round';
 
 /*
@@ -64,8 +64,9 @@ export default class BackgammonGame extends SocketConnection
 
     _t?: GameServerSide['rounds'][number]['player'];
     _tRef?: NodeJS.Timeout;
-    private _status: 'UNINITIALIZED' | 'INITIALIZED' | 'OVER';
+    _status: 'UNINITIALIZED' | 'INITIALIZED' | 'OVER';
     private _handleDisconnect: typeof handleDisconnect;
+    private _initializeGame: typeof initializeGame;
     private _withBreakTimer: typeof withBreakTimer;
 
     constructor(
@@ -89,6 +90,7 @@ export default class BackgammonGame extends SocketConnection
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this._withBreakTimer = withBreakTimer.bind(this);
+        this._initializeGame = initializeGame.bind(this);
         this._handleDisconnect = handleDisconnect.bind(this);
 
         this._namespace.on(
@@ -153,13 +155,7 @@ export default class BackgammonGame extends SocketConnection
      * * * * * * * * * * * *
      */
 
-    private _initializeGame(roundPlayer: Round['player'] = PLAYERS.WHITE) {
-        this._status = 'INITIALIZED';
-        this.rounds = [];
-        this._initializeRound(roundPlayer);
-    }
-
-    private _initializeRound(roundPlayer: Round['player']) {
+    _initializeRound(roundPlayer: Round['player']) {
         const brokens = generatePlayersObj(0, 0);
         const collected = generatePlayersObj(0, 0);
         const round = new Round(0, 1, roundPlayer, brokens, collected, layout);
