@@ -1,5 +1,4 @@
 import {
-    EmitBrokenPointRound,
     EmitCollectPointRound,
     EmitScore,
     EmitStageOver,
@@ -27,6 +26,7 @@ import {
     verifyRoundPlayer,
 } from './helpers';
 import {
+    handleBrokenPoint,
     handleDisconnect,
     handleRoundCalculate,
     initializeGame,
@@ -68,6 +68,7 @@ export default class BackgammonGame extends SocketConnection
     _t?: GameServerSide['rounds'][number]['player'];
     _tRef?: NodeJS.Timeout;
     _status: 'UNINITIALIZED' | 'INITIALIZED' | 'OVER';
+    _handleBrokenPoint: typeof handleBrokenPoint;
     _handleDisconnect: typeof handleDisconnect;
     _handleRoundCalculate: typeof handleRoundCalculate;
     _initializeGame: typeof initializeGame;
@@ -95,9 +96,10 @@ export default class BackgammonGame extends SocketConnection
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this._withBreakTimer = withBreakTimer.bind(this);
+        this._handleBrokenPoint = handleBrokenPoint.bind(this);
+        this._handleDisconnect = handleDisconnect.bind(this);
         this._initializeGame = initializeGame.bind(this);
         this._initializeRound = initializeRound.bind(this);
-        this._handleDisconnect = handleDisconnect.bind(this);
         this._handleRoundCalculate = handleRoundCalculate.bind(this);
 
         this._namespace.on(
@@ -161,12 +163,6 @@ export default class BackgammonGame extends SocketConnection
      * GAME LOGICS
      * * * * * * * * * * * *
      */
-    private async _handleBrokenPoint(data: EmitBrokenPointRound) {
-        const { roundId } = data;
-        const latestRound = await findRoundById(roundId, this.rounds);
-        const result = await latestRound.calculateBrokenPoint(data);
-        this._handleRoundResult(result, latestRound);
-    }
 
     private async _handleCollectPoint(data: EmitCollectPointRound) {
         const { roundId } = data;
