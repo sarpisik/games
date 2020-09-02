@@ -8,10 +8,11 @@ export default function calculateSizes() {
         isLandscape,
         windowHeight,
         windowWidth,
+        orientation,
     } = calculateWindowDimension();
 
     const BOARD_WIDTH = isLandscape ? windowWidth * MAX_WIDTH : windowWidth;
-    const BOARD_HEIGHT = isLandscape ? windowHeight : windowWidth;
+    const BOARD_HEIGHT = isLandscape ? windowHeight : windowWidth * orientation;
 
     return {
         // board
