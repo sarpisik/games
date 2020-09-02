@@ -1,31 +1,20 @@
 import {
-    EmitScore,
     EmitStageOver,
     GameServerSide,
     OPPONENT,
     PLAYERS,
 } from '@shared-types/backgammon';
-import {
-    NOTIFY_DURATION,
-    ONE_SECOND,
-    SHORT_TIMER,
-} from '@shared-types/constants';
+import { ONE_SECOND, SHORT_TIMER } from '@shared-types/constants';
 import { EmitGame, GAME_EVENTS } from '@shared-types/game';
 import { generateBackgammonGamePath } from '@shared-types/helpers';
 import { customPromise } from '@shared/customPromise';
 import { SocketConnection } from '../../shared/socketConnection';
-import {
-    calculateGameOver,
-    calculateMars,
-    calculateSkipRound,
-    calculateStageOver,
-    generatePlayersObj,
-    verifyRoundPlayer,
-} from './helpers';
+import { generatePlayersObj, verifyRoundPlayer } from './helpers';
 import {
     handleBrokenPoint,
     handleCollectPoint,
     handleDisconnect,
+    handleNextRound,
     handleRoundCalculate,
     handleRoundResult,
     initializeGame,
@@ -70,6 +59,7 @@ export default class BackgammonGame extends SocketConnection
     _handleBrokenPoint: typeof handleBrokenPoint;
     _handleCollectPoint: typeof handleCollectPoint;
     _handleDisconnect: typeof handleDisconnect;
+    _handleNextRound: typeof handleNextRound;
     _handleRoundCalculate: typeof handleRoundCalculate;
     _handleRoundResult: typeof handleRoundResult;
     _initializeGame: typeof initializeGame;
@@ -100,6 +90,7 @@ export default class BackgammonGame extends SocketConnection
         this._handleBrokenPoint = handleBrokenPoint.bind(this);
         this._handleCollectPoint = handleCollectPoint.bind(this);
         this._handleDisconnect = handleDisconnect.bind(this);
+        this._handleNextRound = handleNextRound.bind(this);
         this._handleRoundCalculate = handleRoundCalculate.bind(this);
         this._handleRoundResult = handleRoundResult.bind(this);
         this._initializeGame = initializeGame.bind(this);
@@ -167,58 +158,6 @@ export default class BackgammonGame extends SocketConnection
      * * * * * * * * * * * *
      */
 
-    async _handleNextRound(round: Round) {
-        const [shouldStageOver, shouldSkipRound] = await Promise.all([
-            calculateStageOver(round),
-            calculateSkipRound(round),
-        ]);
-
-        if (shouldStageOver) {
-            const { winner } = shouldStageOver;
-            const shouldMars = await calculateMars(winner, round.collected);
-            const winnerPoint = shouldMars ? 2 : 1;
-            this.score[winner] += winnerPoint;
-
-            const shouldGameOver = await calculateGameOver(
-                this.stages,
-                this.score
-            );
-
-            if (shouldGameOver) this._handleGameOver(shouldStageOver);
-            else {
-                const payload = shouldStageOver as EmitScore;
-                payload.score = this.score;
-                payload.stages = this.stages;
-                this._emitNamespace(GAME_EVENTS.STAGE_OVER, payload);
-
-                setTimeout(() => {
-                    this._initializeGame(winner);
-                }, NOTIFY_DURATION);
-            }
-        } else if (shouldSkipRound) {
-            this._emitNamespace(GAME_EVENTS.SKIP_ROUND, {
-                round,
-                message: 'You can not move. Skipping to next round.',
-            });
-
-            setTimeout(() => {
-                this._handleNextRound(
-                    new Round(
-                        0,
-                        round.turn + 1,
-                        OPPONENT[round.player],
-                        round.brokens,
-                        round.collected,
-                        round.layout
-                    )
-                );
-            }, NOTIFY_DURATION);
-        } else {
-            // Send round.
-            this._emitNextRound(round);
-        }
-    }
-
     private async _handleUndoRound() {
         await this._undoRound();
 
@@ -243,7 +182,7 @@ export default class BackgammonGame extends SocketConnection
             }));
     }
 
-    private _handleGameOver(payload: EmitStageOver) {
+    _handleGameOver(payload: EmitStageOver) {
         this._status = 'OVER';
         this._emitNamespace(GAME_EVENTS.GAME_OVER, payload);
     }

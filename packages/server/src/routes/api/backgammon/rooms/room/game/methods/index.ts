@@ -1,6 +1,7 @@
 export { handleBrokenPoint } from './handleBrokenPoint';
 export { handleCollectPoint } from './handleCollectPoint';
 export { handleDisconnect } from './handleDisconnect';
+export { handleNextRound } from './handleNextRound';
 export { handleRoundCalculate } from './handleRoundCalculate';
 export { handleRoundResult } from './handleRoundResult';
 export { initializeGame } from './initializeGame';
