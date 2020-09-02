@@ -93,9 +93,6 @@ export default class BackgammonGame extends SocketConnection
         this._status = 'UNINITIALIZED';
 
         // methods
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        this._withBreakTimer = withBreakTimer.bind(this);
         this._emitNamespace = emitNamespace.bind(this);
         this._emitNextRound = emitNextRound.bind(this);
         this._handleBrokenPoint = handleBrokenPoint.bind(this);
@@ -112,6 +109,9 @@ export default class BackgammonGame extends SocketConnection
         this._recursivelySetShortTimer = recursivelySetShortTimer.bind(this);
         this._recursivelySetTimer = recursivelySetTimer.bind(this);
         this._undoRound = undoRound.bind(this);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        this._withBreakTimer = withBreakTimer.bind(this);
 
         this._namespace.on(
             'connection',
