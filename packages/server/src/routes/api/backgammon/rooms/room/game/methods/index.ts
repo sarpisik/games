@@ -1,3 +1,4 @@
+export { emitNamespace } from './emitNamespace';
 export { emitNextRound } from './emitNextRound';
 export { handleBrokenPoint } from './handleBrokenPoint';
 export { handleCollectPoint } from './handleCollectPoint';

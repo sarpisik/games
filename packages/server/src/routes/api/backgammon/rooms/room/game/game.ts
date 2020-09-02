@@ -5,6 +5,8 @@ import { generateBackgammonGamePath } from '@shared-types/helpers';
 import { SocketConnection } from '../../shared/socketConnection';
 import { generatePlayersObj, verifyRoundPlayer } from './helpers';
 import {
+    emitNamespace,
+    emitNextRound,
     handleBrokenPoint,
     handleCollectPoint,
     handleDisconnect,
@@ -17,7 +19,6 @@ import {
     initializeRound,
     undoRound,
     withBreakTimer,
-    emitNextRound,
 } from './methods';
 import { Round } from './round';
 
@@ -54,6 +55,7 @@ export default class BackgammonGame extends SocketConnection
     _t?: GameServerSide['rounds'][number]['player'];
     _tRef?: NodeJS.Timeout;
     _status: 'UNINITIALIZED' | 'INITIALIZED' | 'OVER';
+    _emitNamespace: typeof emitNamespace;
     _emitNextRound: typeof emitNextRound;
     _handleBrokenPoint: typeof handleBrokenPoint;
     _handleCollectPoint: typeof handleCollectPoint;
@@ -89,6 +91,7 @@ export default class BackgammonGame extends SocketConnection
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this._withBreakTimer = withBreakTimer.bind(this);
+        this._emitNamespace = emitNamespace.bind(this);
         this._emitNextRound = emitNextRound.bind(this);
         this._handleBrokenPoint = handleBrokenPoint.bind(this);
         this._handleCollectPoint = handleCollectPoint.bind(this);
@@ -164,13 +167,7 @@ export default class BackgammonGame extends SocketConnection
      * * * * * * * * * * * *
      */
 
-    _emitNamespace<P>(event: string, payload: P) {
-        this._namespace.emit(event, payload);
-
-        if (event === GAME_EVENTS.ROUND) this._handleTimer();
-    }
-
-    private async _handleTimer() {
+    async _handleTimer() {
         const latestRound = this.rounds[this.rounds.length - 1];
         this._t = latestRound.player;
 
