@@ -1,5 +1,4 @@
 import {
-    EmitCollectPointRound,
     EmitScore,
     EmitStageOver,
     GameServerSide,
@@ -21,12 +20,12 @@ import {
     calculateSkipRound,
     calculateStageOver,
     checkCollectedExist,
-    findRoundById,
     generatePlayersObj,
     verifyRoundPlayer,
 } from './helpers';
 import {
     handleBrokenPoint,
+    handleCollectPoint,
     handleDisconnect,
     handleRoundCalculate,
     initializeGame,
@@ -69,6 +68,7 @@ export default class BackgammonGame extends SocketConnection
     _tRef?: NodeJS.Timeout;
     _status: 'UNINITIALIZED' | 'INITIALIZED' | 'OVER';
     _handleBrokenPoint: typeof handleBrokenPoint;
+    _handleCollectPoint: typeof handleCollectPoint;
     _handleDisconnect: typeof handleDisconnect;
     _handleRoundCalculate: typeof handleRoundCalculate;
     _initializeGame: typeof initializeGame;
@@ -97,6 +97,7 @@ export default class BackgammonGame extends SocketConnection
         // @ts-ignore
         this._withBreakTimer = withBreakTimer.bind(this);
         this._handleBrokenPoint = handleBrokenPoint.bind(this);
+        this._handleCollectPoint = handleCollectPoint.bind(this);
         this._handleDisconnect = handleDisconnect.bind(this);
         this._initializeGame = initializeGame.bind(this);
         this._initializeRound = initializeRound.bind(this);
@@ -163,20 +164,6 @@ export default class BackgammonGame extends SocketConnection
      * GAME LOGICS
      * * * * * * * * * * * *
      */
-
-    private async _handleCollectPoint(data: EmitCollectPointRound) {
-        const { roundId } = data;
-        const latestRound = await findRoundById(roundId, this.rounds);
-        const result = await latestRound.calculateCollectPoint(data);
-
-        // If any point(s) collected, follow the next step.
-        // Else, re-send round.
-        if (result) {
-            this._handleRoundResult(result, latestRound);
-        } else {
-            this._emitNamespace(GAME_EVENTS.COLLECT_POINT_ROUND, latestRound);
-        }
-    }
 
     _handleRoundResult(
         result: Pick<Round, 'brokens' | 'dice' | 'layout'> & {
