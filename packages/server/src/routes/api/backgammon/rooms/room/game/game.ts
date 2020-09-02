@@ -19,7 +19,6 @@ import {
     calculateMars,
     calculateSkipRound,
     calculateStageOver,
-    checkCollectedExist,
     generatePlayersObj,
     verifyRoundPlayer,
 } from './helpers';
@@ -28,6 +27,7 @@ import {
     handleCollectPoint,
     handleDisconnect,
     handleRoundCalculate,
+    handleRoundResult,
     initializeGame,
     initializeRound,
     withBreakTimer,
@@ -71,6 +71,7 @@ export default class BackgammonGame extends SocketConnection
     _handleCollectPoint: typeof handleCollectPoint;
     _handleDisconnect: typeof handleDisconnect;
     _handleRoundCalculate: typeof handleRoundCalculate;
+    _handleRoundResult: typeof handleRoundResult;
     _initializeGame: typeof initializeGame;
     _initializeRound: typeof initializeRound;
     _withBreakTimer: typeof withBreakTimer;
@@ -99,9 +100,10 @@ export default class BackgammonGame extends SocketConnection
         this._handleBrokenPoint = handleBrokenPoint.bind(this);
         this._handleCollectPoint = handleCollectPoint.bind(this);
         this._handleDisconnect = handleDisconnect.bind(this);
+        this._handleRoundCalculate = handleRoundCalculate.bind(this);
+        this._handleRoundResult = handleRoundResult.bind(this);
         this._initializeGame = initializeGame.bind(this);
         this._initializeRound = initializeRound.bind(this);
-        this._handleRoundCalculate = handleRoundCalculate.bind(this);
 
         this._namespace.on(
             'connection',
@@ -165,37 +167,7 @@ export default class BackgammonGame extends SocketConnection
      * * * * * * * * * * * *
      */
 
-    _handleRoundResult(
-        result: Pick<Round, 'brokens' | 'dice' | 'layout'> & {
-            collected?: Round['collected'];
-        },
-        round: Round
-    ) {
-        const { brokens, dice, layout } = result;
-        const shouldJumpToNextRound = dice.length < 1;
-
-        const nextRoundPlayer = shouldJumpToNextRound
-            ? OPPONENT[round.player]
-            : round.player;
-        const nextRoundDice = shouldJumpToNextRound ? undefined : dice;
-
-        const collected = checkCollectedExist(result.collected)
-            ? result.collected
-            : round.collected;
-
-        const nextRound = new Round(
-            1,
-            round.turn + 1,
-            nextRoundPlayer,
-            brokens,
-            collected,
-            layout,
-            nextRoundDice
-        );
-        this._handleNextRound(nextRound);
-    }
-
-    private async _handleNextRound(round: Round) {
+    async _handleNextRound(round: Round) {
         const [shouldStageOver, shouldSkipRound] = await Promise.all([
             calculateStageOver(round),
             calculateSkipRound(round),
