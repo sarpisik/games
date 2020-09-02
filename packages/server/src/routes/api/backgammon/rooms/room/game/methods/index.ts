@@ -7,4 +7,5 @@ export { handleRoundResult } from './handleRoundResult';
 export { handleUndoRound } from './handleUndoRound';
 export { initializeGame } from './initializeGame';
 export { initializeRound } from './initializeRound';
+export { undoRound } from './undoRound';
 export { withBreakTimer } from './withBreakTimer';

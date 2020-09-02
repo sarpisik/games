@@ -7,7 +7,6 @@ import {
 import { ONE_SECOND, SHORT_TIMER } from '@shared-types/constants';
 import { EmitGame, GAME_EVENTS } from '@shared-types/game';
 import { generateBackgammonGamePath } from '@shared-types/helpers';
-import { customPromise } from '@shared/customPromise';
 import { SocketConnection } from '../../shared/socketConnection';
 import { generatePlayersObj, verifyRoundPlayer } from './helpers';
 import {
@@ -17,10 +16,11 @@ import {
     handleNextRound,
     handleRoundCalculate,
     handleRoundResult,
+    handleUndoRound,
     initializeGame,
     initializeRound,
+    undoRound,
     withBreakTimer,
-    handleUndoRound,
 } from './methods';
 import { Round } from './round';
 
@@ -66,6 +66,7 @@ export default class BackgammonGame extends SocketConnection
     _handleUndoRound: typeof handleUndoRound;
     _initializeGame: typeof initializeGame;
     _initializeRound: typeof initializeRound;
+    _undoRound: typeof undoRound;
     _withBreakTimer: typeof withBreakTimer;
 
     constructor(
@@ -98,6 +99,7 @@ export default class BackgammonGame extends SocketConnection
         this._handleUndoRound = handleUndoRound.bind(this);
         this._initializeGame = initializeGame.bind(this);
         this._initializeRound = initializeRound.bind(this);
+        this._undoRound = undoRound.bind(this);
 
         this._namespace.on(
             'connection',
@@ -160,24 +162,6 @@ export default class BackgammonGame extends SocketConnection
      * GAME LOGICS
      * * * * * * * * * * * *
      */
-
-    async _undoRound() {
-        const { rounds } = this;
-        const length = rounds.length;
-
-        const roundsNotEmpty = length > 0;
-
-        const playersAreSame = await customPromise(
-            () => rounds[length - 1]?.player === rounds[length - 2]?.player
-        );
-
-        const shouldUndo = roundsNotEmpty && playersAreSame;
-
-        shouldUndo &&
-            (await customPromise(() => {
-                rounds.pop();
-            }));
-    }
 
     _handleGameOver(payload: EmitStageOver) {
         this._status = 'OVER';
