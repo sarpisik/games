@@ -12,5 +12,6 @@ export { handleUndoRound } from './handleUndoRound';
 export { initializeGame } from './initializeGame';
 export { initializeRound } from './initializeRound';
 export { recursivelySetShortTimer } from './recursivelySetShortTimer';
+export { recursivelySetTimer } from './recursivelySetTimer';
 export { undoRound } from './undoRound';
 export { withBreakTimer } from './withBreakTimer';

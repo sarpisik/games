@@ -1,9 +1,8 @@
-import { GameServerSide, OPPONENT, PLAYERS } from '@shared-types/backgammon';
-import { ONE_SECOND } from '@shared-types/constants';
+import { GameServerSide, PLAYERS } from '@shared-types/backgammon';
 import { EmitGame, GAME_EVENTS } from '@shared-types/game';
 import { generateBackgammonGamePath } from '@shared-types/helpers';
 import { SocketConnection } from '../../shared/socketConnection';
-import { generatePlayersObj, verifyRoundPlayer } from './helpers';
+import { generatePlayersObj } from './helpers';
 import {
     emitNamespace,
     emitNextRound,
@@ -19,6 +18,7 @@ import {
     initializeGame,
     initializeRound,
     recursivelySetShortTimer,
+    recursivelySetTimer,
     undoRound,
     withBreakTimer,
 } from './methods';
@@ -71,6 +71,7 @@ export default class BackgammonGame extends SocketConnection
     _initializeGame: typeof initializeGame;
     _initializeRound: typeof initializeRound;
     _recursivelySetShortTimer: typeof recursivelySetShortTimer;
+    _recursivelySetTimer: typeof recursivelySetTimer;
     _undoRound: typeof undoRound;
     _withBreakTimer: typeof withBreakTimer;
 
@@ -109,6 +110,7 @@ export default class BackgammonGame extends SocketConnection
         this._initializeGame = initializeGame.bind(this);
         this._initializeRound = initializeRound.bind(this);
         this._recursivelySetShortTimer = recursivelySetShortTimer.bind(this);
+        this._recursivelySetTimer = recursivelySetTimer.bind(this);
         this._undoRound = undoRound.bind(this);
 
         this._namespace.on(
@@ -165,34 +167,5 @@ export default class BackgammonGame extends SocketConnection
                 )
             );
         };
-    }
-
-    /*
-     * * * * * * * * * * * *
-     * UTILITIES
-     * * * * * * * * * * * *
-     */
-
-    async _recursivelySetTimer(latestRoundPlayer: PLAYERS | undefined) {
-        const roundPlayer = this._t;
-
-        if (
-            roundPlayer === latestRoundPlayer &&
-            verifyRoundPlayer(roundPlayer)
-        ) {
-            this.timer[roundPlayer] -= 1;
-
-            if (this.timer[roundPlayer] < 1) {
-                // Exit loop on game over.
-                const winner = OPPONENT[roundPlayer];
-                this._handleGameOver({ winner });
-            } else {
-                this._emitNamespace(GAME_EVENTS.TIMER, this.timer);
-
-                this._tRef = setTimeout(() => {
-                    this._recursivelySetTimer(latestRoundPlayer);
-                }, ONE_SECOND);
-            }
-        }
     }
 }
