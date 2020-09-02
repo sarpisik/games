@@ -5,9 +5,14 @@ import { ROUTES } from '../../config';
 
 export default function Home(): React.ReactElement {
     return (
-        <React.Fragment>
-            <Link to={ROUTES.ROOMS}>Rooms</Link>
+        <ul className="p-0 m-0">
+            <Link className="mr-3" to={ROUTES.ROOMS}>
+                Rooms
+            </Link>
+            <Link className="mr-3" to={ROUTES.PROFILE}>
+                Profile
+            </Link>
             <User />
-        </React.Fragment>
+        </ul>
     );
 }

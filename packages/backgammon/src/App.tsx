@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
-import { Game, Room, Rooms, Home, NotFound } from './views';
+import { Game, Room, Rooms, Home, NotFound, Profile } from './views';
 import { withAuthentication } from './components';
 import { ROUTES } from './config';
 
@@ -18,6 +18,7 @@ function App() {
         <Switch>
             <Redirect exact from={ROUTES.SIGN_OUT} to={ROUTES.HOME} />
             <Route path={ROUTES.HOME} component={Home} exact />
+            <Route path={ROUTES.PROFILE} component={Profile} exact />
             <Route
                 path={ROUTES.ROOMS}
                 render={({ match: { path } }) => (
