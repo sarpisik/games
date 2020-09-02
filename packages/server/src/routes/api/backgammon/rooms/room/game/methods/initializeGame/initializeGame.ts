@@ -7,6 +7,5 @@ export default function initializeGame(
     roundPlayer: Round['player'] = PLAYERS.WHITE
 ) {
     this._status = 'INITIALIZED';
-    this.rounds = [];
     this._initializeRound(roundPlayer);
 }

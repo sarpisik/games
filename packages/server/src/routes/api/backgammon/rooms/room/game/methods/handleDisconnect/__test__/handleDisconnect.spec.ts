@@ -6,7 +6,9 @@ import { GAME_EVENTS } from '@shared-types/game';
 import { PLAYERS } from '@shared-types/backgammon';
 
 describe('handleDisconnect', () => {
-    let backgammonGame: Pick<BackgammonGame, 'id' | 'players' | '_users'>,
+    let backgammonGame: Pick<BackgammonGame, 'id' | 'players' | '_users'> & {
+            _resetGame: jasmine.Spy<jasmine.Func>;
+        },
         clientId: string,
         socket: { broadcast: { emit: jasmine.Spy<jasmine.Func> } },
         disconnectCb: jasmine.Spy<jasmine.Func>;
@@ -16,6 +18,7 @@ describe('handleDisconnect', () => {
             id: Date.now(),
             players: generatePlayersObj(null, null),
             _users: new Map(),
+            _resetGame: jasmine.createSpy(),
         };
         clientId = 'a-unique-client-id';
         socket = { broadcast: { emit: jasmine.createSpy() } };
@@ -72,6 +75,8 @@ describe('handleDisconnect', () => {
             GAME_EVENTS.DISCONNECT_USER,
             mockUser.name
         );
+        expect(backgammonGame._resetGame).toHaveBeenCalledTimes(1);
+        expect(backgammonGame._resetGame).toHaveBeenCalledWith();
         expect(socket.broadcast.emit).toHaveBeenCalledWith(
             GAME_EVENTS.DISCONNECT_PLAYER,
             players

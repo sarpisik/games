@@ -1,4 +1,5 @@
 import { User } from '@shared-backgammon/src/types/user';
+import { PLAYERS } from '@shared-types/backgammon';
 import { GAME_EVENTS } from '@shared-types/game';
 import BackgammonGame from '../../game';
 import { checkIsPlayer, deletePlayer } from './utils';
@@ -33,6 +34,11 @@ export default function handleDisconnect(
             if (wasPlayer) {
                 // Delete the player.
                 deletePlayer(userId, players);
+
+                // Reset game if no players left.
+                Boolean(
+                    self.players[PLAYERS.BLACK] || self.players[PLAYERS.WHITE]
+                ) || self._resetGame();
 
                 // Notify the game users.
                 socket.broadcast.emit(GAME_EVENTS.DISCONNECT_PLAYER, players);

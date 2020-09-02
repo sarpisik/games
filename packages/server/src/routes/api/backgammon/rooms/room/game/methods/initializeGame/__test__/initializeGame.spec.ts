@@ -6,7 +6,6 @@ describe('initializeGame', () => {
         PLAYERS[PLAYERS.WHITE]
     }" player after setting the game status and the rounds`, () => {
         const backgammonGame = {
-            rounds: [],
             _status: '',
             _initializeRound: jasmine.createSpy(),
         };
@@ -16,7 +15,6 @@ describe('initializeGame', () => {
         // @ts-ignore
         initializeGame.call(backgammonGame, roundPlayer);
 
-        expect(backgammonGame.rounds).toEqual([]);
         expect(backgammonGame._status).toBe('INITIALIZED');
         expect(backgammonGame._initializeRound).toHaveBeenCalledWith(
             roundPlayer

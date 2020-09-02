@@ -2,7 +2,6 @@ import { GameServerSide, PLAYERS } from '@shared-types/backgammon';
 import { EmitGame, GAME_EVENTS } from '@shared-types/game';
 import { generateBackgammonGamePath } from '@shared-types/helpers';
 import { SocketConnection } from '../../shared/socketConnection';
-import { generatePlayersObj } from './helpers';
 import {
     emitNamespace,
     emitNextRound,
@@ -19,6 +18,7 @@ import {
     initializeRound,
     recursivelySetShortTimer,
     recursivelySetTimer,
+    resetGame,
     undoRound,
     withBreakTimer,
 } from './methods';
@@ -47,16 +47,16 @@ const EMIT_GAME_KEYS: (keyof EmitGame)[] = [
 
 export default class BackgammonGame extends SocketConnection
     implements GameServerSide {
-    players: GameServerSide['players'];
-    score: GameServerSide['score'];
-    stages: GameServerSide['stages'];
-    duration: GameServerSide['duration'];
-    timer: GameServerSide['timer'];
-    rounds: Round[];
+    players!: GameServerSide['players'];
+    score!: GameServerSide['score'];
+    stages!: GameServerSide['stages'];
+    duration!: GameServerSide['duration'];
+    timer!: GameServerSide['timer'];
+    rounds!: Round[];
 
     _t?: GameServerSide['rounds'][number]['player'];
     _tRef?: NodeJS.Timeout;
-    _status: 'UNINITIALIZED' | 'INITIALIZED' | 'OVER';
+    _status!: 'UNINITIALIZED' | 'INITIALIZED' | 'OVER';
     _emitNamespace: typeof emitNamespace;
     _emitNextRound: typeof emitNextRound;
     _handleBrokenPoint: typeof handleBrokenPoint;
@@ -72,6 +72,7 @@ export default class BackgammonGame extends SocketConnection
     _initializeRound: typeof initializeRound;
     _recursivelySetShortTimer: typeof recursivelySetShortTimer;
     _recursivelySetTimer: typeof recursivelySetTimer;
+    _resetGame: typeof resetGame;
     _undoRound: typeof undoRound;
     _withBreakTimer: typeof withBreakTimer;
 
@@ -82,15 +83,6 @@ export default class BackgammonGame extends SocketConnection
         disconnectCb: (id: number) => void
     ) {
         super(_io, generateBackgammonGamePath(_roomId, id));
-
-        // properties
-        this.players = generatePlayersObj(null, null);
-        this.score = generatePlayersObj(0, 0);
-        this.stages = 1;
-        this.duration = 60;
-        this.timer = generatePlayersObj(60, 60);
-        this.rounds = [];
-        this._status = 'UNINITIALIZED';
 
         // methods
         this._emitNamespace = emitNamespace.bind(this);
@@ -108,10 +100,14 @@ export default class BackgammonGame extends SocketConnection
         this._initializeRound = initializeRound.bind(this);
         this._recursivelySetShortTimer = recursivelySetShortTimer.bind(this);
         this._recursivelySetTimer = recursivelySetTimer.bind(this);
+        this._resetGame = resetGame.bind(this);
         this._undoRound = undoRound.bind(this);
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this._withBreakTimer = withBreakTimer.bind(this);
+
+        // properties
+        this._resetGame();
 
         this._namespace.on(
             'connection',
