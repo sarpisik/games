@@ -29,7 +29,7 @@ export default function calculateSizes() {
 
         // triangle
         TRIANGLE_WIDTH: 3,
-        TRIANGLE_HEIGHT: isLandscape ? 20 : 15,
+        TRIANGLE_HEIGHT: 20,
 
         // point
         POINT_SIZE: TRIANGLE_WIDTH / 2,

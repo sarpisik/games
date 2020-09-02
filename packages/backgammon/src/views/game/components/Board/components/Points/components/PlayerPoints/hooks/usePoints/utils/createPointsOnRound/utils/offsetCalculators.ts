@@ -32,16 +32,14 @@ export function yOffsetCalculator(
         windowWidth,
         windowHeight
     );
-    const dynamicOffset = isLandscape ? orientation : 1;
+
+    const dynamicOffset = orientation;
     const isBottomBlock = yOffset > 25;
 
     const pointSize = calculatePointSize(dynamicOffset);
     const overPoints = calculateOverPoints(pointsCount, pointSize, heightLimit);
-    const overSize = isLandscape
-        ? overPoints
-        : calculateOverSize(overPoints, pointSize);
     const overFlowPerEachPoint = calculateOverFlowPerEachPoint(
-        overSize,
+        overPoints,
         pointsCount
     );
 
@@ -62,7 +60,7 @@ function calculateOrientation(
     maxWidth = MAX_WIDTH
 ) {
     const width = isLandscape ? _width * maxWidth : _width;
-    return width / height;
+    return isLandscape ? width / height : height / width;
 }
 
 function calculateSkip(index: number) {
@@ -84,10 +82,6 @@ function calculateOverPoints(
     const pointsSize = count * pointSize;
     const overPoints = pointsSize - heightLimit;
     return overPoints;
-}
-
-function calculateOverSize(overPoints: number, pointSize: number) {
-    return overPoints * pointSize;
 }
 
 function calculateOverFlowPerEachPoint(overSize: number, pointsCount: number) {
