@@ -7,6 +7,7 @@ export { handleGameOver } from './handleGameOver';
 export { handleNextRound } from './handleNextRound';
 export { handleRoundCalculate } from './handleRoundCalculate';
 export { handleRoundResult } from './handleRoundResult';
+export { handleTimer } from './handleTimer';
 export { handleUndoRound } from './handleUndoRound';
 export { initializeGame } from './initializeGame';
 export { initializeRound } from './initializeRound';

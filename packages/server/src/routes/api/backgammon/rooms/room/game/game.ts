@@ -14,6 +14,7 @@ import {
     handleNextRound,
     handleRoundCalculate,
     handleRoundResult,
+    handleTimer,
     handleUndoRound,
     initializeGame,
     initializeRound,
@@ -64,6 +65,7 @@ export default class BackgammonGame extends SocketConnection
     _handleNextRound: typeof handleNextRound;
     _handleRoundCalculate: typeof handleRoundCalculate;
     _handleRoundResult: typeof handleRoundResult;
+    _handleTimer: typeof handleTimer;
     _handleUndoRound: typeof handleUndoRound;
     _initializeGame: typeof initializeGame;
     _initializeRound: typeof initializeRound;
@@ -100,6 +102,7 @@ export default class BackgammonGame extends SocketConnection
         this._handleNextRound = handleNextRound.bind(this);
         this._handleRoundCalculate = handleRoundCalculate.bind(this);
         this._handleRoundResult = handleRoundResult.bind(this);
+        this._handleTimer = handleTimer.bind(this);
         this._handleUndoRound = handleUndoRound.bind(this);
         this._initializeGame = initializeGame.bind(this);
         this._initializeRound = initializeRound.bind(this);
@@ -167,14 +170,7 @@ export default class BackgammonGame extends SocketConnection
      * * * * * * * * * * * *
      */
 
-    async _handleTimer() {
-        const latestRound = this.rounds[this.rounds.length - 1];
-        this._t = latestRound.player;
-
-        this._recursivelySetShortTimer(latestRound.player);
-    }
-
-    private async _recursivelySetShortTimer(
+    async _recursivelySetShortTimer(
         latestRoundPlayer: PLAYERS | undefined,
         seconds = SHORT_TIMER
     ) {
