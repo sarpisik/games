@@ -29,7 +29,12 @@ import {
     generatePlayersObj,
     verifyRoundPlayer,
 } from './helpers';
-import { handleDisconnect, initializeGame, withBreakTimer } from './methods';
+import {
+    handleDisconnect,
+    initializeGame,
+    withBreakTimer,
+    initializeRound,
+} from './methods';
 import { Round } from './round';
 
 /*
@@ -65,9 +70,10 @@ export default class BackgammonGame extends SocketConnection
     _t?: GameServerSide['rounds'][number]['player'];
     _tRef?: NodeJS.Timeout;
     _status: 'UNINITIALIZED' | 'INITIALIZED' | 'OVER';
-    private _handleDisconnect: typeof handleDisconnect;
-    private _initializeGame: typeof initializeGame;
-    private _withBreakTimer: typeof withBreakTimer;
+    _handleDisconnect: typeof handleDisconnect;
+    _initializeGame: typeof initializeGame;
+    _initializeRound: typeof initializeRound;
+    _withBreakTimer: typeof withBreakTimer;
 
     constructor(
         public id: number,
@@ -91,6 +97,7 @@ export default class BackgammonGame extends SocketConnection
         // @ts-ignore
         this._withBreakTimer = withBreakTimer.bind(this);
         this._initializeGame = initializeGame.bind(this);
+        this._initializeRound = initializeRound.bind(this);
         this._handleDisconnect = handleDisconnect.bind(this);
 
         this._namespace.on(
@@ -154,13 +161,6 @@ export default class BackgammonGame extends SocketConnection
      * GAME LOGICS
      * * * * * * * * * * * *
      */
-
-    _initializeRound(roundPlayer: Round['player']) {
-        const brokens = generatePlayersObj(0, 0);
-        const collected = generatePlayersObj(0, 0);
-        const round = new Round(0, 1, roundPlayer, brokens, collected, layout);
-        this._emitNextRound(round);
-    }
 
     private async _handleRoundCalculate(data: EmitRound) {
         try {
@@ -322,7 +322,7 @@ export default class BackgammonGame extends SocketConnection
      * * * * * * * * * * * *
      */
 
-    private _emitNextRound(round: Round) {
+    _emitNextRound(round: Round) {
         this.rounds.push(round);
         this._emitNamespace(GAME_EVENTS.ROUND, round);
     }
