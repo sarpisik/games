@@ -30,9 +30,7 @@ function Profile(_props: RouteComponentProps): React.ReactElement {
                         <Card.Header>Profile</Card.Header>
                         <Card.Body>
                             <Card.Title>{user.name}</Card.Title>
-                            <Card.Text>
-                                User description will be here.
-                            </Card.Text>
+                            <Card.Text>{user.description}</Card.Text>
                         </Card.Body>
                         <ListGroup className="list-group-flush">
                             <ListGroupItem>{user.email}</ListGroupItem>

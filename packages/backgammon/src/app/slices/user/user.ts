@@ -5,6 +5,7 @@ export const initialState: User = {
     id: '',
     name: '',
     email: '',
+    description: '',
     wins: 0,
     loses: 0,
     escapes: 0,
