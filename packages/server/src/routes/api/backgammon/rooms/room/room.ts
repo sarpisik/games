@@ -3,6 +3,7 @@ import { EmitEditGame, OnEditGame, ROOM_EVENTS } from '@shared-types/room';
 import { customPromise } from '@shared/customPromise';
 import { SocketConnection } from '../shared/socketConnection';
 import { BackgammonGame } from './game';
+import { generatePlayersObj } from './game/helpers';
 import { RoomType } from './types';
 
 export default class BackgammonRoom extends SocketConnection
@@ -68,8 +69,11 @@ export default class BackgammonRoom extends SocketConnection
 
             if (!game) socket.emit(ROOM_EVENTS.GAME_NOT_FOUND, data.id);
             else {
+                const duration = data.duration;
                 await customPromise(() => {
-                    Object.assign(game, data);
+                    Object.assign(game, data, {
+                        timer: generatePlayersObj(duration, duration),
+                    });
                 });
                 const parsedGame = this._parseGame(game);
                 const payload: OnEditGame = await customPromise(() =>
