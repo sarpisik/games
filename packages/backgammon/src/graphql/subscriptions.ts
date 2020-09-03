@@ -7,6 +7,7 @@ export const onCreateUser = /* GraphQL */ `
     onCreateUser {
       id
       name
+      description
       email
       wins
       loses
@@ -21,6 +22,7 @@ export const onUpdateUser = /* GraphQL */ `
     onUpdateUser {
       id
       name
+      description
       email
       wins
       loses
@@ -35,6 +37,7 @@ export const onDeleteUser = /* GraphQL */ `
     onDeleteUser {
       id
       name
+      description
       email
       wins
       loses
