@@ -8,7 +8,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import ListGroupItem from 'react-bootstrap/ListGroupItem';
 import { RouteComponentProps } from 'react-router-dom';
 import { useUser } from '../../app/slices';
-import { withAuthorization } from '../../components';
+import { withAuthorization, withBreadcrumb } from '../../components';
 
 /*
  * TODO:
@@ -17,7 +17,7 @@ import { withAuthorization } from '../../components';
  * - [] Render user details.
  */
 
-export default withAuthorization(Profile);
+export default withAuthorization(withBreadcrumb(Profile));
 
 function Profile(_props: RouteComponentProps): React.ReactElement {
     const { user } = useUser();
