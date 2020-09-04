@@ -1,8 +1,10 @@
 import { Auth } from 'aws-amplify';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
+import { editUser } from '../../thunks';
 
 export default function useUser() {
+    const dispatch = useDispatch();
     const user = useSelector(selector);
 
     return {
@@ -13,6 +15,9 @@ export default function useUser() {
         },
         signOut() {
             Auth.signOut();
+        },
+        editUser(user: Parameters<typeof editUser>[0]) {
+            dispatch(editUser(user));
         },
     };
 }
