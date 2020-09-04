@@ -26,9 +26,12 @@ export default async function handleUserAuth(
     if (validateUser(user)) setUserSuccess(user);
     else {
         const input: CreateUserInput = Object.assign({}, userAuth, {
-            wins: 0,
-            loses: 0,
-            escapes: 0,
+            backgammon: {
+                score: 1000,
+                wins: 0,
+                loses: 0,
+                escapes: 0,
+            },
         });
 
         // Mutate new user.
