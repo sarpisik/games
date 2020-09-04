@@ -12,10 +12,12 @@ import routes from './routes';
 import logger from '@shared/Logger';
 import { cookieProps } from '@shared/constants';
 import { socket } from './connection/socket';
+import Cognito from '@shared/cognito';
 
 // Init express
 const app = express();
 const server = http.createServer(app);
+new Cognito().signIn();
 
 /************************************************************************************
  *                              Set socket settings
