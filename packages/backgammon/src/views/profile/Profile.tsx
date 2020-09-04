@@ -1,12 +1,11 @@
 import React from 'react';
-import { FaUserAlt } from 'react-icons/fa';
-import { MdSettings } from 'react-icons/md';
-
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import { FaUserAlt } from 'react-icons/fa';
+import { MdSettings } from 'react-icons/md';
 import { RouteComponentProps } from 'react-router-dom';
 import { useUser } from '../../app/slices';
 import { withAuthorization, withBreadcrumb } from '../../components';
