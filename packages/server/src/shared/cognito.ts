@@ -3,6 +3,12 @@ import AWS from 'aws-sdk';
 import crypto from 'crypto';
 const { aws_cognito_region } = awsConfig;
 
+/*
+ * TODO:
+ * - [] handle access token expiration.
+ * - [] handle refresh token expiration.
+ */
+
 export default class Cognito {
     static exists: boolean;
     static instance: Cognito;
