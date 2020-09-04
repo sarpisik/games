@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { FaRegUser, FaUser } from 'react-icons/fa';
 import { PLAYERS } from 'types/lib/backgammon';
 import { Sit } from './components';
@@ -12,7 +12,7 @@ const ICONS_MAP = {
     [PLAYERS[PLAYERS.WHITE]]: FaRegUser,
 };
 
-export default function User(props: UserProps): ReactElement {
+export default function User(props: UserProps): React.ReactElement {
     const { name, ...sitProps } = props;
     const Icon = ICONS_MAP[sitProps.color];
     const children =
