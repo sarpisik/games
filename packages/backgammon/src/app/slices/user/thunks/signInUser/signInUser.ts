@@ -16,6 +16,7 @@ const signInUser: () => AppThunk = () => async (dispatch) => {
     const setUserSuccess = (user: User) => {
         dispatch(setUser(user));
         dispatch(setFeedback({ setUser: { status: FEEDBACK_STATUS.SUCCESS } }));
+        // Subscribe to update events.
     };
 
     const setUserError = () => {

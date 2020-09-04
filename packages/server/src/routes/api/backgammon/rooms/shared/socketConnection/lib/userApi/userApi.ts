@@ -5,7 +5,7 @@ import * as graphql from 'graphql';
 import gql from 'graphql-tag';
 import fetch from 'node-fetch';
 
-const { aws_appsync_graphqlEndpoint, aws_appsync_apiKey } = awsConfig;
+const { aws_appsync_graphqlEndpoint } = awsConfig;
 
 const { print } = graphql;
 
@@ -24,16 +24,13 @@ const getUser = gql`
 
 export default class UserApi {
     private _endpoint: string;
-    private _apiKey: string;
 
     constructor(
         params = {
             endpoint: aws_appsync_graphqlEndpoint,
-            apiKey: aws_appsync_apiKey,
         }
     ) {
         this._endpoint = params.endpoint;
-        this._apiKey = params.apiKey;
     }
 
     async fetchUser(
@@ -44,11 +41,11 @@ export default class UserApi {
 
         return fetch(this._endpoint, {
             method: 'post',
-            headers: {
-                'x-api-key': this._apiKey,
-            },
             body,
-        }).then((res) => res.json());
+        }).then((res) => {
+            const parsedRes = res.json();
+            return parsedRes;
+        });
     }
 
     validateUser(user?: User | null): user is User {

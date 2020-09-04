@@ -1,4 +1,6 @@
-type User @model {
+type User
+    @model
+    @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) {
     id: ID!
     name: String!
     description: String
