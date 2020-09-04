@@ -1,4 +1,7 @@
 import React from 'react';
+import { FaUserAlt } from 'react-icons/fa';
+import { MdSettings } from 'react-icons/md';
+
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -26,10 +29,10 @@ function Profile(_props: RouteComponentProps): React.ReactElement {
             <Row>
                 <Col>
                     <Tabs defaultActiveKey="user" id="uncontrolled-tab-example">
-                        <Tab eventKey="user" title="User">
+                        <Tab eventKey="user" title={<FaUserAlt />}>
                             <User user={user} />
                         </Tab>
-                        <Tab eventKey="settings" title="Settings">
+                        <Tab eventKey="settings" title={<MdSettings />}>
                             <Settings user={user} />
                         </Tab>
                     </Tabs>
