@@ -62,14 +62,6 @@ const socket: () => Middleware = () => {
         );
     };
 
-    const onGameEvent = (s: typeof store) => (action: {
-        type: GAME_EVENTS;
-        payload: unknown;
-    }) => {
-        // s.dispatch(setGame(game));
-        console.log(action);
-    };
-
     const onUpdateGame = (s: typeof store) => (game: Game) => {
         s.dispatch(setGame(game));
     };
@@ -271,19 +263,6 @@ const socket: () => Middleware = () => {
                     connection.on(GAME_EVENTS.UNDO_ROUND, onUndoRound(store));
                     // @ts-ignore
                     connection.on(GAME_EVENTS.GAME_OVER, onGameOver(store));
-                    break;
-
-                case GAME_EVENTS.INITIALIZE_GAME:
-                    // @ts-ignore
-                    connection.emit(GAME_EVENTS.INITIALIZE_GAME);
-                    // @ts-ignore
-                    connection.on(
-                        GAME_EVENTS.INITIALIZE_GAME,
-                        // @ts-ignore
-                        onGameEvent(store)
-                    );
-                    // @ts-ignore
-                    connection.on(GAME_EVENTS.ROUND, onRound(store));
                     break;
 
                 case EVENTS.JOIN_ROOM:
