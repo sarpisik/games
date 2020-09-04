@@ -2,7 +2,7 @@ type User
     @model
     @auth(
         rules: [
-            { allow: owner }
+            { allow: owner, operations: [create, read] }
             {
                 allow: groups
                 groups: ["Administrators"]
