@@ -35,8 +35,11 @@ const getUser = gql`
     }
 `;
 const updateUser = gql`
-    subscription OnUpdateUser($owner: String) {
-        onUpdateUser(owner: $owner) {
+    mutation UpdateUser(
+        $input: UpdateUserInput!
+        $condition: ModelUserConditionInput
+    ) {
+        updateUser(input: $input, condition: $condition) {
             id
             name
             description
