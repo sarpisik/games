@@ -14,6 +14,11 @@ type User
     name: String!
     description: String
     email: String!
+    backgammon: Game!
+}
+
+type Game {
+    score: Int!
     wins: Int!
     loses: Int!
     escapes: Int!

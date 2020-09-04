@@ -9,9 +9,12 @@ export const getUser = /* GraphQL */ `
       name
       description
       email
-      wins
-      loses
-      escapes
+      backgammon {
+        score
+        wins
+        loses
+        escapes
+      }
       createdAt
       updatedAt
       owner
@@ -30,9 +33,12 @@ export const listUsers = /* GraphQL */ `
         name
         description
         email
-        wins
-        loses
-        escapes
+        backgammon {
+          score
+          wins
+          loses
+          escapes
+        }
         createdAt
         updatedAt
         owner

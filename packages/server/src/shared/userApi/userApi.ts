@@ -22,9 +22,12 @@ const getUser = gql`
             name
             description
             email
-            wins
-            loses
-            escapes
+            backgammon {
+                score
+                wins
+                loses
+                escapes
+            }
             createdAt
             updatedAt
             owner
@@ -32,18 +35,18 @@ const getUser = gql`
     }
 `;
 const updateUser = gql`
-    mutation UpdateUser(
-        $input: UpdateUserInput!
-        $condition: ModelUserConditionInput
-    ) {
-        updateUser(input: $input, condition: $condition) {
+    subscription OnUpdateUser($owner: String) {
+        onUpdateUser(owner: $owner) {
             id
             name
             description
             email
-            wins
-            loses
-            escapes
+            backgammon {
+                score
+                wins
+                loses
+                escapes
+            }
             createdAt
             updatedAt
             owner

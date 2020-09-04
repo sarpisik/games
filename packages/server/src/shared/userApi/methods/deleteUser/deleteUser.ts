@@ -7,20 +7,24 @@ import gql from 'graphql-tag';
 const { print } = graphql;
 
 const q = gql`
-    mutation DeleteUser(
-        $input: DeleteUserInput!
+    mutation UpdateUser(
+        $input: UpdateUserInput!
         $condition: ModelUserConditionInput
     ) {
-        deleteUser(input: $input, condition: $condition) {
+        updateUser(input: $input, condition: $condition) {
             id
             name
             description
             email
-            wins
-            loses
-            escapes
+            backgammon {
+                score
+                wins
+                loses
+                escapes
+            }
             createdAt
             updatedAt
+            owner
         }
     }
 `;

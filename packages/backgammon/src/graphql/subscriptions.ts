@@ -9,9 +9,12 @@ export const onCreateUser = /* GraphQL */ `
       name
       description
       email
-      wins
-      loses
-      escapes
+      backgammon {
+        score
+        wins
+        loses
+        escapes
+      }
       createdAt
       updatedAt
       owner
@@ -25,9 +28,12 @@ export const onUpdateUser = /* GraphQL */ `
       name
       description
       email
-      wins
-      loses
-      escapes
+      backgammon {
+        score
+        wins
+        loses
+        escapes
+      }
       createdAt
       updatedAt
       owner
@@ -41,9 +47,12 @@ export const onDeleteUser = /* GraphQL */ `
       name
       description
       email
-      wins
-      loses
-      escapes
+      backgammon {
+        score
+        wins
+        loses
+        escapes
+      }
       createdAt
       updatedAt
       owner
