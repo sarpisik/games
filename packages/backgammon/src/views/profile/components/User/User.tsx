@@ -1,5 +1,4 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import ListGroupItem from 'react-bootstrap/ListGroupItem';
@@ -24,9 +23,6 @@ export default function User(props: Props): React.ReactElement {
                 <ListGroupItem>{user.wins}</ListGroupItem>
                 <ListGroupItem>{user.loses}</ListGroupItem>
                 <ListGroupItem>{user.escapes}</ListGroupItem>
-                <ListGroupItem>
-                    <Button variant="danger">Delete</Button>
-                </ListGroupItem>
             </ListGroup>
         </Card>
     );

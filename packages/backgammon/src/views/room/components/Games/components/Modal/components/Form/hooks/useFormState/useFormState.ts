@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FormControlProps } from 'react-bootstrap';
+import { FormControlProps } from 'react-bootstrap/FormControl';
 import { PLAYERS } from 'types/lib/backgammon';
 import { generatePlayers } from 'types/lib/helpers';
 import { useUser } from '../../../../../../../../../../app/slices';

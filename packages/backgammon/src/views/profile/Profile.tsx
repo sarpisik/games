@@ -7,7 +7,7 @@ import Tabs from 'react-bootstrap/Tabs';
 import { RouteComponentProps } from 'react-router-dom';
 import { useUser } from '../../app/slices';
 import { withAuthorization, withBreadcrumb } from '../../components';
-import { User } from './components';
+import { Settings, User } from './components';
 
 /*
  * TODO:
@@ -23,11 +23,14 @@ function Profile(_props: RouteComponentProps): React.ReactElement {
 
     return (
         <Container>
-            <Row className="justify-content-md-center">
-                <Col md={8}>
+            <Row>
+                <Col>
                     <Tabs defaultActiveKey="user" id="uncontrolled-tab-example">
                         <Tab eventKey="user" title="User">
                             <User user={user} />
+                        </Tab>
+                        <Tab eventKey="settings" title="Settings">
+                            <Settings user={user} />
                         </Tab>
                     </Tabs>
                 </Col>
