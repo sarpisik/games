@@ -12,7 +12,7 @@ export default (socket: Socket) => {
     //     }
     // );
     [new Rooms(Router, socket)].forEach((route) => {
-        router.use('/backgammon', route.router);
+        router.use('/', route.router);
     });
 
     return router;

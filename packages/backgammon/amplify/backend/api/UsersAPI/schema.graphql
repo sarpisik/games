@@ -1,6 +1,15 @@
 type User
     @model
-    @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) {
+    @auth(
+        rules: [
+            { allow: owner, operations: [create] }
+            {
+                allow: groups
+                groups: ["Administrators"]
+                operations: [create, update, delete]
+            }
+        ]
+    ) {
     id: ID!
     name: String!
     description: String

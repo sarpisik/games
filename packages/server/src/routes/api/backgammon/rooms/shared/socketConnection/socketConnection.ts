@@ -1,10 +1,10 @@
 import { User } from '@shared-backgammon/src/types/user';
-import { UserApi } from './lib';
+import UserApi from '@shared/userApi';
 import { authMiddleware } from './methods';
 
 export default class SocketConnection {
     protected _namespace: SocketIO.Namespace;
-    protected _userApi: UserApi;
+    protected _userApi = new UserApi();
     _users: Map<string, User>;
     private _authMiddleware: typeof authMiddleware;
 
@@ -15,9 +15,6 @@ export default class SocketConnection {
         // socket connection
         this._namespace = _io.of(_path);
         this._namespace.use(this._authMiddleware.bind(this));
-
-        // external api
-        this._userApi = new UserApi();
 
         // connected users
         this._users = new Map();

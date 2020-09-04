@@ -1,6 +1,7 @@
 import awsConfig from '@shared-backgammon/src/aws-exports';
 import { User } from '@shared-backgammon/src/types/user';
 import { customPromise } from '@shared/customPromise';
+import { GraphQLResult } from '@shared-types/user';
 import * as graphql from 'graphql';
 import gql from 'graphql-tag';
 import fetch from 'node-fetch';
@@ -22,6 +23,24 @@ const getUser = gql`
         }
     }
 `;
+const updateUser = gql`
+    mutation UpdateUser(
+        $input: UpdateUserInput!
+        $condition: ModelUserConditionInput
+    ) {
+        updateUser(input: $input, condition: $condition) {
+            id
+            name
+            description
+            email
+            wins
+            loses
+            escapes
+            createdAt
+            updatedAt
+        }
+    }
+`;
 
 export default class UserApi {
     private _endpoint = aws_appsync_graphqlEndpoint;
@@ -33,7 +52,22 @@ export default class UserApi {
         const _body = { query: print(getUser), variables: { id } };
         const body = await customPromise(() => JSON.stringify(_body));
         const headers = {
-            // 'x-api-key': this._apiKey,
+            authorization: this._cognito.accessToken,
+        };
+
+        return fetch(this._endpoint, {
+            method: 'post',
+            headers,
+            body,
+        }).then((res) => res.json());
+    }
+
+    async updateUser(
+        input: Partial<User>
+    ): Promise<GraphQLResult<{ updateUser: User | null }>> {
+        const _body = { query: print(updateUser), variables: { input } };
+        const body = await customPromise(() => JSON.stringify(_body));
+        const headers = {
             authorization: this._cognito.accessToken,
         };
 

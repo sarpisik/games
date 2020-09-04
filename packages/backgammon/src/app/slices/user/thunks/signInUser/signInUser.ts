@@ -1,10 +1,12 @@
-import { Hub } from 'aws-amplify';
+import { Hub, API, graphqlOperation } from 'aws-amplify';
 import { User } from '../../../../../types/user';
 import { AppThunk } from '../../../../store';
 import { setFeedback } from '../../../feedbacks';
 import { FEEDBACK_STATUS } from '../../../feedbacks/feedbacks';
 import { initialState, setUser } from '../../user';
 import { handleUserAuth } from './utils';
+import { onUpdateUser } from '../../../../../graphql/subscriptions';
+import Observable from 'zen-observable-ts';
 
 const signInUser: () => AppThunk = () => async (dispatch) => {
     const setUserFetching = () => {
@@ -17,6 +19,14 @@ const signInUser: () => AppThunk = () => async (dispatch) => {
         dispatch(setUser(user));
         dispatch(setFeedback({ setUser: { status: FEEDBACK_STATUS.SUCCESS } }));
         // Subscribe to update events.
+        (API.graphql(graphqlOperation(onUpdateUser)) as Observable<
+            object
+        >).subscribe({
+            next(v) {
+                console.log('subscribe result');
+                console.log(v);
+            },
+        });
     };
 
     const setUserError = () => {
