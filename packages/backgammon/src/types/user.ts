@@ -1,3 +1,8 @@
-import { GetUserQuery } from '../API';
+import { GetUserQuery, GameInput } from '../API';
 
-export type User = Omit<Exclude<GetUserQuery['getUser'], null>, '__typename'>;
+export type User = Omit<
+    Exclude<GetUserQuery['getUser'], null>,
+    '__typename' | 'backgammon'
+> & {
+    backgammon: GameInput;
+};
