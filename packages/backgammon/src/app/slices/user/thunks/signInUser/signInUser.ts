@@ -1,12 +1,11 @@
-import { Hub, API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation, Hub } from 'aws-amplify';
+import { onUpdateUser } from '../../../../../graphql/subscriptions';
 import { User } from '../../../../../types/user';
 import { AppThunk } from '../../../../store';
 import { setFeedback } from '../../../feedbacks';
 import { FEEDBACK_STATUS } from '../../../feedbacks/feedbacks';
-import { initialState, setUser } from '../../user';
+import { initialState, setUser, setUserState } from '../../user';
 import { handleUserAuth } from './utils';
-import { onUpdateUser } from '../../../../../graphql/subscriptions';
-import Observable from 'zen-observable-ts';
 
 const signInUser: () => AppThunk = () => async (dispatch) => {
     const setUserFetching = () => {
@@ -25,13 +24,18 @@ const signInUser: () => AppThunk = () => async (dispatch) => {
         ).subscribe({
             // @ts-ignore
             next(v) {
+                const user = v?.value?.data?.onUpdateUser;
+                user &&
+                    dispatch(
+                        setUser(Object.assign({}, user, { state: 'INITIAL' }))
+                    );
                 console.log('subscribe result');
                 console.log(v);
             },
             // @ts-ignore
             error(e) {
+                dispatch(setUserState({ state: 'ERROR' }));
                 console.log('subscribe error');
-
                 console.error(e);
             },
         });

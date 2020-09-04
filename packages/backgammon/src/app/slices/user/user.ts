@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User as U } from '../../../types/user';
 
-interface User extends U {
+export interface User extends U {
     state: 'INITIAL' | 'LOADING' | 'SUCCESS' | 'ERROR';
 }
 
