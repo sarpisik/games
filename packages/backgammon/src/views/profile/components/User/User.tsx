@@ -2,6 +2,7 @@ import React from 'react';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import ListGroupItem from 'react-bootstrap/ListGroupItem';
+import { FaMinusCircle, FaThumbsDown, FaTrophy } from 'react-icons/fa';
 import { User as U } from '../../../../types/user';
 
 interface Props {
@@ -20,9 +21,18 @@ export default function User(props: Props): React.ReactElement {
             <ListGroup className="list-group-flush">
                 <ListGroupItem>{user.email}</ListGroupItem>
                 <ListGroupItem>{user.createdAt}</ListGroupItem>
-                <ListGroupItem>{user.wins}</ListGroupItem>
-                <ListGroupItem>{user.loses}</ListGroupItem>
-                <ListGroupItem>{user.escapes}</ListGroupItem>
+                <ListGroupItem>
+                    <FaTrophy />
+                    <span className="ml-3">{user.wins}</span>
+                </ListGroupItem>
+                <ListGroupItem>
+                    <FaThumbsDown />
+                    <span className="ml-3">{user.loses}</span>
+                </ListGroupItem>
+                <ListGroupItem>
+                    <FaMinusCircle />
+                    <span className="ml-3">{user.escapes}</span>
+                </ListGroupItem>
             </ListGroup>
         </Card>
     );
