@@ -1,10 +1,9 @@
 import { API, graphqlOperation } from 'aws-amplify';
+import Axios from 'axios';
 import { CreateUserInput } from '../../../../../../../API';
 import { createUser } from '../../../../../../../graphql/mutations';
-import { getUser } from '../../../../../../../graphql/queries';
 import { User } from '../../../../../../../types/user';
 import { fetchUserAuth, validateUser } from './utils';
-import Axios from 'axios';
 
 export default async function handleUserAuth(
     setUserFetching: () => void,
@@ -17,13 +16,11 @@ export default async function handleUserAuth(
     const userAuth = await fetchUserAuth();
 
     // Fetch user from db
-    // const response = await API.graphql(
-    //     graphqlOperation(getUser, { id: userAuth.id })
-    // );
     const response = await Axios.get('/api/users/' + userAuth.id);
 
     // @ts-ignore
     const user = response?.data;
+
     // If user is exist in db, dispatch.
     // Else, create a new user.
     if (validateUser(user)) setUserSuccess(user);
@@ -38,6 +35,7 @@ export default async function handleUserAuth(
         const _response = await API.graphql(
             graphqlOperation(createUser, { input })
         );
+
         // @ts-ignore
         const newUser = _response?.data?.createUser;
 
