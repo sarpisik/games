@@ -1,5 +1,5 @@
 import { User } from '@shared-backgammon/src/types/user';
-import UserApi from '@shared/userApi';
+import { UserApi } from '@shared/userApi';
 import { authMiddleware } from './methods';
 
 export default class SocketConnection {

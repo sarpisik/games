@@ -6,6 +6,7 @@ import * as graphql from 'graphql';
 import gql from 'graphql-tag';
 import fetch from 'node-fetch';
 import Cognito from '@shared/cognito';
+import { deleteUser } from './methods';
 
 const { aws_appsync_graphqlEndpoint } = awsConfig;
 
@@ -43,8 +44,9 @@ const updateUser = gql`
 `;
 
 export default class UserApi {
-    private _endpoint = aws_appsync_graphqlEndpoint;
-    private _cognito = new Cognito();
+    _endpoint = aws_appsync_graphqlEndpoint;
+    _cognito = new Cognito();
+    deleteUser = deleteUser;
 
     async fetchUser(
         id: User['id']
