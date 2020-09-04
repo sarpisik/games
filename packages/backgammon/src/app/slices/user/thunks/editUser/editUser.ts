@@ -13,7 +13,7 @@ const editUser: (user: Pick<User, 'name' | 'description'>) => AppThunk = (
     dispatch(setUserState({ state: 'LOADING' }));
 
     // Update user
-    await axios.put(`/api/users/${id}`, user);
+    await axios.put(`/api/users/${id}`, { ...user, owner: _user.owner });
 };
 
 export default editUser;

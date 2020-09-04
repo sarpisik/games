@@ -2,11 +2,11 @@ type User
     @model
     @auth(
         rules: [
-            { allow: owner, operations: [create] }
+            { allow: owner }
             {
                 allow: groups
                 groups: ["Administrators"]
-                operations: [create, update, delete]
+                operations: [create, read, update, delete]
             }
         ]
     ) {

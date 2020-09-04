@@ -14,6 +14,7 @@ export const getUser = /* GraphQL */ `
       escapes
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -34,6 +35,7 @@ export const listUsers = /* GraphQL */ `
         escapes
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }

@@ -17,6 +17,7 @@ export const createUser = /* GraphQL */ `
       escapes
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -35,6 +36,7 @@ export const updateUser = /* GraphQL */ `
       escapes
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -53,6 +55,7 @@ export const deleteUser = /* GraphQL */ `
       escapes
       createdAt
       updatedAt
+      owner
     }
   }
 `;

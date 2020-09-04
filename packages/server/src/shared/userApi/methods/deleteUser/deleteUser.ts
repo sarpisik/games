@@ -1,8 +1,8 @@
 import { User as U } from '@shared-backgammon/src/types/user';
-import * as graphql from 'graphql';
-import gql from 'graphql-tag';
 import { customPromise } from '@shared/customPromise';
 import { UserApi } from '@shared/userApi';
+import * as graphql from 'graphql';
+import gql from 'graphql-tag';
 
 const { print } = graphql;
 

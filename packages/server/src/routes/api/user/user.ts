@@ -13,8 +13,16 @@ export default class User {
     }
 
     private _init() {
+        this.router.get(this.path + ':id', this.readUser.bind(this));
         this.router.put(this.path + ':id', this.updateUser.bind(this));
-        this.router.delete(this.path + ':id', this.updateUser.bind(this));
+        this.router.delete(this.path + ':id', this.deleteUser.bind(this));
+    }
+
+    public async readUser(req: Request, res: Response, next: NextFunction) {
+        const user = await this._userApi.fetchUser(req.params.id);
+
+        if (user?.errors) next(user.errors);
+        else res.status(OK).json(user.data?.getUser);
     }
 
     public async updateUser(req: Request, res: Response, next: NextFunction) {

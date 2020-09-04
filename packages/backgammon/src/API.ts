@@ -136,6 +136,7 @@ export type CreateUserMutation = {
     escapes: number,
     createdAt: string,
     updatedAt: string,
+    owner: string | null,
   } | null,
 };
 
@@ -156,6 +157,7 @@ export type UpdateUserMutation = {
     escapes: number,
     createdAt: string,
     updatedAt: string,
+    owner: string | null,
   } | null,
 };
 
@@ -176,6 +178,7 @@ export type DeleteUserMutation = {
     escapes: number,
     createdAt: string,
     updatedAt: string,
+    owner: string | null,
   } | null,
 };
 
@@ -195,6 +198,7 @@ export type GetUserQuery = {
     escapes: number,
     createdAt: string,
     updatedAt: string,
+    owner: string | null,
   } | null,
 };
 
@@ -218,9 +222,14 @@ export type ListUsersQuery = {
       escapes: number,
       createdAt: string,
       updatedAt: string,
+      owner: string | null,
     } | null > | null,
     nextToken: string | null,
   } | null,
+};
+
+export type OnCreateUserSubscriptionVariables = {
+  owner?: string | null,
 };
 
 export type OnCreateUserSubscription = {
@@ -235,7 +244,12 @@ export type OnCreateUserSubscription = {
     escapes: number,
     createdAt: string,
     updatedAt: string,
+    owner: string | null,
   } | null,
+};
+
+export type OnUpdateUserSubscriptionVariables = {
+  owner?: string | null,
 };
 
 export type OnUpdateUserSubscription = {
@@ -250,7 +264,12 @@ export type OnUpdateUserSubscription = {
     escapes: number,
     createdAt: string,
     updatedAt: string,
+    owner: string | null,
   } | null,
+};
+
+export type OnDeleteUserSubscriptionVariables = {
+  owner?: string | null,
 };
 
 export type OnDeleteUserSubscription = {
@@ -265,5 +284,6 @@ export type OnDeleteUserSubscription = {
     escapes: number,
     createdAt: string,
     updatedAt: string,
+    owner: string | null,
   } | null,
 };

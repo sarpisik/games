@@ -19,12 +19,20 @@ const signInUser: () => AppThunk = () => async (dispatch) => {
         dispatch(setUser(user));
         dispatch(setFeedback({ setUser: { status: FEEDBACK_STATUS.SUCCESS } }));
         // Subscribe to update events.
-        (API.graphql(graphqlOperation(onUpdateUser)) as Observable<
-            object
-        >).subscribe({
+        API.graphql(
+            graphqlOperation(onUpdateUser, { owner: user.owner })
+            // @ts-ignore
+        ).subscribe({
+            // @ts-ignore
             next(v) {
                 console.log('subscribe result');
                 console.log(v);
+            },
+            // @ts-ignore
+            error(e) {
+                console.log('subscribe error');
+
+                console.error(e);
             },
         });
     };

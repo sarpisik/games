@@ -1,7 +1,7 @@
 import { Auth } from 'aws-amplify';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
-import { editUser } from '../../thunks';
+import { editUser, deleteUser } from '../../thunks';
 
 export default function useUser() {
     const dispatch = useDispatch();
@@ -18,6 +18,9 @@ export default function useUser() {
         },
         editUser(user: Parameters<typeof editUser>[0]) {
             dispatch(editUser(user));
+        },
+        deleteUser() {
+            dispatch(deleteUser());
         },
     };
 }

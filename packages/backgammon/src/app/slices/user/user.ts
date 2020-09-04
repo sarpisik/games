@@ -15,6 +15,7 @@ export const initialState: User = {
     escapes: 0,
     createdAt: '',
     updatedAt: '',
+    owner: '',
     state: 'INITIAL',
 };
 

@@ -7,6 +7,9 @@ import gql from 'graphql-tag';
 import fetch from 'node-fetch';
 import Cognito from '@shared/cognito';
 import { deleteUser } from './methods';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+global.fetch = fetch;
 
 const { aws_appsync_graphqlEndpoint } = awsConfig;
 
@@ -17,10 +20,14 @@ const getUser = gql`
         getUser(id: $id) {
             id
             name
+            description
             email
             wins
             loses
             escapes
+            createdAt
+            updatedAt
+            owner
         }
     }
 `;
@@ -39,6 +46,7 @@ const updateUser = gql`
             escapes
             createdAt
             updatedAt
+            owner
         }
     }
 `;
@@ -50,7 +58,7 @@ export default class UserApi {
 
     async fetchUser(
         id: User['id']
-    ): Promise<{ data?: { getUser?: User | null } }> {
+    ): Promise<GraphQLResult<{ getUser: User | null }>> {
         const _body = { query: print(getUser), variables: { id } };
         const body = await customPromise(() => JSON.stringify(_body));
         const headers = {
