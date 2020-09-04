@@ -22,7 +22,11 @@ export default function Form(props: Props): React.ReactElement {
                     Name
                 </F.Label>
                 <Col sm="10">
-                    <F.Control onChange={onChange} value={user.name} />
+                    <F.Control
+                        onChange={onChange}
+                        name="name"
+                        value={user.name}
+                    />
                 </Col>
             </F.Group>
             <F.Group as={Row} controlId="exampleF.ControlInput2">
@@ -30,7 +34,11 @@ export default function Form(props: Props): React.ReactElement {
                     Description
                 </F.Label>
                 <Col sm="10">
-                    <F.Control onChange={onChange} value={user.description} />
+                    <F.Control
+                        onChange={onChange}
+                        name="description"
+                        value={user.description}
+                    />
                 </Col>
             </F.Group>
             <Submit className="mr-3" />
