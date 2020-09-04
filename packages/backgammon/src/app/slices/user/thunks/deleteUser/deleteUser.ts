@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { AppThunk } from '../../../../store';
 import { initialState, setUser, setUserState } from '../../user';
+import { setFeedback } from '../../../feedbacks';
+import { FEEDBACK_STATUS } from '../../../feedbacks/feedbacks';
 
 const deleteUser: () => AppThunk = () => async (dispatch, getState) => {
     try {
@@ -15,6 +17,9 @@ const deleteUser: () => AppThunk = () => async (dispatch, getState) => {
 
         // Set initial user state
         dispatch(setUser(initialState));
+
+        // Trigger WithAuthorization UI
+        dispatch(setFeedback({ setUser: { status: FEEDBACK_STATUS.ERROR } }));
     } catch (error) {
         dispatch(setUserState({ state: 'ERROR' }));
         console.log('User delete failed.');
