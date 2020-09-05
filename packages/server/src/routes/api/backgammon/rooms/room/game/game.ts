@@ -26,8 +26,8 @@ import { Round } from './round';
 
 /*
  * TODO:
- * - [] reset game on both players disconnected.
- * - [] handle restart game event.
+ * - [x] reset game on both players disconnected.
+ * - [x] handle restart game event.
  */
 
 type User = Exclude<
