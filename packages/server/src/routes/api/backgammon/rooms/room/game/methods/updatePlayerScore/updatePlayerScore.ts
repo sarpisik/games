@@ -15,7 +15,7 @@ export default async function updatePlayerScore(
         const user = response.data?.getUser;
 
         if (!user) throw new Error(`User not found by id: ${playerId}`);
-        const { backgammon } = user;
+        const { backgammon, id } = user;
 
         switch (action) {
             case 'WIN':
@@ -35,7 +35,12 @@ export default async function updatePlayerScore(
                 throw new Error(`Invalid action type: ${action}`);
         }
 
-        await this._userApi.updateUser(user);
+        const r = await this._userApi.updateUser({ id, backgammon });
+
+        if (r.errors) {
+            console.error(r.errors);
+            throw new Error(`User update failed by id: ${id}`);
+        }
     } catch (error) {
         // TODO: write error to db.
         logger.error(error);
