@@ -6,7 +6,7 @@ export default function handleGameOver(
     this: BackgammonGame,
     payload: EmitStageOver
 ) {
-    this._status = 'OVER';
+    this._status = 'UNINITIALIZED';
 
     // Edit players scores in db
     this._handlePlayersScore(payload.winner);

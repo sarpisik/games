@@ -38,17 +38,18 @@ export default [
 ];
 // export default [
 //     // Top left.
+
+//     [PLAYERS.BLACK, 2],
 //     [PLAYERS.NONE, 0],
 //     [PLAYERS.NONE, 0],
 //     [PLAYERS.NONE, 0],
 //     [PLAYERS.NONE, 0],
 //     [PLAYERS.NONE, 0],
-//     [PLAYERS.BLACK, 5],
 
 //     // Top right.
 
 //     [PLAYERS.NONE, 0],
-//     [PLAYERS.BLACK, 3],
+//     [PLAYERS.NONE, 0],
 //     [PLAYERS.NONE, 0],
 //     [PLAYERS.NONE, 0],
 //     [PLAYERS.NONE, 0],
@@ -56,7 +57,7 @@ export default [
 
 //     // Bottom right.
 
-//     [PLAYERS.BLACK, 5],
+//     [PLAYERS.NONE, 0],
 //     [PLAYERS.NONE, 0],
 //     [PLAYERS.NONE, 0],
 //     [PLAYERS.NONE, 0],
@@ -65,10 +66,10 @@ export default [
 
 //     // Bottom left.
 
-//     [PLAYERS.WHITE, 3],
-//     [PLAYERS.WHITE, 3],
-//     [PLAYERS.WHITE, 3],
-//     [PLAYERS.WHITE, 2],
-//     [PLAYERS.WHITE, 2],
+//     [PLAYERS.NONE, 0],
+//     [PLAYERS.NONE, 0],
+//     [PLAYERS.NONE, 0],
+//     [PLAYERS.NONE, 0],
+//     [PLAYERS.NONE, 0],
 //     [PLAYERS.WHITE, 2],
 // ];
