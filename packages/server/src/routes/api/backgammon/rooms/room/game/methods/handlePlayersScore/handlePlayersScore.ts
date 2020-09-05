@@ -7,7 +7,7 @@ export default function handlePlayersScore(
     this: BackgammonGame,
     winner: Round['player']
 ) {
-    const mars = this.score[winner] - this.stages === 2;
+    const mars = this.score[winner] - this.stages > 0;
     const winnerScore = mars ? SCORES.MARS : SCORES.WINNER;
 
     const winnerId = (this.players[winner] as User).id;
