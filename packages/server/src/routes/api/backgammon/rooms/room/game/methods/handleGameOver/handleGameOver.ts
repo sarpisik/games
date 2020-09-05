@@ -7,5 +7,10 @@ export default function handleGameOver(
     payload: EmitStageOver
 ) {
     this._status = 'OVER';
+
+    // Edit players scores in db
+    this._handlePlayersScore(payload.winner);
+
+    // Notify client
     this._emitNamespace(GAME_EVENTS.GAME_OVER, payload);
 }

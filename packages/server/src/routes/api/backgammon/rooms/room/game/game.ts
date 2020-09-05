@@ -1,6 +1,7 @@
 import { GameServerSide, PLAYERS } from '@shared-types/backgammon';
 import { EmitGame, GAME_EVENTS } from '@shared-types/game';
 import { generateBackgammonGamePath } from '@shared-types/helpers';
+import { UserApi } from '@shared/userApi';
 import { SocketConnection } from '../../shared/socketConnection';
 import {
     emitNamespace,
@@ -10,6 +11,7 @@ import {
     handleDisconnect,
     handleGameOver,
     handleNextRound,
+    handlePlayersScore,
     handleRoundCalculate,
     handleRoundResult,
     handleTimer,
@@ -20,10 +22,10 @@ import {
     recursivelySetTimer,
     resetGame,
     undoRound,
+    updatePlayerScore,
     withBreakTimer,
 } from './methods';
 import { Round } from './round';
-import { UserApi } from '@shared/userApi';
 
 /*
  * TODO:
@@ -66,6 +68,7 @@ export default class BackgammonGame extends SocketConnection
     _handleDisconnect: typeof handleDisconnect;
     _handleGameOver: typeof handleGameOver;
     _handleNextRound: typeof handleNextRound;
+    _handlePlayersScore: typeof handlePlayersScore;
     _handleRoundCalculate: typeof handleRoundCalculate;
     _handleRoundResult: typeof handleRoundResult;
     _handleTimer: typeof handleTimer;
@@ -75,6 +78,7 @@ export default class BackgammonGame extends SocketConnection
     _recursivelySetShortTimer: typeof recursivelySetShortTimer;
     _recursivelySetTimer: typeof recursivelySetTimer;
     _resetGame: typeof resetGame;
+    _updatePlayerScore: typeof updatePlayerScore;
     _undoRound: typeof undoRound;
     _withBreakTimer: typeof withBreakTimer;
 
@@ -94,6 +98,7 @@ export default class BackgammonGame extends SocketConnection
         this._handleDisconnect = handleDisconnect.bind(this);
         this._handleGameOver = handleGameOver.bind(this);
         this._handleNextRound = handleNextRound.bind(this);
+        this._handlePlayersScore = handlePlayersScore.bind(this);
         this._handleRoundCalculate = handleRoundCalculate.bind(this);
         this._handleRoundResult = handleRoundResult.bind(this);
         this._handleTimer = handleTimer.bind(this);
@@ -103,6 +108,7 @@ export default class BackgammonGame extends SocketConnection
         this._recursivelySetShortTimer = recursivelySetShortTimer.bind(this);
         this._recursivelySetTimer = recursivelySetTimer.bind(this);
         this._resetGame = resetGame.bind(this);
+        this._updatePlayerScore = updatePlayerScore.bind(this);
         this._undoRound = undoRound.bind(this);
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
