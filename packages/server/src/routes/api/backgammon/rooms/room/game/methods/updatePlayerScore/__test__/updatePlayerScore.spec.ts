@@ -15,7 +15,7 @@ describe('updatePlayerScore', () => {
         action: UpdatePlayerScore[0],
         playerId: UpdatePlayerScore[1],
         _score: UpdatePlayerScore[2],
-        response: { data: { getUser: { backgammon: GameInput } } };
+        response: { data: { getUser: { id: string; backgammon: GameInput } } };
 
     beforeEach(() => {
         backgammonGame = {
@@ -30,6 +30,7 @@ describe('updatePlayerScore', () => {
         response = {
             data: {
                 getUser: {
+                    id: '1234',
                     backgammon: {
                         score: 800,
                         wins: 10,
@@ -77,6 +78,7 @@ describe('updatePlayerScore', () => {
             score: 815,
             wins: 11,
         });
+        const result = Object.assign({}, response.data.getUser, { backgammon });
 
         updatePlayerScore
             // @ts-ignore
@@ -85,9 +87,9 @@ describe('updatePlayerScore', () => {
                 expect(
                     backgammonGame._userApi.updateUser
                 ).toHaveBeenCalledTimes(1);
-                expect(
-                    backgammonGame._userApi.updateUser
-                ).toHaveBeenCalledWith({ backgammon });
+                expect(backgammonGame._userApi.updateUser).toHaveBeenCalledWith(
+                    result
+                );
                 done();
             });
     });
@@ -100,6 +102,7 @@ describe('updatePlayerScore', () => {
             score: 790,
             loses: 11,
         });
+        const result = Object.assign({}, response.data.getUser, { backgammon });
 
         updatePlayerScore
             // @ts-ignore
@@ -108,9 +111,9 @@ describe('updatePlayerScore', () => {
                 expect(
                     backgammonGame._userApi.updateUser
                 ).toHaveBeenCalledTimes(1);
-                expect(
-                    backgammonGame._userApi.updateUser
-                ).toHaveBeenCalledWith({ backgammon });
+                expect(backgammonGame._userApi.updateUser).toHaveBeenCalledWith(
+                    result
+                );
                 done();
             });
     });
@@ -123,6 +126,7 @@ describe('updatePlayerScore', () => {
             score: 775,
             escapes: 11,
         });
+        const result = Object.assign({}, response.data.getUser, { backgammon });
 
         updatePlayerScore
             // @ts-ignore
@@ -131,9 +135,9 @@ describe('updatePlayerScore', () => {
                 expect(
                     backgammonGame._userApi.updateUser
                 ).toHaveBeenCalledTimes(1);
-                expect(
-                    backgammonGame._userApi.updateUser
-                ).toHaveBeenCalledWith({ backgammon });
+                expect(backgammonGame._userApi.updateUser).toHaveBeenCalledWith(
+                    result
+                );
                 done();
             });
     });
