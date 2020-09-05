@@ -23,6 +23,7 @@ import {
     withBreakTimer,
 } from './methods';
 import { Round } from './round';
+import { UserApi } from '@shared/userApi';
 
 /*
  * TODO:
@@ -54,6 +55,7 @@ export default class BackgammonGame extends SocketConnection
     timer!: GameServerSide['timer'];
     rounds!: Round[];
 
+    _userApi = new UserApi();
     _t?: GameServerSide['rounds'][number]['player'];
     _tRef?: NodeJS.Timeout;
     _status!: 'UNINITIALIZED' | 'INITIALIZED' | 'OVER';
