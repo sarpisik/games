@@ -71,7 +71,6 @@ export default class Cognito {
                 this.refreshToken = authResult.RefreshToken as string;
                 this.tokenType = authResult.TokenType as string;
             } else throw new Error('Invalid auth response.');
-            console.log(r);
             // // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // // @ts-ignore
             // const re = await this.cognitoIdentity
