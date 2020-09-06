@@ -1,4 +1,5 @@
 import { API, graphqlOperation, Hub } from 'aws-amplify';
+import Observable, { ZenObservable } from 'zen-observable-ts';
 import { onUpdateUser } from '../../../../../graphql/subscriptions';
 import { User } from '../../../../../types/user';
 import { AppThunk } from '../../../../store';
@@ -8,6 +9,8 @@ import { initialState, setUser, setUserState } from '../../user';
 import { handleUserAuth } from './utils';
 
 const signInUser: () => AppThunk = () => async (dispatch) => {
+    let subscription: ZenObservable.Subscription;
+
     const setUserFetching = () => {
         dispatch(
             setFeedback({ setUser: { status: FEEDBACK_STATUS.FETCHING } })
@@ -18,11 +21,11 @@ const signInUser: () => AppThunk = () => async (dispatch) => {
         dispatch(setUser(user));
         dispatch(setFeedback({ setUser: { status: FEEDBACK_STATUS.SUCCESS } }));
         // Subscribe to update events.
-        API.graphql(
+        subscription = (API.graphql(
             graphqlOperation(onUpdateUser, { owner: user.owner })
-            // @ts-ignore
-        ).subscribe({
-            // @ts-ignore
+        ) as Observable<{
+            value?: { data?: { onUpdateUser: typeof user } };
+        }>).subscribe({
             next(v) {
                 const user = v?.value?.data?.onUpdateUser;
                 user &&
@@ -66,6 +69,7 @@ const signInUser: () => AppThunk = () => async (dispatch) => {
                     break;
                 case 'signOut':
                     setUser(initialState);
+                    subscription.unsubscribe();
                     break;
                 case 'signIn_failure':
                 case 'cognitoHostedUI_failure':
