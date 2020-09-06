@@ -14,13 +14,14 @@ describe('recursivelyCalculatePickableTriangle', () => {
                     .map((t, i) => {
                         switch (i) {
                             // Black player triangles
-                            case 4: // dice 5
+                            case 4: // 5th triangle
                                 return [PLAYERS.BLACK, 2];
 
                             default:
                                 return t;
                         }
-                    }),
+                    })
+                    .reverse(),
                 roundPlayer: PLAYERS.BLACK,
                 dices: [5],
                 resolve(value) {
@@ -46,7 +47,8 @@ describe('recursivelyCalculatePickableTriangle', () => {
                             default:
                                 return t;
                         }
-                    }),
+                    })
+                    .reverse(),
                 roundPlayer: PLAYERS.BLACK,
                 dices: [4, 4, 4, 4],
                 resolve(value) {
@@ -66,13 +68,14 @@ describe('recursivelyCalculatePickableTriangle', () => {
                     .map((t, i) => {
                         switch (i) {
                             // Black player triangles
-                            case 4:
+                            case 4: // 5th triangle
                                 return [PLAYERS.BLACK, 2];
 
                             default:
                                 return t;
                         }
-                    }),
+                    })
+                    .reverse(),
                 roundPlayer: PLAYERS.BLACK,
                 dices: [4],
                 resolve(value) {
@@ -98,7 +101,8 @@ describe('recursivelyCalculatePickableTriangle', () => {
                             default:
                                 return t;
                         }
-                    }),
+                    })
+                    .reverse(),
                 roundPlayer: PLAYERS.BLACK,
                 dices: [6],
                 resolve(value) {
@@ -118,7 +122,7 @@ describe('recursivelyCalculatePickableTriangle', () => {
                     .map((t, i) => {
                         switch (i) {
                             // Black player triangles
-                            case 4:
+                            case 4: // 5th triangle
                                 return [PLAYERS.BLACK, 2];
 
                             // White player triangles
@@ -128,7 +132,8 @@ describe('recursivelyCalculatePickableTriangle', () => {
                             default:
                                 return t;
                         }
-                    }),
+                    })
+                    .reverse(),
                 roundPlayer: PLAYERS.BLACK,
                 dices: [4],
                 resolve(value) {
@@ -158,7 +163,8 @@ describe('recursivelyCalculatePickableTriangle', () => {
                             default:
                                 return t;
                         }
-                    }),
+                    })
+                    .reverse(),
                 roundPlayer: PLAYERS.BLACK,
                 dices: [4, 3],
                 resolve(value) {
@@ -205,9 +211,75 @@ describe('recursivelyCalculatePickableTriangle', () => {
                             default:
                                 return t;
                         }
-                    }),
+                    })
+                    .reverse(),
                 roundPlayer: PLAYERS.BLACK,
                 dices: [4],
+                resolve(value) {
+                    expect(value).toBeFalse();
+                    done();
+                },
+            };
+            recursivelyCalculatePickableTriangle(params);
+        });
+
+        it(`when pickable points do not exist by dices and all the movable triangles are blocked for "${
+            PLAYERS[PLAYERS.BLACK]
+        }" player.`, (done) => {
+            const params: Params = {
+                triangles: Array(6)
+                    .fill([PLAYERS.NONE, 0])
+                    .map((t, i) => {
+                        switch (i) {
+                            // Black player triangles
+                            case 5: // 6th triangle
+                                return [PLAYERS.BLACK, 2];
+
+                            // White player triangles
+                            case 1: // 2nd triangle
+                                return [PLAYERS.WHITE, 2];
+                            case 3: // 4th triangle
+                                return [PLAYERS.WHITE, 2];
+
+                            default:
+                                return t;
+                        }
+                    })
+                    .reverse(),
+                roundPlayer: PLAYERS.BLACK,
+                dices: [4, 2],
+                resolve(value) {
+                    expect(value).toBeFalse();
+                    done();
+                },
+            };
+            recursivelyCalculatePickableTriangle(params);
+        });
+
+        it(`when pickable points do not exist by dices and all the movable triangles are blocked for "${
+            PLAYERS[PLAYERS.WHITE]
+        }" player.`, (done) => {
+            const params: Params = {
+                triangles: Array(6)
+                    .fill([PLAYERS.NONE, 0])
+                    .map((t, i) => {
+                        switch (i) {
+                            // Black player triangles
+                            case 0: // 1st triangle
+                                return [PLAYERS.BLACK, 3];
+
+                            // Empty triangles
+                            case 4: // 5th triangle
+                                return t;
+
+                            // White player triangles
+                            default:
+                                return [PLAYERS.WHITE, 2];
+                        }
+                    })
+                    .reverse(),
+                roundPlayer: PLAYERS.WHITE,
+                dices: [5, 5],
                 resolve(value) {
                     expect(value).toBeFalse();
                     done();

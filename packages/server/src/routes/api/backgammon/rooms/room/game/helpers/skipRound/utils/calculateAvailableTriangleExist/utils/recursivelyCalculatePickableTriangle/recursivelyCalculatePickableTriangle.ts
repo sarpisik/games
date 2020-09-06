@@ -32,6 +32,14 @@ export default async function recursivelyCalculatePickableTriangle(
             checkMovable(dices, triangles, OPPONENT[roundPlayer], i);
 
         if (pickable || movable) resolve(true);
+        // Quit falsy if...
+        else if (
+            // we have doubled dices and...
+            dices[0] === dices[1] &&
+            // from current triangle we can not play.
+            i + dices[0] === limit
+        )
+            resolve(false);
         else {
             params.i = i + 1;
 
@@ -49,7 +57,7 @@ function checkMovable(
     i: number
 ) {
     return dices.some((dice) => {
-        const targetTriangle = triangles[i - dice];
+        const targetTriangle = triangles[i + dice];
         if (targetTriangle) {
             const [player, points] = targetTriangle;
             const shouldMovble = player !== opponent || points < 2;
