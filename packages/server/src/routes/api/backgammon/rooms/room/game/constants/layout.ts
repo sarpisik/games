@@ -39,11 +39,11 @@ export default [
 // export default [
 //     // Top left.
 
+//     [PLAYERS.BLACK, 5],
+//     [PLAYERS.WHITE, 2],
+//     [PLAYERS.BLACK, 3],
+//     [PLAYERS.WHITE, 1],
 //     [PLAYERS.BLACK, 2],
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
 //     [PLAYERS.NONE, 0],
 
 //     // Top right.
@@ -66,10 +66,10 @@ export default [
 
 //     // Bottom left.
 
+//     [PLAYERS.WHITE, 1],
 //     [PLAYERS.NONE, 0],
 //     [PLAYERS.NONE, 0],
 //     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.WHITE, 2],
+//     [PLAYERS.WHITE, 6],
+//     [PLAYERS.WHITE, 5],
 // ];

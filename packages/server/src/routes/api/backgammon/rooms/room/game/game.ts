@@ -31,6 +31,7 @@ import { Round } from './round';
  * TODO:
  * - [x] reset game on both players disconnected.
  * - [x] handle restart game event.
+ * - [] Bug, auto timer start on restart game.
  */
 
 type User = Exclude<
