@@ -6,21 +6,13 @@ interface CalculateByDicesParams {
     fromTriangleIndex: number;
     roundPlayer: Round['player'];
     triangles: Round['layout'];
-    shouldCollect: boolean;
 }
 
 export default function calculateByDices(params: CalculateByDicesParams) {
-    const {
-        dices,
-        fromTriangleIndex,
-        roundPlayer,
-        shouldCollect,
-        triangles,
-    } = params;
+    const { dices, fromTriangleIndex, roundPlayer, triangles } = params;
 
     return customPromiseSome(dices, function onDice(dice) {
-        let targetTriangleAvailable = shouldCollect;
-
+        let targetTriangleAvailable = false;
         const targetTriangleIndex = fromTriangleIndex + dice;
         const targetTriangle = triangles[targetTriangleIndex];
 
