@@ -39,29 +39,14 @@ export default async function recursivelyCalculateAvailableTriangle(
             });
         }
 
-        const lastDice =
+        if (targetTriangleAvailable) resolve(targetTriangleAvailable);
+        else if (
+            roundPlayerTriangle &&
             shouldCollect &&
-            !targetTriangleAvailable &&
-            dices.find((d) => i + d === limit);
-
-        if (targetTriangleAvailable) {
-            resolve(targetTriangleAvailable);
-        } else if (typeof lastDice === 'number') {
-            const prevTriangleCanNotMove = triangles
-                .slice(17, i) // Get area from  farthest collectable triangle to current triangle.
-                .some((t) => t[0] === roundPlayer);
-            const otherDices = dices.filter((d) => d !== lastDice);
-            const isOnlyDice = otherDices.length === 0;
-
-            // If this is the only dice and could not used for movement, quit false.
-            // Else, control other dices.
-            if (prevTriangleCanNotMove && isOnlyDice) resolve(false);
-            else {
-                params.dices = otherDices;
-                params.i = 0;
-                recursivelyCalculateAvailableTriangle(params);
-            }
-        } else {
+            !isPickable(dices, triangles, limit, roundPlayer)
+        )
+            resolve(false);
+        else {
             params.i = i + 1;
 
             setImmediate(() => {
@@ -69,4 +54,16 @@ export default async function recursivelyCalculateAvailableTriangle(
             });
         }
     }
+}
+
+function isPickable(
+    dices: number[],
+    triangles: Round['layout'],
+    limit: number,
+    roundPlayer: Round['player']
+) {
+    return dices.some((dice) => {
+        const triangle = triangles[limit - dice];
+        return triangle[0] === roundPlayer;
+    });
 }

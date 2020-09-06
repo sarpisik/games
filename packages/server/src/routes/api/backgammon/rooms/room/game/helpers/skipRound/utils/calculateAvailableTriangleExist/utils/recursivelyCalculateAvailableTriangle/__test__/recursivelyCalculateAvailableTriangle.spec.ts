@@ -51,6 +51,32 @@ describe('recursivelyCalculateAvailableTriangle', () => {
         recursivelyCalculateAvailableTriangle(params);
     });
 
+    it('resolves true when collectable mode and pickable but not movable by higher dice.', (done) => {
+        const params: Params = {
+            triangles: Array(layout.length)
+                .fill([PLAYERS.NONE, 0])
+                .map((t, i) => {
+                    switch (i) {
+                        // Black player triangles
+                        case 3:
+                            return [PLAYERS.BLACK, 2];
+
+                        default:
+                            return t;
+                    }
+                })
+                .reverse(),
+            roundPlayer: PLAYERS.BLACK,
+            shouldCollect: true,
+            dices: [6, 6, 6, 6],
+            resolve(value) {
+                expect(value).toBeTrue();
+                done();
+            },
+        };
+        recursivelyCalculateAvailableTriangle(params);
+    });
+
     it('resolves false when collectable mode but not movable with single dice.', (done) => {
         const params: Params = {
             triangles: Array(layout.length)
