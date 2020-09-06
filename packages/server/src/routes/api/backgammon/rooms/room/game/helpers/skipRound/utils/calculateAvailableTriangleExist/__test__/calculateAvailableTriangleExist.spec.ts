@@ -19,6 +19,35 @@ describe('calculateAvailableTriangleExist', () => {
                 done();
             });
         });
+
+        it('should return true in collectable mode and no opponent points.', (done) => {
+            _params.layout = layout.map((t, i) => {
+                switch (i) {
+                    // Black points
+                    case 0:
+                    case 11:
+                    case 16:
+                    case 18:
+                    case 19:
+                    case 20:
+                    case 21:
+                    case 22:
+                        return [PLAYERS.NONE, 0];
+                    // Delete the rest black points
+                    case 23:
+                        return [PLAYERS.WHITE, 4];
+
+                    default:
+                        return t;
+                }
+            });
+            _params.dice = [2, 2, 2];
+            _params.player = PLAYERS.WHITE;
+            calculateAvailableTriangleExist(_params).then((result) => {
+                expect(result).toBeTrue();
+                done();
+            });
+        });
     });
 
     describe(`"${PLAYERS[PLAYERS.BLACK]}" player:`, () => {

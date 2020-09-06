@@ -38,9 +38,23 @@ export default async function recursivelyCalculatePickableTriangle(
             dices[0] === dices[1] &&
             // from current triangle we can not play.
             i + dices[0] === limit
-        )
-            resolve(false);
-        else {
+        ) {
+            const prevTriangles = triangles.slice(0, i);
+            const prevTrianglesExist = prevTriangles.length > 0;
+            const roundPlayerTriangles =
+                prevTrianglesExist &&
+                prevTriangles.some((t) => t[0] === roundPlayer);
+
+            // Round player couldn't move the prev triangles.
+            if (roundPlayerTriangles) resolve(false);
+            else {
+                params.i = i + 1;
+
+                setImmediate(() => {
+                    recursivelyCalculatePickableTriangle(params);
+                });
+            }
+        } else {
             params.i = i + 1;
 
             setImmediate(() => {
