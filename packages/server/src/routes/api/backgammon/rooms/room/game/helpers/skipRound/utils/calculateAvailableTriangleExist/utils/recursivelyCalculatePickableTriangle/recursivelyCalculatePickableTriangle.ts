@@ -34,9 +34,9 @@ export default async function recursivelyCalculatePickableTriangle(
         if (pickable || movable) resolve(true);
         // Quit falsy if...
         else if (
-            // we have doubled dices and...
+            // we have doubled dices or just one dice...
             (dices[0] === dices[1] || dices.length === 1) &&
-            // from current triangle we can not play.
+            // which is equal to current triangle and...
             i + dices[0] === limit
         ) {
             const prevTriangles = triangles.slice(0, i);
@@ -45,7 +45,7 @@ export default async function recursivelyCalculatePickableTriangle(
                 prevTrianglesExist &&
                 prevTriangles.some((t) => t[0] === roundPlayer);
 
-            // Round player couldn't move the prev triangles.
+            // we can not move because it is blocked.
             if (roundPlayerTriangles) resolve(false);
             else {
                 params.i = i + 1;
