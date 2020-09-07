@@ -116,7 +116,7 @@ describe('handleDisconnect', () => {
         backgammonGame.players[PLAYERS.WHITE] = whitePlayer;
         backgammonGame.players[PLAYERS.BLACK] = blackPlayer;
         // result players
-        const players = generatePlayersObj(blackPlayer, whitePlayer);
+        const players = generatePlayersObj(blackPlayer, null);
 
         // @ts-ignore
         handleDisconnect.call(backgammonGame, clientId, socket, disconnectCb)();
@@ -126,9 +126,10 @@ describe('handleDisconnect', () => {
 
         // User disconnected events.
         expect(backgammonGame._handlePlayerDisconnect).toHaveBeenCalledTimes(1);
-        expect(backgammonGame._handlePlayerDisconnect).toHaveBeenCalledWith(
-            whitePlayer.id
-        );
+        expect(backgammonGame._handlePlayerDisconnect).toHaveBeenCalledWith({
+            id: whitePlayer.id,
+            name: whitePlayer.name,
+        });
 
         expect(backgammonGame._resetGame).toHaveBeenCalledTimes(0);
         expect(disconnectCb).toHaveBeenCalledWith(backgammonGame.id);

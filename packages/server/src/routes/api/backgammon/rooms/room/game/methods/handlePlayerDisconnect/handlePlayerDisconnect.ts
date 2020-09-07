@@ -8,19 +8,22 @@ import { ONE_SECOND } from '@shared-types/constants';
 
 export default function handlePlayerDisconnect(
     this: BackgammonGame,
-    userId: User['id'],
+    user: Pick<User, 'id' | 'name'>,
     secondsLeft = 10
 ) {
+    const { id, name } = user;
     const players = Object.values(
         this.players
     ) as typeof this.players[keyof typeof this.players][];
-    const disconnectedPlayer = players.find((p) => p?.id === userId);
+    const disconnectedPlayer = players.find((p) => p?.id === id);
 
-    // If should break, handle scores.
-    // Else, run timer.
-    if (!disconnectedPlayer || secondsLeft < 1) {
+    // If user come backs, break timer.
+    // ELse if, timeout, handle scores.
+    // Else, continue timer.
+    if (disconnectedPlayer) this._tRef && clearTimeout(this._tRef);
+    else if (secondsLeft < 1) {
         this._status = 'UNINITIALIZED';
-        const winnerPlayer = players.find((p) => p?.id !== userId);
+        const winnerPlayer = players.find((p) => p?.id !== id);
 
         // Winner
         if (winnerPlayer) {
@@ -41,22 +44,15 @@ export default function handlePlayerDisconnect(
             );
 
         // Escape
-        if (disconnectedPlayer)
-            // Handle escape score
-            this._updatePlayerScore(
-                'ESCAPE',
-                disconnectedPlayer.id,
-                SCORES.ESCAPE
-            );
-        else logger.error(`Disconnected player not found by id:${userId}`);
+        this._updatePlayerScore('ESCAPE', id, SCORES.ESCAPE);
     } else {
         this._emitNamespace(
             GAME_EVENTS.NOTIFICATION,
-            createMessage(disconnectedPlayer.name, secondsLeft)
+            createMessage(name, secondsLeft)
         );
 
         this._tRef = setTimeout(() => {
-            this._handlePlayerDisconnect(userId, secondsLeft - 1);
+            this._handlePlayerDisconnect(user, secondsLeft - 1);
         }, ONE_SECOND);
     }
 }

@@ -19,25 +19,24 @@ export default function handleDisconnect(
         if (connectedUsers.has(clientId)) {
             const players = self.players;
             const user = connectedUsers.get(clientId) as User;
-            const userId = user.id;
-            const userName = user.name;
+            const { id, name } = user;
 
-            const wasPlayer = checkIsPlayer(userId, players);
+            const wasPlayer = checkIsPlayer(id, players);
 
             // Delete client from the users list.
             connectedUsers.delete(clientId);
 
             // Broadcast disconnected client.
-            socket.broadcast.emit(GAME_EVENTS.DISCONNECT_USER, userName);
+            socket.broadcast.emit(GAME_EVENTS.DISCONNECT_USER, name);
 
             // If disconnected user was one of the players...
             if (wasPlayer) {
-                const gameNotOver = self._status === 'INITIALIZED';
-                if (gameNotOver) self._handlePlayerDisconnect(userId);
-                else {
-                    // Delete the player.
-                    deletePlayer(userId, players);
+                // Delete the disconnected player.
+                deletePlayer(id, players);
 
+                const gameNotOver = self._status === 'INITIALIZED';
+                if (gameNotOver) self._handlePlayerDisconnect({ id, name });
+                else {
                     // Reset game if no players left.
                     Boolean(
                         self.players[PLAYERS.BLACK] ||
