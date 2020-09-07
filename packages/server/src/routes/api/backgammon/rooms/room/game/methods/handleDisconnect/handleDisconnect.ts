@@ -33,12 +33,8 @@ export default function handleDisconnect(
             // If disconnected user was one of the players...
             if (wasPlayer) {
                 const gameNotOver = self._status === 'INITIALIZED';
-                if (gameNotOver) {
-                    // TODO: call disconnect timer.
-                    // // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // // @ts-ignore
-                    // self._handleDisconnectPlayer(socket);
-                } else {
+                if (gameNotOver) self._handlePlayerDisconnect(userId);
+                else {
                     // Delete the player.
                     deletePlayer(userId, players);
 

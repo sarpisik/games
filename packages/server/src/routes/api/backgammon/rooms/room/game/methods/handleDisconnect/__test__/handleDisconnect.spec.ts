@@ -11,6 +11,7 @@ describe('handleDisconnect', () => {
             'id' | 'players' | '_users' | '_status'
         > & {
             _resetGame: jasmine.Spy<jasmine.Func>;
+            _handlePlayerDisconnect: jasmine.Spy<jasmine.Func>;
         },
         clientId: string,
         socket: { broadcast: { emit: jasmine.Spy<jasmine.Func> } },
@@ -22,6 +23,7 @@ describe('handleDisconnect', () => {
             players: generatePlayersObj(null, null),
             _users: new Map(),
             _resetGame: jasmine.createSpy(),
+            _handlePlayerDisconnect: jasmine.createSpy(),
             _status: 'OVER',
         };
         clientId = 'a-unique-client-id';
@@ -122,12 +124,11 @@ describe('handleDisconnect', () => {
         expect(backgammonGame.players).toEqual(players);
         expect(backgammonGame._users.has(clientId)).toBeFalsy();
 
-        // // User disconnected events.
-        // expect(socket.broadcast.emit).toHaveBeenCalledTimes(1);
-        // expect(socket.broadcast.emit).toHaveBeenCalledWith(
-        //     GAME_EVENTS.DISCONNECT_USER,
-        //     whitePlayer.name
-        // );
+        // User disconnected events.
+        expect(backgammonGame._handlePlayerDisconnect).toHaveBeenCalledTimes(1);
+        expect(backgammonGame._handlePlayerDisconnect).toHaveBeenCalledWith(
+            whitePlayer.id
+        );
 
         expect(backgammonGame._resetGame).toHaveBeenCalledTimes(0);
         expect(disconnectCb).toHaveBeenCalledWith(backgammonGame.id);

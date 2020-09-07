@@ -11,6 +11,7 @@ import {
     handleDisconnect,
     handleGameOver,
     handleNextRound,
+    handlePlayerDisconnect,
     handlePlayersScore,
     handleRoundCalculate,
     handleRoundResult,
@@ -70,6 +71,7 @@ export default class BackgammonGame extends SocketConnection
     _handleDisconnect: typeof handleDisconnect;
     _handleGameOver: typeof handleGameOver;
     _handleNextRound: typeof handleNextRound;
+    _handlePlayerDisconnect: typeof handlePlayerDisconnect;
     _handlePlayersScore: typeof handlePlayersScore;
     _handleRoundCalculate: typeof handleRoundCalculate;
     _handleRoundResult: typeof handleRoundResult;
@@ -100,6 +102,7 @@ export default class BackgammonGame extends SocketConnection
         this._handleDisconnect = handleDisconnect.bind(this);
         this._handleGameOver = handleGameOver.bind(this);
         this._handleNextRound = handleNextRound.bind(this);
+        this._handlePlayerDisconnect = handlePlayerDisconnect.bind(this);
         this._handlePlayersScore = handlePlayersScore.bind(this);
         this._handleRoundCalculate = handleRoundCalculate.bind(this);
         this._handleRoundResult = handleRoundResult.bind(this);
