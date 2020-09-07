@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { EVENTS } from 'types/lib/backgammon';
+import { GAME_EVENTS } from 'types/lib/game';
 
 export enum NOTIFICATION {
     WHITE_PLAYER = 'WHITE_PLAYER',
     BLACK_PLAYER = 'BLACK_PLAYER',
 }
 
-type NotificationType = NOTIFICATION | EVENTS;
+type NotificationType = NOTIFICATION | EVENTS | GAME_EVENTS;
 
 interface Notification {
     type: string | NotificationType;

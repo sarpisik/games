@@ -168,6 +168,12 @@ const socket: () => Middleware = () => {
         s.dispatch(setNotification(data));
     };
 
+    const onGameNotification = (s: typeof store) => (message: string) => {
+        s.dispatch(
+            setNotification({ type: GAME_EVENTS.NOTIFICATION, message })
+        );
+    };
+
     const onStageOver = (s: typeof store) => (data: EmitScore) => {
         const { game, user } = s.getState();
         const message = createWinnerMessage(game, user, data).concat(
@@ -263,6 +269,11 @@ const socket: () => Middleware = () => {
                     connection.on(GAME_EVENTS.UNDO_ROUND, onUndoRound(store));
                     // @ts-ignore
                     connection.on(GAME_EVENTS.GAME_OVER, onGameOver(store));
+                    connection.on(
+                        GAME_EVENTS.NOTIFICATION,
+                        // @ts-ignore
+                        onGameNotification(store)
+                    );
                     break;
 
                 case EVENTS.JOIN_ROOM:
