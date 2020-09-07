@@ -94,6 +94,49 @@ describe('calculateAvailableTriangleExist', () => {
             });
         });
 
+        it('should return false in collectable mode', (done) => {
+            _params.layout = Array(24)
+                .fill([PLAYERS.NONE, 0])
+                .map((t, i) => {
+                    switch (i) {
+                        // Black points
+                        case 0: // 1st triangle from blacks area
+                            return [PLAYERS.BLACK, 2];
+                        case 1: // 2nd triangle from blacks area
+                            return [PLAYERS.BLACK, 3];
+                        case 2: // 3rd triangle from blacks area
+                            return [PLAYERS.BLACK, 3];
+                        case 3: // 4th triangle from blacks area
+                            return [PLAYERS.BLACK, 2];
+                        case 4: // 5th triangle from blacks area
+                            return [PLAYERS.BLACK, 1];
+                        case 15:
+                            return [PLAYERS.BLACK, 1];
+                        case 23: // 1st triangle from whites area
+                            return [PLAYERS.BLACK, 2];
+                        case 22: // 2nd triangle from whites area
+                            return [PLAYERS.BLACK, 1];
+
+                        // Delete the rest black points
+                        case 21: // 3th triangle from whites area
+                            return [PLAYERS.WHITE, 7];
+                        case 20: // 4th triangle from whites area
+                            return [PLAYERS.WHITE, 4];
+                        case 18: // 6th triangle from whites area
+                            return [PLAYERS.WHITE, 4];
+
+                        default:
+                            return t;
+                    }
+                });
+            _params.dice = [5];
+            _params.player = PLAYERS.WHITE;
+            calculateAvailableTriangleExist(_params).then((result) => {
+                expect(result).toBeFalse();
+                done();
+            });
+        });
+
         it('should return true in collectable mode and no opponent points.', (done) => {
             _params.layout = layout.map((t, i) => {
                 switch (i) {

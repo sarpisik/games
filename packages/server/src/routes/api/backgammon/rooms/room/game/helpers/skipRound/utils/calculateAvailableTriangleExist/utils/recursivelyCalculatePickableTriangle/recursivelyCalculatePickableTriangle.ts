@@ -35,7 +35,7 @@ export default async function recursivelyCalculatePickableTriangle(
         // Quit falsy if...
         else if (
             // we have doubled dices and...
-            dices[0] === dices[1] &&
+            (dices[0] === dices[1] || dices.length === 1) &&
             // from current triangle we can not play.
             i + dices[0] === limit
         ) {
