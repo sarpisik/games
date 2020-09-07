@@ -16,6 +16,8 @@ export default function handlePlayerDisconnect(
     ) as typeof this.players[keyof typeof this.players][];
     const disconnectedPlayer = players.find((p) => p?.id === userId);
 
+    // If should break, handle scores.
+    // Else, run timer.
     if (!disconnectedPlayer || secondsLeft < 1) {
         this._status = 'UNINITIALIZED';
         const winnerPlayer = players.find((p) => p?.id !== userId);
