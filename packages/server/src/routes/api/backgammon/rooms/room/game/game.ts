@@ -27,6 +27,7 @@ import {
     withBreakTimer,
 } from './methods';
 import { Round } from './round';
+import logger from '@shared/Logger';
 
 /*
  * TODO:
@@ -140,6 +141,10 @@ export default class BackgammonGame extends SocketConnection
                     self.players[PLAYERS.BLACK] &&
                     self.players[PLAYERS.WHITE]
             );
+            const shouldContinue = Boolean(
+                self._status === 'INITIALIZED' &&
+                    (self.players[PLAYERS.BLACK] || self.players[PLAYERS.WHITE])
+            );
 
             socket.emit(
                 GAME_EVENTS.JOIN_GAME,
@@ -150,6 +155,38 @@ export default class BackgammonGame extends SocketConnection
             );
 
             if (shouldInitialize) self._initializeGame();
+            else if (shouldContinue) {
+                const user = self._users.get(clientId);
+                if (user) {
+                    logger.info(`Reconnected client is ${user.name}`);
+
+                    const isEmptySpot = !(
+                        self.players[PLAYERS.WHITE] &&
+                        self.players[PLAYERS.BLACK]
+                    );
+                    if (isEmptySpot) {
+                        const emptyPlayerSpot = self.players[PLAYERS.WHITE]
+                            ? PLAYERS.BLACK
+                            : PLAYERS.WHITE;
+                        self.players[emptyPlayerSpot] = user;
+                    }
+
+                    // Send game in again within updated players
+                    socket.emit(
+                        GAME_EVENTS.JOIN_GAME,
+                        EMIT_GAME_KEYS.reduce((game, key) => {
+                            game[key] = self[key];
+                            return game;
+                        }, {} as Record<keyof EmitGame, EmitGame[keyof EmitGame]>)
+                    );
+
+                    // TODO: control if the last round done.
+                    self._emitNamespace(
+                        GAME_EVENTS.ROUND,
+                        self.rounds[self.rounds.length - 1]
+                    );
+                }
+            }
 
             socket.on(
                 GAME_EVENTS.ROUND,

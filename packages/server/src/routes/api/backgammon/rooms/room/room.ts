@@ -69,11 +69,8 @@ export default class BackgammonRoom extends SocketConnection
 
             if (!game) socket.emit(ROOM_EVENTS.GAME_NOT_FOUND, data.id);
             else {
-                const duration = data.duration;
                 await customPromise(() => {
-                    Object.assign(game, data, {
-                        timer: generatePlayersObj(duration, duration),
-                    });
+                    Object.assign(game, data);
                 });
                 const parsedGame = this._parseGame(game);
                 const payload: OnEditGame = await customPromise(() =>

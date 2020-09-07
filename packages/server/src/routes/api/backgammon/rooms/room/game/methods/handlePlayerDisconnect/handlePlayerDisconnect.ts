@@ -20,40 +20,43 @@ export default function handlePlayerDisconnect(
     // If user come backs, break timer.
     // ELse if, timeout, handle scores.
     // Else, continue timer.
-    if (disconnectedPlayer) this._tRef && clearTimeout(this._tRef);
-    else if (secondsLeft < 1) {
-        this._status = 'UNINITIALIZED';
-        const winnerPlayer = players.find((p) => p?.id !== id);
+    if (disconnectedPlayer) return;
+    else {
+        this._tRef && clearTimeout(this._tRef);
+        if (secondsLeft < 1) {
+            this._status = 'UNINITIALIZED';
+            const winnerPlayer = players.find((p) => p?.id !== id);
 
-        // Winner
-        if (winnerPlayer) {
-            const winner =
-                this.players[PLAYERS.BLACK]?.id === winnerPlayer.id
-                    ? PLAYERS.BLACK
-                    : PLAYERS.WHITE;
-            const emitStageOver: EmitStageOver = { winner };
+            // Winner
+            if (winnerPlayer) {
+                const winner =
+                    this.players[PLAYERS.BLACK]?.id === winnerPlayer.id
+                        ? PLAYERS.BLACK
+                        : PLAYERS.WHITE;
+                const emitStageOver: EmitStageOver = { winner };
 
-            // Notify client
-            this._emitNamespace(GAME_EVENTS.GAME_OVER, emitStageOver);
+                // Notify client
+                this._emitNamespace(GAME_EVENTS.GAME_OVER, emitStageOver);
 
-            // Handle winner score
-            this._updatePlayerScore('WIN', winnerPlayer.id, SCORES.WINNER);
-        } else
-            logger.error(
-                'Winner player update score failed because of disconnected.'
+                // Handle winner score
+                this._updatePlayerScore('WIN', winnerPlayer.id, SCORES.WINNER);
+            } else
+                logger.error(
+                    'Winner player update score failed because of disconnected.'
+                );
+
+            // Escape
+            this._updatePlayerScore('ESCAPE', id, SCORES.ESCAPE);
+        } else {
+            this._emitNamespace(
+                GAME_EVENTS.NOTIFICATION,
+                createMessage(name, secondsLeft)
             );
 
-        // Escape
-        this._updatePlayerScore('ESCAPE', id, SCORES.ESCAPE);
-    } else {
-        this._emitNamespace(
-            GAME_EVENTS.NOTIFICATION,
-            createMessage(name, secondsLeft)
-        );
-
-        this._tRef = setTimeout(() => {
-            this._handlePlayerDisconnect(user, secondsLeft - 1);
-        }, ONE_SECOND);
+            this._tRef = setTimeout(() => {
+                this._handlePlayerDisconnect(user, secondsLeft - 1);
+            }, ONE_SECOND);
+        }
     }
 }
 

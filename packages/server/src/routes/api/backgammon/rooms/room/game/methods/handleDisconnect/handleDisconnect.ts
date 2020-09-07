@@ -3,6 +3,7 @@ import { PLAYERS } from '@shared-types/backgammon';
 import { GAME_EVENTS } from '@shared-types/game';
 import BackgammonGame from '../../game';
 import { checkIsPlayer, deletePlayer } from './utils';
+import logger from '@shared/Logger';
 
 export default function handleDisconnect(
     this: BackgammonGame,
@@ -25,7 +26,7 @@ export default function handleDisconnect(
 
             // Delete client from the users list.
             connectedUsers.delete(clientId);
-
+            logger.info(`disconnected user ${name}`);
             // Broadcast disconnected client.
             socket.broadcast.emit(GAME_EVENTS.DISCONNECT_USER, name);
 
