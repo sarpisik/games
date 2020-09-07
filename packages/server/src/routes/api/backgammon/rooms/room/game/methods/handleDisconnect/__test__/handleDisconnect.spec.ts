@@ -6,7 +6,10 @@ import { GAME_EVENTS } from '@shared-types/game';
 import { PLAYERS } from '@shared-types/backgammon';
 
 describe('handleDisconnect', () => {
-    let backgammonGame: Pick<BackgammonGame, 'id' | 'players' | '_users'> & {
+    let backgammonGame: Pick<
+            BackgammonGame,
+            'id' | 'players' | '_users' | '_status'
+        > & {
             _resetGame: jasmine.Spy<jasmine.Func>;
         },
         clientId: string,
@@ -19,6 +22,7 @@ describe('handleDisconnect', () => {
             players: generatePlayersObj(null, null),
             _users: new Map(),
             _resetGame: jasmine.createSpy(),
+            _status: 'OVER',
         };
         clientId = 'a-unique-client-id';
         socket = { broadcast: { emit: jasmine.createSpy() } };
@@ -82,6 +86,50 @@ describe('handleDisconnect', () => {
             players
         );
         expect(socket.broadcast.emit).toHaveBeenCalledTimes(2);
+        expect(disconnectCb).toHaveBeenCalledWith(backgammonGame.id);
+    });
+
+    it('should delete player from connected users list and but not from players list if game is not over.', () => {
+        // Game is not over
+        backgammonGame._status = 'INITIALIZED';
+
+        // register to users list
+        const [whitePlayer, blackPlayer] = [
+            {
+                id: 'white-player-id',
+                name: 'Mock User',
+                email: 'mock_user@example.com',
+            },
+            {
+                id: 'black-player-id',
+                name: 'Mock User Black',
+                email: 'mock_user_black@example.com',
+            },
+        ];
+        // @ts-ignore
+        backgammonGame._users.set(clientId, whitePlayer);
+        // @ts-ignore
+        backgammonGame._users.set('black-layer-client-id', blackPlayer);
+        // register user as player
+        backgammonGame.players[PLAYERS.WHITE] = whitePlayer;
+        backgammonGame.players[PLAYERS.BLACK] = blackPlayer;
+        // result players
+        const players = generatePlayersObj(blackPlayer, whitePlayer);
+
+        // @ts-ignore
+        handleDisconnect.call(backgammonGame, clientId, socket, disconnectCb)();
+
+        expect(backgammonGame.players).toEqual(players);
+        expect(backgammonGame._users.has(clientId)).toBeFalsy();
+
+        // // User disconnected events.
+        // expect(socket.broadcast.emit).toHaveBeenCalledTimes(1);
+        // expect(socket.broadcast.emit).toHaveBeenCalledWith(
+        //     GAME_EVENTS.DISCONNECT_USER,
+        //     whitePlayer.name
+        // );
+
+        expect(backgammonGame._resetGame).toHaveBeenCalledTimes(0);
         expect(disconnectCb).toHaveBeenCalledWith(backgammonGame.id);
     });
 });

@@ -32,16 +32,28 @@ export default function handleDisconnect(
 
             // If disconnected user was one of the players...
             if (wasPlayer) {
-                // Delete the player.
-                deletePlayer(userId, players);
+                const gameNotOver = self._status === 'INITIALIZED';
+                if (gameNotOver) {
+                    // TODO: call disconnect timer.
+                    // // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // // @ts-ignore
+                    // self._handleDisconnectPlayer(socket);
+                } else {
+                    // Delete the player.
+                    deletePlayer(userId, players);
 
-                // Reset game if no players left.
-                Boolean(
-                    self.players[PLAYERS.BLACK] || self.players[PLAYERS.WHITE]
-                ) || self._resetGame();
+                    // Reset game if no players left.
+                    Boolean(
+                        self.players[PLAYERS.BLACK] ||
+                            self.players[PLAYERS.WHITE]
+                    ) || self._resetGame();
 
-                // Notify the game users.
-                socket.broadcast.emit(GAME_EVENTS.DISCONNECT_PLAYER, players);
+                    // Notify the game users.
+                    socket.broadcast.emit(
+                        GAME_EVENTS.DISCONNECT_PLAYER,
+                        players
+                    );
+                }
 
                 // Notify the room users.
                 disconnectCb(self.id);
