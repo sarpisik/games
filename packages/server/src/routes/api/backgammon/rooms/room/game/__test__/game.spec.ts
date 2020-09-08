@@ -8,7 +8,7 @@ describe('BackgammonGame', () => {
         const duration = 60;
 
         const io = jasmine.createSpyObj('io', ['of']);
-        const ofSpy = jasmine.createSpyObj('of', ['use', 'on']);
+        const ofSpy = jasmine.createSpyObj('of', ['use', 'on', 'emit']);
         (io.of as jasmine.Spy).and.callFake(() => ofSpy);
 
         const disconnectCb = jasmine.createSpy();

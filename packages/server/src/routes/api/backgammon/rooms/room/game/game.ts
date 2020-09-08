@@ -1,8 +1,10 @@
 import { GameServerSide, PLAYERS } from '@shared-types/backgammon';
 import { EmitGame, GAME_EVENTS } from '@shared-types/game';
 import { generateBackgammonGamePath } from '@shared-types/helpers';
+import logger from '@shared/Logger';
 import { UserApi } from '@shared/userApi';
 import { SocketConnection } from '../../shared/socketConnection';
+import { reduceGameProps } from './helpers';
 import {
     emitNamespace,
     emitNextRound,
@@ -27,14 +29,13 @@ import {
     withBreakTimer,
 } from './methods';
 import { Round } from './round';
-import logger from '@shared/Logger';
 
 /*
  * TODO:
  * - [x] reset game on both players disconnected.
  * - [x] handle restart game event.
  * - [] Bug, auto timer start on restart game.
- * - [] Handle player escapes.
+ * - [x] Handle player escapes.
  */
 
 type User = Exclude<
@@ -146,13 +147,7 @@ export default class BackgammonGame extends SocketConnection
                     (self.players[PLAYERS.BLACK] || self.players[PLAYERS.WHITE])
             );
 
-            socket.emit(
-                GAME_EVENTS.JOIN_GAME,
-                EMIT_GAME_KEYS.reduce((game, key) => {
-                    game[key] = self[key];
-                    return game;
-                }, {} as Record<keyof EmitGame, EmitGame[keyof EmitGame]>)
-            );
+            socket.emit(GAME_EVENTS.JOIN_GAME, reduceGameProps(self));
 
             if (shouldInitialize) self._initializeGame();
             else if (shouldContinue) {
@@ -172,13 +167,7 @@ export default class BackgammonGame extends SocketConnection
                     }
 
                     // Send game in again within updated players
-                    socket.emit(
-                        GAME_EVENTS.JOIN_GAME,
-                        EMIT_GAME_KEYS.reduce((game, key) => {
-                            game[key] = self[key];
-                            return game;
-                        }, {} as Record<keyof EmitGame, EmitGame[keyof EmitGame]>)
-                    );
+                    socket.emit(GAME_EVENTS.JOIN_GAME, reduceGameProps(self));
 
                     // TODO: control if the last round done.
                     self._emitNamespace(

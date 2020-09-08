@@ -6,7 +6,7 @@ describe('BackgammonRoom', () => {
         const roomId = 0;
 
         const io = jasmine.createSpyObj('io', ['of']);
-        const ofSpy = jasmine.createSpyObj('of', ['use', 'on']);
+        const ofSpy = jasmine.createSpyObj('of', ['use', 'on', 'emit']);
         (io.of as jasmine.Spy).and.callFake(() => ofSpy);
 
         const room = new BackgammonRoom(roomId, io);
