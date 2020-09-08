@@ -27,6 +27,7 @@ import {
     undoRound,
     updatePlayerScore,
     withBreakTimer,
+    setStatus,
 } from './methods';
 import { Round } from './round';
 
@@ -84,6 +85,7 @@ export default class BackgammonGame extends SocketConnection
     _recursivelySetShortTimer: typeof recursivelySetShortTimer;
     _recursivelySetTimer: typeof recursivelySetTimer;
     _resetGame: typeof resetGame;
+    _setStatus: typeof setStatus;
     _updatePlayerScore: typeof updatePlayerScore;
     _undoRound: typeof undoRound;
     _withBreakTimer: typeof withBreakTimer;
@@ -115,6 +117,7 @@ export default class BackgammonGame extends SocketConnection
         this._recursivelySetShortTimer = recursivelySetShortTimer.bind(this);
         this._recursivelySetTimer = recursivelySetTimer.bind(this);
         this._resetGame = resetGame.bind(this);
+        this._setStatus = setStatus.bind(this);
         this._updatePlayerScore = updatePlayerScore.bind(this);
         this._undoRound = undoRound.bind(this);
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
