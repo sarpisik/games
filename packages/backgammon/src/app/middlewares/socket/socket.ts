@@ -7,6 +7,7 @@ import {
     EmitStageOver,
     EVENTS,
     GameClient,
+    PLAYERS,
 } from 'types/lib/backgammon';
 import { GAME_EVENTS } from 'types/lib/game';
 import { EmitJoinRooms, OnEditGame, ROOM_EVENTS } from 'types/lib/room';
@@ -20,10 +21,10 @@ import {
     deleteNotification,
     deleteRoomUser,
     deleteRounds,
+    editGame,
     replaceRound,
     setConnectionStatus,
     setGame,
-    editGame,
     setNextStage,
     setNotification,
     setRoom,
@@ -337,10 +338,25 @@ function createWinnerMessage(
     const { id } = user;
     const { players } = game;
     const { winner } = data;
-    const shouldWinner = players[winner]?.id === id;
-    const message = shouldWinner ? 'Congratulations! You won!' : 'You lose!';
+    const playersList = Object.values(players) as Array<
+        typeof players[keyof typeof players]
+    >;
+    const userIsPlayer = playersList.some((_p) => _p?.id === id);
+    const shouldWinner = userIsPlayer && players[winner]?.id === id;
 
-    return message;
+    // User is a player
+    if (userIsPlayer) {
+        const message = shouldWinner
+            ? 'Congratulations! You won!'
+            : 'You lose!';
+
+        return message.concat(
+            '\nYou can click"Restart Game" on top bar to restart the game.'
+        );
+    }
+
+    // User is a guest.
+    return `Game Over.\nThe winner is ${PLAYERS[winner]} player.`;
 }
 
 function calculateIsRoundPlayer(
