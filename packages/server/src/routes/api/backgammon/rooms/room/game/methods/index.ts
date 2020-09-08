@@ -16,6 +16,7 @@ export { initializeRound } from './initializeRound';
 export { recursivelySetShortTimer } from './recursivelySetShortTimer';
 export { recursivelySetTimer } from './recursivelySetTimer';
 export { resetGame } from './resetGame';
+export { restartGame } from './restartGame';
 export { setStatus } from './setStatus';
 export { undoRound } from './undoRound';
 export { updatePlayerScore } from './updatePlayerScore';

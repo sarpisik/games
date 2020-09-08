@@ -11,6 +11,7 @@ const initialState: GameClient = {
     rounds: [],
     duration: 0,
     timer: generatePlayers(0, 0),
+    status: 'UNINITIALIZED',
 };
 
 export const gameSlice = createSlice({
@@ -48,6 +49,7 @@ export const gameSlice = createSlice({
             const round = action.payload;
             round.availableTriangles = [];
             state.rounds.push(round);
+            state.status = 'INITIALIZED';
         },
         editRound(state, action: PayloadAction<GameClient['rounds'][number]>) {
             const round = action.payload;

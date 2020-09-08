@@ -1,12 +1,12 @@
 import React from 'react';
 import { useUndoHistory } from '../../../../app/slices';
 
-export default function Undo(): React.ReactElement {
-    const [isUndo, undoHistory] = useUndoHistory();
+export default function Undo() {
+    const [isUndo, status, undoHistory] = useUndoHistory();
 
-    return (
+    return status === 'INITIALIZED' ? (
         <button disabled={!isUndo} onClick={undoHistory}>
             undo
         </button>
-    );
+    ) : null;
 }

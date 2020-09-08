@@ -1,5 +1,5 @@
 import { GameServerSide, PLAYERS } from '@shared-types/backgammon';
-import { EmitGame, GAME_EVENTS } from '@shared-types/game';
+import { GAME_EVENTS } from '@shared-types/game';
 import { generateBackgammonGamePath } from '@shared-types/helpers';
 import logger from '@shared/Logger';
 import { UserApi } from '@shared/userApi';
@@ -24,10 +24,11 @@ import {
     recursivelySetShortTimer,
     recursivelySetTimer,
     resetGame,
+    restartGame,
+    setStatus,
     undoRound,
     updatePlayerScore,
     withBreakTimer,
-    setStatus,
 } from './methods';
 import { Round } from './round';
 
@@ -38,21 +39,6 @@ import { Round } from './round';
  * - [] Bug, auto timer start on restart game.
  * - [x] Handle player escapes.
  */
-
-type User = Exclude<
-    GameServerSide['players'][keyof GameServerSide['players']],
-    null
->;
-
-const EMIT_GAME_KEYS: (keyof EmitGame)[] = [
-    'duration',
-    'id',
-    'players',
-    'rounds',
-    'score',
-    'stages',
-    'timer',
-];
 
 export default class BackgammonGame extends SocketConnection
     implements GameServerSide {
@@ -85,6 +71,7 @@ export default class BackgammonGame extends SocketConnection
     _recursivelySetShortTimer: typeof recursivelySetShortTimer;
     _recursivelySetTimer: typeof recursivelySetTimer;
     _resetGame: typeof resetGame;
+    _restartGame: typeof restartGame;
     _setStatus: typeof setStatus;
     _updatePlayerScore: typeof updatePlayerScore;
     _undoRound: typeof undoRound;
@@ -117,6 +104,7 @@ export default class BackgammonGame extends SocketConnection
         this._recursivelySetShortTimer = recursivelySetShortTimer.bind(this);
         this._recursivelySetTimer = recursivelySetTimer.bind(this);
         this._resetGame = resetGame.bind(this);
+        this._restartGame = restartGame.bind(this);
         this._setStatus = setStatus.bind(this);
         this._updatePlayerScore = updatePlayerScore.bind(this);
         this._undoRound = undoRound.bind(this);
@@ -196,6 +184,7 @@ export default class BackgammonGame extends SocketConnection
                 self._withBreakTimer(self._handleCollectPoint).bind(self)
             );
             socket.on(GAME_EVENTS.UNDO_ROUND, self._handleUndoRound.bind(self));
+            socket.on(GAME_EVENTS.RESTART_GAME, self._restartGame.bind(self));
 
             // Disconnect event
             socket.on(

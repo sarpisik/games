@@ -36,6 +36,7 @@ export interface EmitBase {
 export interface GameClient extends Omit<Game, "rounds"> {
     isRoundPlayer: boolean;
     rounds: GameClientRound[];
+    status: "INITIALIZED" | "UNINITIALIZED" | "OVER";
 }
 
 interface GameClientRound extends Round {

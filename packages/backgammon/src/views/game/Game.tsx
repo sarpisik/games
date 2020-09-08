@@ -9,6 +9,7 @@ import {
     Timer,
     Undo,
     withGameConnection,
+    RestartGame,
 } from './components';
 import { useDynamicLayout } from './hooks';
 
@@ -28,6 +29,8 @@ function Game(_props: RouteComponentProps) {
                 <Timer />
                 <hr />
                 <Undo />
+                <hr />
+                <RestartGame />
             </Sidebar>
         </div>
     );

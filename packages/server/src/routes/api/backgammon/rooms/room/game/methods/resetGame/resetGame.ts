@@ -4,7 +4,7 @@ import { GAME_EVENTS } from '@shared-types/game';
 
 export default function resetGame(this: BackgammonGame) {
     // Reset game server side
-    this._status = 'UNINITIALIZED';
+    this._setStatus('UNINITIALIZED');
     this.duration = this.duration || 60;
     this.players = generatePlayersObj(null, null);
     this.timer = generatePlayersObj(this.duration, this.duration);

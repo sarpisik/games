@@ -24,7 +24,7 @@ export default function handlePlayerDisconnect(
     else {
         this._tRef && clearTimeout(this._tRef);
         if (secondsLeft < 1) {
-            this._status = 'UNINITIALIZED';
+            this._setStatus('OVER');
             const winnerPlayer = players.find((p) => {
                 if (p) return p.id !== id;
                 return false;
