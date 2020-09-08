@@ -25,10 +25,18 @@ export default function handlePlayerDisconnect(
         this._tRef && clearTimeout(this._tRef);
         if (secondsLeft < 1) {
             this._status = 'UNINITIALIZED';
-            const winnerPlayer = players.find((p) => p?.id !== id);
+            const winnerPlayer = players.find((p) => {
+                if (p) return p.id !== id;
+                return false;
+            });
+
+            logger.info(`Escaped player's name is ${name} and the id: ${id}.`);
 
             // Winner
             if (winnerPlayer) {
+                logger.info(
+                    `Winner player's name is ${winnerPlayer.name} and the id ${winnerPlayer.id}.`
+                );
                 const winner =
                     this.players[PLAYERS.BLACK]?.id === winnerPlayer.id
                         ? PLAYERS.BLACK
