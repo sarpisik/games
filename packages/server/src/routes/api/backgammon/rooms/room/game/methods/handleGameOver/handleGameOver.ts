@@ -1,10 +1,10 @@
-import { EmitStageOver } from '@shared-types/backgammon';
+import { EmitScore } from '@shared-types/backgammon';
 import { GAME_EVENTS } from '@shared-types/game';
 import BackgammonGame from '../../game';
 
 export default function handleGameOver(
     this: BackgammonGame,
-    payload: EmitStageOver
+    payload: EmitScore
 ) {
     this._status = 'UNINITIALIZED';
 

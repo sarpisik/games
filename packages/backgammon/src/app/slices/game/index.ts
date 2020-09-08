@@ -5,7 +5,6 @@ export {
     replaceRound,
     resetCurrentRoundLayout,
     editGame,
-    setNextStage,
     setRoundPlayer,
     setTimer,
     undoRound,

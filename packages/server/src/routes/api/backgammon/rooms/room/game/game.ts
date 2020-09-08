@@ -147,7 +147,7 @@ export default class BackgammonGame extends SocketConnection
                     (self.players[PLAYERS.BLACK] || self.players[PLAYERS.WHITE])
             );
 
-            socket.emit(GAME_EVENTS.JOIN_GAME, reduceGameProps(self));
+            self._emitNamespace(GAME_EVENTS.JOIN_GAME, reduceGameProps(self));
 
             if (shouldInitialize) self._initializeGame();
             else if (shouldContinue) {
@@ -167,7 +167,10 @@ export default class BackgammonGame extends SocketConnection
                     }
 
                     // Send game in again within updated players
-                    socket.emit(GAME_EVENTS.JOIN_GAME, reduceGameProps(self));
+                    self._emitNamespace(
+                        GAME_EVENTS.JOIN_GAME,
+                        reduceGameProps(self)
+                    );
 
                     // TODO: control if the last round done.
                     self._emitNamespace(

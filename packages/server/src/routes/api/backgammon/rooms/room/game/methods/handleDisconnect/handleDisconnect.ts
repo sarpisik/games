@@ -26,7 +26,7 @@ export default function handleDisconnect(
 
             // Delete client from the users list.
             connectedUsers.delete(clientId);
-            logger.info(`disconnected user ${name}`);
+            logger.info(`disconnected user ${name} by id: ${id}`);
             // Broadcast disconnected client.
             socket.broadcast.emit(GAME_EVENTS.DISCONNECT_USER, name);
 
@@ -43,13 +43,10 @@ export default function handleDisconnect(
                         self.players[PLAYERS.BLACK] ||
                             self.players[PLAYERS.WHITE]
                     ) || self._resetGame();
-
-                    // Notify the game users.
-                    socket.broadcast.emit(
-                        GAME_EVENTS.DISCONNECT_PLAYER,
-                        players
-                    );
                 }
+
+                // Update players list client side.
+                socket.broadcast.emit(GAME_EVENTS.DISCONNECT_PLAYER, players);
 
                 // Notify the room users.
                 disconnectCb(self.id);

@@ -21,12 +21,10 @@ import {
     addRound,
     deleteNotification,
     deleteRoomUser,
-    deleteRounds,
     editGame,
     replaceRound,
     setConnectionStatus,
     setGame,
-    setNextStage,
     setNotification,
     setRoom,
     setRooms,
@@ -177,20 +175,22 @@ const socket: () => Middleware = () => {
 
     const onStageOver = (s: typeof store) => (data: EmitScore) => {
         const { game, user } = s.getState();
-        const message = createWinnerMessage(game, user, data).concat(
+        const { winner, ..._game } = data;
+        const message = createWinnerMessage(game, user, winner).concat(
             ' Preparing the next stage.'
         );
 
         s.dispatch(setNotification({ type: EVENTS.STAGE_OVER, message }));
-        s.dispatch(setNextStage(data));
+        s.dispatch(editGame(_game));
     };
 
-    const onGameOver = (s: typeof store) => (data: EmitGameOver) => {
+    const onGameOver = (s: typeof store) => (data: EmitScore) => {
         const { game, user } = s.getState();
-        const message = createWinnerMessage(game, user, data);
+        const { winner, ..._game } = data;
+        const message = createWinnerMessage(game, user, winner);
 
         s.dispatch(setNotification({ type: EVENTS.GAME_OVER, message }));
-        s.dispatch(deleteRounds());
+        s.dispatch(editGame(_game));
     };
 
     return (store) => (next) => (action) => {
@@ -334,11 +334,10 @@ export default socket();
 function createWinnerMessage(
     game: Game,
     user: User,
-    data: EmitStageOver | EmitGameOver
+    winner: (EmitStageOver | EmitGameOver)['winner']
 ): string {
     const { id } = user;
     const { players } = game;
-    const { winner } = data;
     const playersList = Object.values(players) as Array<
         typeof players[keyof typeof players]
     >;

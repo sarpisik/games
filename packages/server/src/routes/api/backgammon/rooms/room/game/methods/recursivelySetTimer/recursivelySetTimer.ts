@@ -16,7 +16,12 @@ export default async function recursivelySetTimer(
         if (this.timer[roundPlayer] < 1) {
             // Exit loop on game over.
             const winner = OPPONENT[roundPlayer];
-            this._handleGameOver({ winner });
+            this.score[winner] = this.stages;
+            this._handleGameOver({
+                winner,
+                score: this.score,
+                stages: this.stages,
+            });
         } else {
             this._emitNamespace(GAME_EVENTS.TIMER, this.timer);
 

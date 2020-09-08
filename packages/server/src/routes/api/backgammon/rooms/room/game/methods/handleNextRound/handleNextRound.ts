@@ -20,18 +20,22 @@ export default async function handleNextRound(
     ]);
 
     if (shouldStageOver) {
-        const { winner } = shouldStageOver;
+        const payload = shouldStageOver as EmitScore;
+        const { winner } = payload;
+
         const shouldMars = await calculateMars(winner, round.collected);
         const winnerPoint = shouldMars ? 2 : 1;
         this.score[winner] += winnerPoint;
 
+        payload.score = this.score;
+        payload.stages = this.stages;
+
         const shouldGameOver = await calculateGameOver(this.stages, this.score);
 
-        if (shouldGameOver) this._handleGameOver(shouldStageOver);
+        if (shouldGameOver) this._handleGameOver(payload);
         else {
-            const payload = shouldStageOver as EmitScore;
-            payload.score = this.score;
-            payload.stages = this.stages;
+            this.rounds = [];
+            payload.rounds = this.rounds;
             this._emitNamespace(GAME_EVENTS.STAGE_OVER, payload);
 
             setTimeout(() => {
