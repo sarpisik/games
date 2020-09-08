@@ -19,6 +19,7 @@ describe('handlePlayerDisconnect', () => {
     let backgammonGame: {
         _emitNamespace: jasmine.Spy<jasmine.Func>;
         _updatePlayerScore: jasmine.Spy<jasmine.Func>;
+        _setStatus: jasmine.Spy<jasmine.Func>;
         _handlePlayerDisconnect: (
             userId: Pick<User, 'id' | 'name'>,
             secondsLeft?: number
@@ -49,6 +50,7 @@ describe('handlePlayerDisconnect', () => {
         backgammonGame = {
             _emitNamespace: jasmine.createSpy(),
             _updatePlayerScore: jasmine.createSpy(),
+            _setStatus: jasmine.createSpy(),
             _handlePlayerDisconnect: jasmine.createSpy(),
             players,
             _status: 'INITIALIZED',
@@ -104,13 +106,15 @@ describe('handlePlayerDisconnect', () => {
         };
         delete backgammonGame.players[PLAYERS.BLACK];
         const winner = PLAYERS.WHITE;
-        const status = 'UNINITIALIZED';
+        const status = 'OVER';
         const winnerId = backgammonGame.players[winner].id;
 
         // @ts-ignore
         handlePlayerDisconnect.call(backgammonGame, disconnedtedPlayer, 0);
 
-        expect(backgammonGame._status).toBe(status);
+        // Game status
+        expect(backgammonGame._setStatus).toHaveBeenCalledWith(status);
+        expect(backgammonGame._setStatus).toHaveBeenCalledTimes(1);
 
         // Notification
         expect(
@@ -140,13 +144,15 @@ describe('handlePlayerDisconnect', () => {
         };
         delete backgammonGame.players[PLAYERS.WHITE];
         const winner = PLAYERS.BLACK;
-        const status = 'UNINITIALIZED';
+        const status = 'OVER';
         const winnerId = backgammonGame.players[winner].id;
 
         // @ts-ignore
         handlePlayerDisconnect.call(backgammonGame, disconnedtedPlayer, 0);
 
-        expect(backgammonGame._status).toBe(status);
+        // Game status
+        expect(backgammonGame._setStatus).toHaveBeenCalledWith(status);
+        expect(backgammonGame._setStatus).toHaveBeenCalledTimes(1);
 
         // Notification
         expect(

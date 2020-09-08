@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { SCORES } from '../../../constants';
-import { updatePlayerScore, Params } from '../updatePlayerScore';
+import updatePlayerScore, { Params } from '../updatePlayerScore';
 import { GameInput } from '@shared-backgammon/src/API';
 
 describe('updatePlayerScore', () => {

@@ -8,12 +8,13 @@ import { GAME_EVENTS } from '@shared-types/game';
 describe('resetGame', () => {
     let backgammonGame: Pick<
         BackgammonGame,
-        'id' | '_status' | 'duration' | 'timer' | 'stages' | 'score' | 'rounds'
+        'id' | 'duration' | 'timer' | 'stages' | 'score' | 'rounds'
     > & {
         players: {
             [key in Round['player']]: { id: number } | null;
         };
         _emitNamespace: jasmine.Spy<jasmine.Func>;
+        _setStatus: jasmine.Spy<jasmine.Func>;
     };
 
     beforeEach(() => {
@@ -22,7 +23,7 @@ describe('resetGame', () => {
         backgammonGame = {
             id: 1,
             _emitNamespace: jasmine.createSpy(),
-            _status: 'OVER',
+            _setStatus: jasmine.createSpy(),
             duration,
             players: generatePlayersObj(
                 { id: Date.now() },
@@ -39,7 +40,8 @@ describe('resetGame', () => {
         // @ts-ignore
         resetGame.call(backgammonGame);
 
-        expect(backgammonGame._status).toBe('UNINITIALIZED');
+        expect(backgammonGame._setStatus).toHaveBeenCalledWith('UNINITIALIZED');
+        expect(backgammonGame._setStatus).toHaveBeenCalledTimes(1);
         expect(backgammonGame.duration).toBe(120);
         expect(backgammonGame.players).toEqual(generatePlayersObj(null, null));
         expect(backgammonGame.timer).toEqual(generatePlayersObj(120, 120));
@@ -61,7 +63,8 @@ describe('resetGame', () => {
         // @ts-ignore
         resetGame.call(backgammonGame);
 
-        expect(backgammonGame._status).toBe('UNINITIALIZED');
+        expect(backgammonGame._setStatus).toHaveBeenCalledWith('UNINITIALIZED');
+        expect(backgammonGame._setStatus).toHaveBeenCalledTimes(1);
         expect(backgammonGame.duration).toBe(60);
         expect(backgammonGame.players).toEqual(generatePlayersObj(null, null));
         expect(backgammonGame.timer).toEqual(generatePlayersObj(60, 60));

@@ -8,6 +8,7 @@ describe('initializeGame', () => {
         const backgammonGame = {
             _status: '',
             _initializeRound: jasmine.createSpy(),
+            _setStatus: jasmine.createSpy(),
         };
         const roundPlayer = PLAYERS.WHITE;
 
@@ -15,7 +16,8 @@ describe('initializeGame', () => {
         // @ts-ignore
         initializeGame.call(backgammonGame, roundPlayer);
 
-        expect(backgammonGame._status).toBe('INITIALIZED');
+        expect(backgammonGame._setStatus).toHaveBeenCalledWith('INITIALIZED');
+        expect(backgammonGame._setStatus).toHaveBeenCalledTimes(1);
         expect(backgammonGame._initializeRound).toHaveBeenCalledWith(
             roundPlayer
         );

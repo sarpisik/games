@@ -1,10 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import {
-    EmitScore,
-    EmitStageOver,
-    OPPONENT,
-    PLAYERS,
-} from '@shared-types/backgammon';
+import { EmitScore, OPPONENT, PLAYERS } from '@shared-types/backgammon';
 import { GAME_EVENTS } from '@shared-types/game';
 import { layout } from '../../../constants';
 import BackgammonGame from '../../../game';
@@ -96,6 +91,7 @@ describe('handleNextRound', () => {
             winner: roundPlayer,
             score: generatePlayersObj(0, 2), //Mars
             stages: backgammonGame.stages,
+            rounds: [],
         };
 
         backgammonGame._initializeGame = async (winner) => {
@@ -122,6 +118,7 @@ describe('handleNextRound', () => {
             winner: roundPlayer,
             score: generatePlayersObj(0, 1),
             stages: backgammonGame.stages,
+            rounds: [],
         };
 
         backgammonGame._initializeGame = async (winner) => {
@@ -145,8 +142,10 @@ describe('handleNextRound', () => {
         // Update score
         backgammonGame.score[roundPlayer] = backgammonGame.stages - 2;
 
-        const payload: EmitStageOver = {
+        const payload: EmitScore = {
             winner: roundPlayer,
+            score: generatePlayersObj(0, 3),
+            stages: backgammonGame.stages,
         };
 
         // @ts-ignore

@@ -6,7 +6,10 @@ import { generatePlayersObj } from '../../../helpers';
 import recursivelySetTimer from '../recursivelySetTimer';
 
 describe('recursivelySetTimer', () => {
-    let backgammonGame: Pick<BackgammonGame, '_t' | '_tRef' | 'timer'> & {
+    let backgammonGame: Pick<
+            BackgammonGame,
+            '_t' | '_tRef' | 'timer' | 'score' | 'stages'
+        > & {
             _handleGameOver: jasmine.Spy<jasmine.Func>;
             _emitNamespace: jasmine.Spy<jasmine.Func>;
             _recursivelySetTimer: (
@@ -20,6 +23,8 @@ describe('recursivelySetTimer', () => {
         backgammonGame = {
             _t: player,
             timer: generatePlayersObj(60, 60),
+            score: generatePlayersObj(0, 0),
+            stages: 3,
             _emitNamespace: jasmine.createSpy(),
             _handleGameOver: jasmine.createSpy(),
             _recursivelySetTimer: jasmine.createSpy(),
@@ -66,6 +71,8 @@ describe('recursivelySetTimer', () => {
             expect(backgammonGame._handleGameOver).toHaveBeenCalledTimes(1);
             expect(backgammonGame._handleGameOver).toHaveBeenCalledWith({
                 winner: PLAYERS.WHITE,
+                score: generatePlayersObj(0, backgammonGame.stages),
+                stages: backgammonGame.stages,
             });
             expect(backgammonGame._recursivelySetTimer).toHaveBeenCalledTimes(
                 0
