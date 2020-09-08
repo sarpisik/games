@@ -1,16 +1,22 @@
 import BackgammonGame from '../../game';
 import { User } from '@shared-backgammon/src/types/user';
 import logger from '@shared/Logger';
+import withResetGame from './withResetGame/withResetGame';
 
 type ACTION = 'WIN' | 'LOSE' | 'ESCAPE';
 
-export default async function updatePlayerScore(
-    this: BackgammonGame,
-    action: ACTION,
-    playerId: User['id'],
-    _score: number
-) {
+export interface Params {
+    action: ACTION;
+    playerId: User['id'];
+    _score: number;
+}
+
+export default withResetGame(updatePlayerScore);
+
+// Export itself for testing
+export async function updatePlayerScore(this: BackgammonGame, params: Params) {
     try {
+        const { action, playerId, _score } = params;
         const response = await this._userApi.fetchUser(playerId);
         const user = response.data?.getUser;
 

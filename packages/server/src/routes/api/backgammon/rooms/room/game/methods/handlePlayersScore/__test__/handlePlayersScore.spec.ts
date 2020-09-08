@@ -41,15 +41,15 @@ describe('handlePlayersScore', () => {
         handlePlayersScore.call(backgammonGame, winner);
 
         expect(backgammonGame._updatePlayerScore).toHaveBeenCalledTimes(2);
-        expect(backgammonGame._updatePlayerScore).toHaveBeenCalledWith(
-            'WIN',
-            winnerId,
-            winnerScore
-        );
-        expect(backgammonGame._updatePlayerScore).toHaveBeenCalledWith(
-            'LOSE',
-            loserId,
-            loserScore
-        );
+        expect(backgammonGame._updatePlayerScore).toHaveBeenCalledWith({
+            action: 'WIN',
+            playerId: winnerId,
+            _score: winnerScore,
+        });
+        expect(backgammonGame._updatePlayerScore).toHaveBeenCalledWith({
+            action: 'LOSE',
+            playerId: loserId,
+            _score: loserScore,
+        });
     });
 });

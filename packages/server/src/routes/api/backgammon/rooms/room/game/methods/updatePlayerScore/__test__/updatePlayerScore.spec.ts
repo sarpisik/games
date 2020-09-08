@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { SCORES } from '../../../constants';
-import updatePlayerScore from '../updatePlayerScore';
+import { updatePlayerScore, Params } from '../updatePlayerScore';
 import { GameInput } from '@shared-backgammon/src/API';
-
-type UpdatePlayerScore = Parameters<typeof updatePlayerScore>;
 
 describe('updatePlayerScore', () => {
     let backgammonGame: {
@@ -12,9 +10,7 @@ describe('updatePlayerScore', () => {
                 updateUser: jasmine.Spy<jasmine.Func>;
             };
         },
-        action: UpdatePlayerScore[0],
-        playerId: UpdatePlayerScore[1],
-        _score: UpdatePlayerScore[2],
+        params: Params,
         response: { data: { getUser: { id: string; backgammon: GameInput } } };
 
     beforeEach(() => {
@@ -24,9 +20,11 @@ describe('updatePlayerScore', () => {
                 updateUser: jasmine.createSpy(),
             },
         };
-        action = 'WIN';
-        playerId = '1';
-        _score = SCORES.WINNER;
+        params = {
+            action: 'WIN',
+            playerId: '1',
+            _score: SCORES.WINNER,
+        };
         response = {
             data: {
                 getUser: {
@@ -47,7 +45,7 @@ describe('updatePlayerScore', () => {
 
         updatePlayerScore
             // @ts-ignore
-            .call(backgammonGame, action, playerId, _score)
+            .call(backgammonGame, params)
             .then(() => {
                 expect(
                     backgammonGame._userApi.updateUser
@@ -58,10 +56,12 @@ describe('updatePlayerScore', () => {
 
     it('throws error when invalid "action" parameter passed', (done) => {
         backgammonGame._userApi.fetchUser.and.returnValue(response);
+        // @ts-ignore
+        params.action = '';
 
         updatePlayerScore
             // @ts-ignore
-            .call(backgammonGame, '', playerId, _score)
+            .call(backgammonGame, params)
             .then(() => {
                 expect(
                     backgammonGame._userApi.updateUser
@@ -82,7 +82,7 @@ describe('updatePlayerScore', () => {
 
         updatePlayerScore
             // @ts-ignore
-            .call(backgammonGame, action, playerId, _score)
+            .call(backgammonGame, params)
             .then(() => {
                 expect(
                     backgammonGame._userApi.updateUser
@@ -98,6 +98,8 @@ describe('updatePlayerScore', () => {
         SCORES[SCORES.LOSER]
     }" and updates the user in db`, (done) => {
         backgammonGame._userApi.fetchUser.and.returnValue(response);
+        params.action = 'LOSE';
+        params._score = SCORES.LOSER;
         const backgammon = Object.assign({}, response.data.getUser.backgammon, {
             score: 790,
             loses: 11,
@@ -106,7 +108,7 @@ describe('updatePlayerScore', () => {
 
         updatePlayerScore
             // @ts-ignore
-            .call(backgammonGame, 'LOSE', playerId, SCORES.LOSER)
+            .call(backgammonGame, params)
             .then(() => {
                 expect(
                     backgammonGame._userApi.updateUser
@@ -122,6 +124,8 @@ describe('updatePlayerScore', () => {
         SCORES[SCORES.ESCAPE]
     }" and updates the user in db`, (done) => {
         backgammonGame._userApi.fetchUser.and.returnValue(response);
+        params.action = 'ESCAPE';
+        params._score = SCORES.ESCAPE;
         const backgammon = Object.assign({}, response.data.getUser.backgammon, {
             score: 775,
             escapes: 11,
@@ -130,7 +134,7 @@ describe('updatePlayerScore', () => {
 
         updatePlayerScore
             // @ts-ignore
-            .call(backgammonGame, 'ESCAPE', playerId, SCORES.ESCAPE)
+            .call(backgammonGame, params)
             .then(() => {
                 expect(
                     backgammonGame._userApi.updateUser

@@ -39,14 +39,22 @@ export default function handlePlayerDisconnect(
                 this._emitNamespace(GAME_EVENTS.GAME_OVER, emitStageOver);
 
                 // Handle winner score
-                this._updatePlayerScore('WIN', winnerPlayer.id, SCORES.WINNER);
+                this._updatePlayerScore({
+                    action: 'WIN',
+                    playerId: winnerPlayer.id,
+                    _score: SCORES.WINNER,
+                });
             } else
                 logger.error(
                     'Winner player update score failed because of disconnected.'
                 );
 
             // Escape
-            this._updatePlayerScore('ESCAPE', id, SCORES.ESCAPE);
+            this._updatePlayerScore({
+                action: 'ESCAPE',
+                playerId: id,
+                _score: SCORES.ESCAPE,
+            });
         } else {
             this._emitNamespace(
                 GAME_EVENTS.NOTIFICATION,

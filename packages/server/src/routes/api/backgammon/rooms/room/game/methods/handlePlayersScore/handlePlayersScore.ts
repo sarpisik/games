@@ -13,6 +13,14 @@ export default function handlePlayersScore(
     const winnerId = (this.players[winner] as User).id;
     const loserId = (this.players[OPPONENT[winner]] as User).id;
 
-    this._updatePlayerScore('WIN', winnerId, winnerScore);
-    this._updatePlayerScore('LOSE', loserId, SCORES.LOSER);
+    this._updatePlayerScore({
+        action: 'WIN',
+        playerId: winnerId,
+        _score: winnerScore,
+    });
+    this._updatePlayerScore({
+        action: 'LOSE',
+        playerId: loserId,
+        _score: SCORES.LOSER,
+    });
 }

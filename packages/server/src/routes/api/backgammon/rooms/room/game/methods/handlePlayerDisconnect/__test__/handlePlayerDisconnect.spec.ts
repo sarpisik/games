@@ -31,6 +31,16 @@ describe('handlePlayerDisconnect', () => {
         _tRef?: BackgammonGame['_tRef'];
     };
 
+    const createUpdateParams = (
+        action: string,
+        playerId: string,
+        _score: number
+    ) => ({
+        action,
+        playerId,
+        _score,
+    });
+
     beforeEach(() => {
         const players = generatePlayersObj(
             { id: '54321', name: 'black-player', email: 'test@example.com' },
@@ -110,16 +120,12 @@ describe('handlePlayerDisconnect', () => {
 
         // Win
         expect(backgammonGame._updatePlayerScore).toHaveBeenCalledWith(
-            'WIN',
-            winnerId,
-            SCORES.WINNER
+            createUpdateParams('WIN', winnerId, SCORES.WINNER)
         );
 
         // Escape
         expect(backgammonGame._updatePlayerScore).toHaveBeenCalledWith(
-            'ESCAPE',
-            disconnedtedPlayer.id,
-            SCORES.ESCAPE
+            createUpdateParams('ESCAPE', disconnedtedPlayer.id, SCORES.ESCAPE)
         );
 
         expect(backgammonGame._updatePlayerScore).toHaveBeenCalledTimes(2);
@@ -150,16 +156,12 @@ describe('handlePlayerDisconnect', () => {
 
         // Win
         expect(backgammonGame._updatePlayerScore).toHaveBeenCalledWith(
-            'WIN',
-            winnerId,
-            SCORES.WINNER
+            createUpdateParams('WIN', winnerId, SCORES.WINNER)
         );
 
         // Escape
         expect(backgammonGame._updatePlayerScore).toHaveBeenCalledWith(
-            'ESCAPE',
-            disconnedtedPlayer.id,
-            SCORES.ESCAPE
+            createUpdateParams('ESCAPE', disconnedtedPlayer.id, SCORES.ESCAPE)
         );
 
         expect(backgammonGame._updatePlayerScore).toHaveBeenCalledTimes(2);
@@ -181,9 +183,7 @@ describe('handlePlayerDisconnect', () => {
 
         // Escape
         expect(backgammonGame._updatePlayerScore).toHaveBeenCalledWith(
-            'ESCAPE',
-            disconnedtedPlayer.id,
-            SCORES.ESCAPE
+            createUpdateParams('ESCAPE', disconnedtedPlayer.id, SCORES.ESCAPE)
         );
 
         expect(backgammonGame._updatePlayerScore).toHaveBeenCalledTimes(1);
