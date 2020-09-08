@@ -8,6 +8,7 @@ import {
     EVENTS,
     GameClient,
     PLAYERS,
+    OPPONENT,
 } from 'types/lib/backgammon';
 import { GAME_EVENTS } from 'types/lib/game';
 import { EmitJoinRooms, OnEditGame, ROOM_EVENTS } from 'types/lib/room';
@@ -350,9 +351,16 @@ function createWinnerMessage(
             ? 'Congratulations! You won!'
             : 'You lose!';
 
-        return message.concat(
+        const restartMessage = message.concat(
             '\nYou can click"Restart Game" on top bar to restart the game.'
         );
+
+        if (shouldWinner) {
+            const opponentExist = Boolean(players[OPPONENT[winner]]);
+            return opponentExist ? restartMessage : message;
+        }
+
+        return restartMessage;
     }
 
     // User is a guest.
