@@ -39,6 +39,7 @@ export interface GameClient extends Omit<Game, "rounds"> {
 
 interface GameClientRound extends Round {
     availableTriangles: number[];
+    loading: boolean;
 }
 
 export interface GameServerSide extends Game {

@@ -49,6 +49,16 @@ export const gameSlice = createSlice({
             round.availableTriangles = [];
             state.rounds.push(round);
         },
+        editRound(state, action: PayloadAction<GameClient['rounds'][number]>) {
+            const round = action.payload;
+            const rounds = state.rounds;
+            for (const _r of rounds) {
+                if (_r.id === round.id) {
+                    Object.assign(_r, round);
+                    break;
+                }
+            }
+        },
         setNextStage(state, action: PayloadAction<EmitScore>) {
             const { score, stages } = action.payload;
             state.score = score;
@@ -74,6 +84,7 @@ export const gameSlice = createSlice({
 
 export const {
     addRound,
+    editRound,
     deleteRounds,
     replaceRound,
     resetCurrentRoundLayout,
