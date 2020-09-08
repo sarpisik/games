@@ -23,10 +23,9 @@ import {
     replaceRound,
     setConnectionStatus,
     setGame,
-    setInitialGame,
+    editGame,
     setNextStage,
     setNotification,
-    setPlayers,
     setRoom,
     setRooms,
     setRoundPlayer,
@@ -77,14 +76,14 @@ const socket: () => Middleware = () => {
     };
 
     const onJoinGame = (s: typeof store) => (payload: GameClient) => {
-        s.dispatch(setInitialGame(payload));
+        s.dispatch(editGame(payload));
         s.dispatch(setConnectionStatus(CONNECTION_STATUS.CONNECTED));
     };
 
     const onPlayerDisconnect = (s: typeof store) => (
         players: GameClient['players']
     ) => {
-        s.dispatch(setPlayers({ players }));
+        s.dispatch(editGame({ players }));
     };
 
     const onNewUser = (s: typeof store) => (payload: User) => {

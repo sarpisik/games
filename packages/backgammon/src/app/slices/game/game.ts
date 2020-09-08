@@ -17,23 +17,7 @@ export const gameSlice = createSlice({
     name: 'game',
     initialState,
     reducers: {
-        setInitialGame(state, action: PayloadAction<GameClient>) {
-            const {
-                id,
-                players,
-                stages,
-                score,
-                rounds,
-                timer,
-            } = action.payload;
-            state.id = id;
-            state.players = players;
-            state.rounds = rounds;
-            state.score = score;
-            state.stages = stages;
-            state.timer = timer;
-        },
-        setPlayers(state, action: PayloadAction<Pick<GameClient, 'players'>>) {
+        editGame(state, action: PayloadAction<Partial<GameClient>>) {
             Object.assign(state, action.payload);
         },
         resetCurrentRoundLayout(state) {
@@ -94,9 +78,8 @@ export const {
     replaceRound,
     resetCurrentRoundLayout,
     setAvailableTriangles,
-    setInitialGame,
+    editGame,
     setNextStage,
-    setPlayers,
     setRoundPlayer,
     setTimer,
     undoRound,

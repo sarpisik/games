@@ -4,7 +4,7 @@ import { PLAYERS } from '../../../../../views/game/components/Board/constants';
 import { AppThunk } from '../../../../store';
 import { setNotification } from '../../../notification';
 import { NOTIFICATION } from '../../../notification/notification';
-import { setInitialGame } from '../../game';
+import { editGame } from '../../game';
 
 const setGame: (game: GameClient) => AppThunk = (game) => (
     dispatch,
@@ -18,7 +18,7 @@ const setGame: (game: GameClient) => AppThunk = (game) => (
         const userId = user.id;
 
         // Initialize game
-        dispatch(setInitialGame(game));
+        dispatch(editGame(game));
 
         // Generate notification
         if (players[PLAYERS.WHITE]?.id === userId) {
