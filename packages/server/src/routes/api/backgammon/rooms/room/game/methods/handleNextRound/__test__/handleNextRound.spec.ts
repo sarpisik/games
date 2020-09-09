@@ -7,14 +7,16 @@ import { generatePlayersObj } from '../../../helpers';
 import { Round } from '../../../round';
 import handleNextRound from '../handleNextRound';
 
+type CustomSetStatus = (
+    status: BackgammonGame['_status'],
+    payload: PLAYERS.WHITE | PLAYERS.BLACK | EmitScore
+) => void;
+
 describe('handleNextRound', () => {
     let backgammonGame: Pick<BackgammonGame, 'score' | 'stages'> & {
-            _handleGameOver: jasmine.Spy<jasmine.Func>;
+            _setStatus: jasmine.Spy<jasmine.Func> | CustomSetStatus;
             _emitNamespace: jasmine.Spy<jasmine.Func>;
             _handleNextRound: (round: Round) => Promise<void>;
-            _initializeGame: (
-                roundPlayer: PLAYERS.WHITE | PLAYERS.BLACK
-            ) => void;
 
             _emitNextRound: jasmine.Spy<jasmine.Func>;
         },
@@ -29,9 +31,8 @@ describe('handleNextRound', () => {
             stages: 3,
             _emitNamespace: jasmine.createSpy(),
             _emitNextRound: jasmine.createSpy(),
-            _handleGameOver: jasmine.createSpy(),
+            _setStatus: jasmine.createSpy('_setStatus'),
             _handleNextRound: jasmine.createSpy(),
-            _initializeGame: jasmine.createSpy(),
         };
         round = {
             brokens: generatePlayersObj(0, 0),
@@ -93,16 +94,17 @@ describe('handleNextRound', () => {
             stages: backgammonGame.stages,
             rounds: [],
         };
-
-        backgammonGame._initializeGame = async (winner) => {
+        const _setStatus: CustomSetStatus = async (status, winner) => {
             expect(backgammonGame._emitNamespace).toHaveBeenCalledTimes(1);
             expect(backgammonGame._emitNamespace).toHaveBeenCalledWith(
                 GAME_EVENTS.STAGE_OVER,
                 payload
             );
+            expect(status).toBe('INITIALIZED');
             expect(winner).toBe(roundPlayer);
             done();
         };
+        backgammonGame._setStatus = _setStatus;
 
         // @ts-ignore
         handleNextRound.call(backgammonGame, round);
@@ -121,15 +123,17 @@ describe('handleNextRound', () => {
             rounds: [],
         };
 
-        backgammonGame._initializeGame = async (winner) => {
+        const _setStatus: CustomSetStatus = async (status, winner) => {
             expect(backgammonGame._emitNamespace).toHaveBeenCalledTimes(1);
             expect(backgammonGame._emitNamespace).toHaveBeenCalledWith(
                 GAME_EVENTS.STAGE_OVER,
                 payload
             );
+            expect(status).toBe('INITIALIZED');
             expect(winner).toBe(roundPlayer);
             done();
         };
+        backgammonGame._setStatus = _setStatus;
 
         // @ts-ignore
         handleNextRound.call(backgammonGame, round);
@@ -146,14 +150,16 @@ describe('handleNextRound', () => {
             winner: roundPlayer,
             score: generatePlayersObj(0, 3),
             stages: backgammonGame.stages,
+            rounds: [],
         };
 
         // @ts-ignore
         handleNextRound.call(backgammonGame, round).then(() => {
-            expect(backgammonGame._handleGameOver).toHaveBeenCalledTimes(1);
-            expect(backgammonGame._handleGameOver).toHaveBeenCalledWith(
+            expect(backgammonGame._setStatus).toHaveBeenCalledWith(
+                'OVER',
                 payload
             );
+            expect(backgammonGame._setStatus).toHaveBeenCalledTimes(1);
             done();
         });
     });

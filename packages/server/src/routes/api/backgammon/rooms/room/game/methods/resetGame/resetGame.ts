@@ -2,11 +2,13 @@ import BackgammonGame from '../../game';
 import { generatePlayersObj, reduceGameProps } from '../../helpers';
 import { GAME_EVENTS } from '@shared-types/game';
 
-export default function resetGame(this: BackgammonGame) {
+export default function resetGame(
+    this: BackgammonGame,
+    players: BackgammonGame['players'] = generatePlayersObj(null, null)
+) {
     // Reset game server side
-    this._setStatus('UNINITIALIZED');
     this.duration = this.duration || 60;
-    this.players = generatePlayersObj(null, null);
+    this.players = players;
     this.timer = generatePlayersObj(this.duration, this.duration);
     this.stages = this.stages || 1;
     this.score = generatePlayersObj(0, 0);

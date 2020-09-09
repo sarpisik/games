@@ -8,11 +8,9 @@ describe('handleGameOver', () => {
     it(`should set status to "${STATUS}" and emits "${GAME_EVENTS.GAME_OVER}" event`, () => {
         const _emitNamespace = jasmine.createSpy();
         const _handlePlayersScore = jasmine.createSpy();
-        const _setStatus = jasmine.createSpy();
         const backgammonGame = {
             _status: '',
             _handlePlayersScore,
-            _setStatus,
             _emitNamespace,
         };
         const payload: EmitStageOver = { winner: PLAYERS.BLACK };
@@ -20,9 +18,6 @@ describe('handleGameOver', () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         handleGameOver.call(backgammonGame, payload);
-
-        expect(_setStatus).toHaveBeenCalledTimes(1);
-        expect(_setStatus).toHaveBeenCalledWith('OVER');
 
         expect(_handlePlayersScore).toHaveBeenCalledTimes(1);
         expect(_handlePlayersScore).toHaveBeenCalledWith(payload.winner);

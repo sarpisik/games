@@ -9,6 +9,7 @@ const EMIT_GAME_KEYS: (keyof EmitGame)[] = [
     'score',
     'stages',
     'timer',
+    '_status',
 ];
 
 type Keys = typeof EMIT_GAME_KEYS;

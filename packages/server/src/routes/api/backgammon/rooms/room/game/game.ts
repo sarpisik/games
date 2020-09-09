@@ -1,11 +1,10 @@
-import { GameServerSide, PLAYERS } from '@shared-types/backgammon';
+import { GameServerSide } from '@shared-types/backgammon';
 import { GAME_EVENTS } from '@shared-types/game';
 import { generateBackgammonGamePath } from '@shared-types/helpers';
-import logger from '@shared/Logger';
 import { UserApi } from '@shared/userApi';
 import { SocketConnection } from '../../shared/socketConnection';
-import { reduceGameProps } from './helpers';
 import {
+    emitGameUpdate,
     emitNamespace,
     emitNextRound,
     handleBrokenPoint,
@@ -52,7 +51,8 @@ export default class BackgammonGame extends SocketConnection
     _userApi = new UserApi();
     _t?: GameServerSide['rounds'][number]['player'];
     _tRef?: NodeJS.Timeout;
-    _status!: 'UNINITIALIZED' | 'INITIALIZED' | 'OVER';
+    _status!: 'UNINITIALIZED' | 'INITIALIZED' | 'OVER' | 'START';
+    _emitGameUpdate: typeof emitGameUpdate;
     _emitNamespace: typeof emitNamespace;
     _emitNextRound: typeof emitNextRound;
     _handleBrokenPoint: typeof handleBrokenPoint;
@@ -86,6 +86,7 @@ export default class BackgammonGame extends SocketConnection
         super(_io, generateBackgammonGamePath(_roomId, id));
 
         // methods
+        this._emitGameUpdate = emitGameUpdate.bind(this);
         this._emitNamespace = emitNamespace.bind(this);
         this._emitNextRound = emitNextRound.bind(this);
         this._handleBrokenPoint = handleBrokenPoint.bind(this);
@@ -113,7 +114,7 @@ export default class BackgammonGame extends SocketConnection
         this._withBreakTimer = withBreakTimer.bind(this);
 
         // properties
-        this._resetGame();
+        this._setStatus('UNINITIALIZED');
 
         this._namespace.on(
             'connection',
@@ -127,50 +128,54 @@ export default class BackgammonGame extends SocketConnection
 
         return function _onClientConnection(socket: SocketIO.Socket) {
             const clientId = socket.client.id;
-            const gameUninitialized = self._status === 'UNINITIALIZED';
-            const shouldInitialize = Boolean(
-                gameUninitialized &&
-                    self.players[PLAYERS.BLACK] &&
-                    self.players[PLAYERS.WHITE]
-            );
-            const shouldContinue = Boolean(
-                self._status === 'INITIALIZED' &&
-                    (self.players[PLAYERS.BLACK] || self.players[PLAYERS.WHITE])
-            );
+            // const gameUninitialized = self._status === 'UNINITIALIZED';
+            // const shouldInitialize = Boolean(
+            //     gameUninitialized &&
+            //         self.players[PLAYERS.BLACK] &&
+            //         self.players[PLAYERS.WHITE]
+            // );
+            // const shouldContinue = Boolean(
+            //     self._status === 'INITIALIZED' &&
+            //         (self.players[PLAYERS.BLACK] || self.players[PLAYERS.WHITE])
+            // );
 
-            self._emitNamespace(GAME_EVENTS.JOIN_GAME, reduceGameProps(self));
+            // self._emitNamespace(GAME_EVENTS.JOIN_GAME, reduceGameProps(self));
 
-            if (shouldInitialize) self._initializeGame();
-            else if (shouldContinue) {
-                const user = self._users.get(clientId);
-                if (user) {
-                    logger.info(`Reconnected client is ${user.name}`);
+            // if (shouldInitialize) self._setStatus('INITIALIZED');
+            // else if (shouldContinue) {
+            //     const user = self._users.get(clientId);
+            //     if (user) {
+            //         logger.info(`Reconnected client is ${user.name}`);
 
-                    const isEmptySpot = !(
-                        self.players[PLAYERS.WHITE] &&
-                        self.players[PLAYERS.BLACK]
-                    );
-                    if (isEmptySpot) {
-                        const emptyPlayerSpot = self.players[PLAYERS.WHITE]
-                            ? PLAYERS.BLACK
-                            : PLAYERS.WHITE;
-                        self.players[emptyPlayerSpot] = user;
-                    }
+            //         const isEmptySpot = !(
+            //             self.players[PLAYERS.WHITE] &&
+            //             self.players[PLAYERS.BLACK]
+            //         );
+            //         if (isEmptySpot) {
+            //             const emptyPlayerSpot = self.players[PLAYERS.WHITE]
+            //                 ? PLAYERS.BLACK
+            //                 : PLAYERS.WHITE;
+            //             self.players[emptyPlayerSpot] = user;
+            //         }
 
-                    // Send game in again within updated players
-                    self._emitNamespace(
-                        GAME_EVENTS.JOIN_GAME,
-                        reduceGameProps(self)
-                    );
+            //         // Send game in again within updated players
+            //         self._emitNamespace(
+            //             GAME_EVENTS.JOIN_GAME,
+            //             reduceGameProps(self)
+            //         );
 
-                    // TODO: control if the last round done.
-                    self._emitNamespace(
-                        GAME_EVENTS.ROUND,
-                        self.rounds[self.rounds.length - 1]
-                    );
-                }
-            }
+            //         // TODO: control if the last round done.
+            //         self._emitNamespace(
+            //             GAME_EVENTS.ROUND,
+            //             self.rounds[self.rounds.length - 1]
+            //         );
+            //     }
+            // }
 
+            // socket.on(
+            //     GAME_EVENTS.START_GAME,
+            //     self._withBreakTimer(self._handleGameStart).bind(self)
+            // );
             socket.on(
                 GAME_EVENTS.ROUND,
                 self._withBreakTimer(self._handleRoundCalculate).bind(self)

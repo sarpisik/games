@@ -1,3 +1,4 @@
+export { checkPlayersFull } from './checkPlayersFull';
 export { findRoundById } from './findRoundById';
 export { calculateGameOver } from './gameOver';
 export { generatePlayersObj } from './generatePlayersObj';

@@ -27,19 +27,19 @@ export default async function handleNextRound(
         const winnerPoint = shouldMars ? 2 : 1;
         this.score[winner] += winnerPoint;
 
+        this.rounds = [];
+        payload.rounds = this.rounds;
         payload.score = this.score;
         payload.stages = this.stages;
 
         const shouldGameOver = await calculateGameOver(this.stages, this.score);
 
-        if (shouldGameOver) this._handleGameOver(payload);
+        if (shouldGameOver) this._setStatus('OVER', payload);
         else {
-            this.rounds = [];
-            payload.rounds = this.rounds;
             this._emitNamespace(GAME_EVENTS.STAGE_OVER, payload);
 
             setTimeout(() => {
-                this._initializeGame(winner);
+                this._setStatus('INITIALIZED', winner);
             }, NOTIFY_DURATION);
         }
     } else if (shouldSkipRound) {

@@ -1,3 +1,4 @@
+export { emitGameUpdate } from './emitGameUpdate';
 export { emitNamespace } from './emitNamespace';
 export { emitNextRound } from './emitNextRound';
 export { handleBrokenPoint } from './handleBrokenPoint';
