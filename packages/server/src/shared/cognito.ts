@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import awsConfig from '@shared-backgammon/src/aws-exports';
 import AWS from 'aws-sdk';
 import crypto from 'crypto';
+import logger from './Logger';
+import jwt from 'jsonwebtoken';
 const { aws_cognito_region } = awsConfig;
 
 /*
@@ -19,9 +22,12 @@ export default class Cognito {
             authResult?.AccessToken &&
                 authResult?.ExpiresIn &&
                 authResult?.IdToken &&
-                authResult?.RefreshToken &&
                 authResult?.TokenType
         );
+    }
+    static timeoutSeconds(expiresIn: number) {
+        // Refresh token before token expires.
+        return expiresIn * 0.9;
     }
 
     private config = { region: aws_cognito_region };
@@ -48,18 +54,33 @@ export default class Cognito {
         Cognito.exists = true;
     }
 
-    async signIn() {
+    async signIn(
+        type: 'USER_PASSWORD_AUTH' | 'REFRESH_TOKEN_AUTH' = 'USER_PASSWORD_AUTH'
+    ) {
         try {
             const signInParams = {
                 ClientId: this.clientId,
-                AuthFlow: 'USER_PASSWORD_AUTH',
-                AuthParameters: {
-                    USERNAME: this.username,
-                    PASSWORD: this.password,
-                    SECRET_HASH: this.generateHash(this.username),
-                },
+                AuthFlow: type,
+                AuthParameters: Object.assign(
+                    {
+                        USERNAME: this.username,
+                    },
+                    type === 'USER_PASSWORD_AUTH'
+                        ? {
+                              PASSWORD: this.password,
+                              SECRET_HASH: this.generateHash(this.username),
+                          }
+                        : {
+                              REFRESH_TOKEN: this.refreshToken,
+                              SECRET_HASH: this.generateHash(
+                                  // @ts-ignore
+                                  jwt.decode(this.idToken)['cognito:username']
+                              ),
+                          }
+                ),
             };
             const r = await this.cognitoIdentity
+                // @ts-ignore
                 .initiateAuth(signInParams)
                 .promise();
 
@@ -68,8 +89,17 @@ export default class Cognito {
                 this.accessToken = authResult.AccessToken as string;
                 this.expiresIn = authResult.ExpiresIn as number;
                 this.idToken = authResult.IdToken as string;
-                this.refreshToken = authResult.RefreshToken as string;
                 this.tokenType = authResult.TokenType as string;
+
+                // If this is initial sign in, then received refresh token.
+                // Else, this is response by "REFRESH TOKEN" request
+                if (authResult.RefreshToken)
+                    this.refreshToken = authResult.RefreshToken;
+
+                setTimeout(() => {
+                    logger.info('Refreshing access token.');
+                    this.signIn('REFRESH_TOKEN_AUTH');
+                }, Cognito.timeoutSeconds(this.expiresIn));
             } else throw new Error('Invalid auth response.');
             // // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // // @ts-ignore
