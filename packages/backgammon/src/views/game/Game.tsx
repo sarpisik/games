@@ -3,19 +3,20 @@ import { RouteComponentProps } from 'react-router-dom';
 import { withAuthorization } from '../../components';
 import {
     Board,
+    Buttons,
     RoundBoard,
     ScoreBoard,
     Sidebar,
     Timer,
     Undo,
     withGameConnection,
-    RestartGame,
 } from './components';
-import { useDynamicLayout } from './hooks';
+import { useDynamicLayout, useResetGame } from './hooks';
 
 export default withAuthorization(withGameConnection(Game));
 
 function Game(_props: RouteComponentProps) {
+    useResetGame();
     useDynamicLayout();
 
     return (
@@ -30,7 +31,7 @@ function Game(_props: RouteComponentProps) {
                 <hr />
                 <Undo />
                 <hr />
-                <RestartGame />
+                <Buttons />
             </Sidebar>
         </div>
     );

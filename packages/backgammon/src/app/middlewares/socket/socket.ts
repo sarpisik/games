@@ -3,13 +3,13 @@ import socketIOClient from 'socket.io-client';
 import {
     EmitError,
     EmitGameOver,
+    EmitGameStart,
     EmitScore,
     EmitStageOver,
     EVENTS,
     GameClient,
-    PLAYERS,
     OPPONENT,
-    Round,
+    PLAYERS,
 } from 'types/lib/backgammon';
 import { GAME_EVENTS } from 'types/lib/game';
 import { EmitJoinRooms, OnEditGame, ROOM_EVENTS } from 'types/lib/room';
@@ -77,22 +77,22 @@ const socket: () => Middleware = () => {
     };
 
     const onJoinGame = (s: typeof store) => (payload: GameClient) => {
-        const user = s.getState().user;
-        const game = s.getState().game;
-        const { players } = game;
-        const _players = Object.values(game.players) as Array<
-            typeof players[keyof typeof players]
-        >;
-        const playersFull = _players.every(Boolean);
-        const notVisiter =
-            playersFull && _players.some((p) => p?.id === user.id);
-        s.dispatch(
-            editGame(
-                notVisiter
-                    ? Object.assign(payload, { status: 'INITIAlIZED' })
-                    : payload
-            )
-        );
+        const state = s.getState();
+        const { user } = state;
+        const { _status, players } = payload;
+        const initialized = _status === 'INITIALIZED';
+        const playersFull = Object.values(players).every(Boolean);
+        const isBlackPlayer = players?.[PLAYERS.BLACK]?.id === user.id;
+        const isWhitePlayer = players?.[PLAYERS.WHITE]?.id === user.id;
+        const isPlayer = isBlackPlayer || isWhitePlayer;
+        const shouldResume = initialized && playersFull && isPlayer;
+        if (shouldResume)
+            payload.isRoundPlayer = calculateIsRoundPlayer(
+                user.id,
+                players,
+                isBlackPlayer ? PLAYERS.BLACK : PLAYERS.WHITE
+            );
+        s.dispatch(editGame(payload));
         s.dispatch(setConnectionStatus(CONNECTION_STATUS.CONNECTED));
     };
 
@@ -213,22 +213,6 @@ const socket: () => Middleware = () => {
         s.dispatch(editGame(Object.assign(_game, { status: 'OVER' })));
     };
 
-    const onGameRestart = (s: typeof store) => (player: Round['player']) => {
-        const { game, user } = s.getState();
-        const requestedUser = game.players[player]?.id === user.id;
-        const message = createRestartMessage(game, user, player);
-
-        // Notification
-        s.dispatch(setNotification({ type: EVENTS.GAME_OVER, message }));
-
-        // If we requested restart game, disable restart game button.
-        // Else, render restart game button.
-        const status: typeof game.status = requestedUser
-            ? 'UNINITIALIZED'
-            : 'OVER';
-        s.dispatch(editGame({ status, rounds: [] }));
-    };
-
     return (store) => (next) => (action) => {
         if (typeof action === 'function') {
             action(store.dispatch, store.getState);
@@ -307,11 +291,6 @@ const socket: () => Middleware = () => {
                     // @ts-ignore
                     connection.on(GAME_EVENTS.GAME_OVER, onGameOver(store));
                     connection.on(
-                        GAME_EVENTS.RESTART_GAME,
-                        // @ts-ignore
-                        onGameRestart(store)
-                    );
-                    connection.on(
                         GAME_EVENTS.NOTIFICATION,
                         // @ts-ignore
                         onGameNotification(store)
@@ -361,8 +340,13 @@ const socket: () => Middleware = () => {
                     connection?.emit(EVENTS.UNDO_ROUND, action.payload);
                     break;
 
+                case GAME_EVENTS.START_GAME:
                 case GAME_EVENTS.RESTART_GAME:
-                    connection?.emit(GAME_EVENTS.RESTART_GAME, action.payload);
+                    connection?.emit(
+                        GAME_EVENTS.START_GAME,
+                        action.payload ||
+                            (store.getState().game.players as EmitGameStart)
+                    );
                     break;
 
                 default:
@@ -409,26 +393,6 @@ function createWinnerMessage(
 
     // User is a guest.
     return `Game Over.\nThe winner is ${PLAYERS[winner]} player.`;
-}
-
-function createRestartMessage(
-    game: Game,
-    user: User,
-    _player: Round['player']
-) {
-    const { id } = user;
-    const { players } = game;
-    const playersList = Object.values(players) as Array<
-        typeof players[keyof typeof players]
-    >;
-    const userIsPlayer = playersList.some((_p) => _p?.id === id);
-    const challengerPlayer = players[_player];
-    const challengedPlayer = players[OPPONENT[_player]];
-
-    if (userIsPlayer && challengedPlayer?.id === id)
-        return `Player ${challengerPlayer?.name} challenges you to a new game!`;
-
-    return `Waiting player ${challengedPlayer?.name} to accept game restart.`;
 }
 
 function calculateIsRoundPlayer(

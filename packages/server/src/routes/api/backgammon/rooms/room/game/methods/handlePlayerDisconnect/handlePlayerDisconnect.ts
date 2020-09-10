@@ -20,7 +20,7 @@ export default function handlePlayerDisconnect(
     // If user come backs, break timer.
     // ELse if, timeout, handle scores.
     // Else, continue timer.
-    if (disconnectedPlayer) return;
+    if (disconnectedPlayer) this._emitNamespace(GAME_EVENTS.NOTIFICATION, '');
     else {
         this._tRef && clearTimeout(this._tRef);
         if (secondsLeft < 1) {

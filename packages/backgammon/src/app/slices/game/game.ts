@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { GameClient } from 'types/lib/backgammon';
 import { generatePlayers } from 'types/lib/helpers';
 
-const initialState: GameClient = {
+export const initialState: GameClient = {
     id: -1,
     players: generatePlayers(null, null),
     stages: 0,
@@ -11,7 +11,7 @@ const initialState: GameClient = {
     rounds: [],
     duration: 0,
     timer: generatePlayers(0, 0),
-    status: 'UNINITIALIZED',
+    _status: 'UNINITIALIZED',
 };
 
 export const gameSlice = createSlice({
@@ -49,7 +49,7 @@ export const gameSlice = createSlice({
             const round = action.payload;
             round.availableTriangles = [];
             state.rounds.push(round);
-            state.status = 'INITIALIZED';
+            state._status = 'INITIALIZED';
         },
         editRound(state, action: PayloadAction<GameClient['rounds'][number]>) {
             const round = action.payload;

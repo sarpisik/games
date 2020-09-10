@@ -34,6 +34,7 @@ import {
 } from './methods';
 import { Round } from './round';
 import logger from '@shared/Logger';
+import { checkPlayersFull, checkUserIsPlayer } from './helpers';
 
 /*
  * TODO:
@@ -137,6 +138,18 @@ export default class BackgammonGame extends SocketConnection
             const clientId = socket.client.id;
             const user = self._users.get(clientId);
             logger.info(`Reconnected client is ${user?.name}`);
+
+            const players = self.players;
+            // Player disconnected once and now reconnected,
+            // before disconnect, clear timer and resume the game.
+            if (
+                user &&
+                self._status === 'INITIALIZED' &&
+                checkPlayersFull(players)
+            )
+                checkUserIsPlayer(players, user.id) &&
+                    self._handlePlayerReconnect();
+            else self._emitGameUpdate(GAME_EVENTS.JOIN_GAME);
 
             socket.on(
                 GAME_EVENTS.START_GAME,
