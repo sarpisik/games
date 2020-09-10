@@ -84,48 +84,17 @@ describe('setStatus', () => {
         expect(backgammonGame._emitGameUpdate).toHaveBeenCalledTimes(0);
     });
 
-    it(`dispatch "${GAME_EVENTS.START_GAME}" event on "${GAME_EVENTS.START_GAME}" event if players prop not full.`, (done) => {
+    it(`dispatch "${GAME_EVENTS.START_GAME}" event on "START" start status.`, () => {
         _status = 'START';
-        const payload = { players: generatePlayersObj({ id: '12345' }, null) };
-        const result = reduceGameProps(
-            // @ts-ignore
-            Object.assign({}, backgammonGame, { _status }, payload)
-        );
-
         backgammonGame._status = 'UNINITIALIZED';
-        backgammonGame._emitGameUpdate = function (event: string) {
-            // New status
-            expect(backgammonGame._status).toBe(_status);
-
-            // Dispatch game event
-            expect(event).toBe(GAME_EVENTS.START_GAME);
-            // Ignore missing props for result obj.
-            // @ts-ignore
-            expect(reduceGameProps(this)).toEqual(result);
-            done();
-        };
 
         // @ts-ignore
-        setStatus.call(backgammonGame, _status, payload);
-    });
+        setStatus.call(backgammonGame, _status);
 
-    it(`set status "INITIALIZED" on "${GAME_EVENTS.START_GAME}" event if players prop is full.`, () => {
-        _status = 'INITIALIZED';
-        // Ignore missing props for players obj.
-        // @ts-ignore
-        backgammonGame.players = generatePlayersObj({ id: '12345' }, null);
-        // One of the players already clicked on start game button
-        // so status is "START"
-        backgammonGame._status = 'START';
-        const payload = {
-            players: generatePlayersObj({ id: '12345' }, { id: '54321' }),
-        };
-
-        // @ts-ignore
-        setStatus.call(backgammonGame, backgammonGame._status, payload);
-
-        expect(backgammonGame._setStatus).toHaveBeenCalledWith(_status);
-        expect(backgammonGame._setStatus).toHaveBeenCalledTimes(1);
+        expect(backgammonGame._status).toBe(_status);
+        expect(backgammonGame._emitGameUpdate).toHaveBeenCalledWith(
+            GAME_EVENTS.START_GAME
+        );
     });
 
     it('set status "OVER" and calls "_handleGameOver" method with passed payload.', () => {

@@ -7,6 +7,8 @@ export interface EmitError {
 
 export type EmitGameOver = EmitStageOver;
 
+export type EmitGameStart = Game["players"];
+
 export type EmitScore = EmitStageOver &
     Pick<Game, "score" | "stages"> & { rounds?: Game["rounds"] };
 
@@ -57,7 +59,7 @@ export interface Game {
     duration: number;
     timer: PlayersMap;
     rounds: Round[];
-    _status: 'UNINITIALIZED' | 'INITIALIZED' | 'OVER' | 'START';
+    _status: "UNINITIALIZED" | "INITIALIZED" | "OVER" | "START";
 }
 
 interface UsersMap {

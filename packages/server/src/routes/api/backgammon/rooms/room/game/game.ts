@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { GameServerSide } from '@shared-types/backgammon';
 import { GAME_EVENTS } from '@shared-types/game';
 import { generateBackgammonGamePath } from '@shared-types/helpers';
@@ -11,8 +12,10 @@ import {
     handleCollectPoint,
     handleDisconnect,
     handleGameOver,
+    handleGameStart,
     handleNextRound,
     handlePlayerDisconnect,
+    handlePlayerReconnect,
     handlePlayersScore,
     handleRoundCalculate,
     handleRoundResult,
@@ -30,6 +33,7 @@ import {
     withBreakTimer,
 } from './methods';
 import { Round } from './round';
+import logger from '@shared/Logger';
 
 /*
  * TODO:
@@ -59,8 +63,10 @@ export default class BackgammonGame extends SocketConnection
     _handleCollectPoint: typeof handleCollectPoint;
     _handleDisconnect: typeof handleDisconnect;
     _handleGameOver: typeof handleGameOver;
+    _handleGameStart: typeof handleGameStart;
     _handleNextRound: typeof handleNextRound;
     _handlePlayerDisconnect: typeof handlePlayerDisconnect;
+    _handlePlayerReconnect: typeof handlePlayerReconnect;
     _handlePlayersScore: typeof handlePlayersScore;
     _handleRoundCalculate: typeof handleRoundCalculate;
     _handleRoundResult: typeof handleRoundResult;
@@ -93,8 +99,10 @@ export default class BackgammonGame extends SocketConnection
         this._handleCollectPoint = handleCollectPoint.bind(this);
         this._handleDisconnect = handleDisconnect.bind(this);
         this._handleGameOver = handleGameOver.bind(this);
+        this._handleGameStart = handleGameStart.bind(this);
         this._handleNextRound = handleNextRound.bind(this);
         this._handlePlayerDisconnect = handlePlayerDisconnect.bind(this);
+        this._handlePlayerReconnect = handlePlayerReconnect.bind(this);
         this._handlePlayersScore = handlePlayersScore.bind(this);
         this._handleRoundCalculate = handleRoundCalculate.bind(this);
         this._handleRoundResult = handleRoundResult.bind(this);
@@ -109,7 +117,6 @@ export default class BackgammonGame extends SocketConnection
         this._setStatus = setStatus.bind(this);
         this._updatePlayerScore = updatePlayerScore.bind(this);
         this._undoRound = undoRound.bind(this);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this._withBreakTimer = withBreakTimer.bind(this);
 
@@ -128,54 +135,14 @@ export default class BackgammonGame extends SocketConnection
 
         return function _onClientConnection(socket: SocketIO.Socket) {
             const clientId = socket.client.id;
-            // const gameUninitialized = self._status === 'UNINITIALIZED';
-            // const shouldInitialize = Boolean(
-            //     gameUninitialized &&
-            //         self.players[PLAYERS.BLACK] &&
-            //         self.players[PLAYERS.WHITE]
-            // );
-            // const shouldContinue = Boolean(
-            //     self._status === 'INITIALIZED' &&
-            //         (self.players[PLAYERS.BLACK] || self.players[PLAYERS.WHITE])
-            // );
+            const user = self._users.get(clientId);
+            logger.info(`Reconnected client is ${user?.name}`);
 
-            // self._emitNamespace(GAME_EVENTS.JOIN_GAME, reduceGameProps(self));
-
-            // if (shouldInitialize) self._setStatus('INITIALIZED');
-            // else if (shouldContinue) {
-            //     const user = self._users.get(clientId);
-            //     if (user) {
-            //         logger.info(`Reconnected client is ${user.name}`);
-
-            //         const isEmptySpot = !(
-            //             self.players[PLAYERS.WHITE] &&
-            //             self.players[PLAYERS.BLACK]
-            //         );
-            //         if (isEmptySpot) {
-            //             const emptyPlayerSpot = self.players[PLAYERS.WHITE]
-            //                 ? PLAYERS.BLACK
-            //                 : PLAYERS.WHITE;
-            //             self.players[emptyPlayerSpot] = user;
-            //         }
-
-            //         // Send game in again within updated players
-            //         self._emitNamespace(
-            //             GAME_EVENTS.JOIN_GAME,
-            //             reduceGameProps(self)
-            //         );
-
-            //         // TODO: control if the last round done.
-            //         self._emitNamespace(
-            //             GAME_EVENTS.ROUND,
-            //             self.rounds[self.rounds.length - 1]
-            //         );
-            //     }
-            // }
-
-            // socket.on(
-            //     GAME_EVENTS.START_GAME,
-            //     self._withBreakTimer(self._handleGameStart).bind(self)
-            // );
+            socket.on(
+                GAME_EVENTS.START_GAME,
+                // @ts-ignore
+                self._withBreakTimer(self._handleGameStart).bind(self)
+            );
             socket.on(
                 GAME_EVENTS.ROUND,
                 self._withBreakTimer(self._handleRoundCalculate).bind(self)
