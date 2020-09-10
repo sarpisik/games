@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { User } from '@shared-backgammon/src/types/user';
+import { EmitGameOver, PLAYERS } from '@shared-types/backgammon';
+import { ONE_SECOND } from '@shared-types/constants';
 import { GAME_EVENTS } from '@shared-types/game';
+import BackgammonGame from '../../../game';
+import { generatePlayersObj } from '../../../helpers';
 import handlePlayerDisconnect, {
     createMessage,
 } from '../handlePlayerDisconnect';
-import BackgammonGame from '../../../game';
-import { generatePlayersObj } from '../../../helpers';
-import { PLAYERS } from '@shared-types/backgammon';
-import { SCORES } from '../../../constants';
-import { ONE_SECOND } from '@shared-types/constants';
 
 type Player = Exclude<
     BackgammonGame['players'][keyof BackgammonGame['players']],
@@ -18,7 +17,6 @@ type Player = Exclude<
 describe('handlePlayerDisconnect', () => {
     let backgammonGame: {
         _emitNamespace: jasmine.Spy<jasmine.Func>;
-        _updatePlayerScore: jasmine.Spy<jasmine.Func>;
         _setStatus: jasmine.Spy<jasmine.Func>;
         _handlePlayerDisconnect: (
             userId: Pick<User, 'id' | 'name'>,
@@ -48,16 +46,17 @@ describe('handlePlayerDisconnect', () => {
             { id: '12345', name: 'white-player', email: 'test@example.com' }
         );
         backgammonGame = {
-            _emitNamespace: jasmine.createSpy(),
-            _updatePlayerScore: jasmine.createSpy(),
-            _setStatus: jasmine.createSpy(),
-            _handlePlayerDisconnect: jasmine.createSpy(),
+            _emitNamespace: jasmine.createSpy('_emitNamespace'),
+            _setStatus: jasmine.createSpy('_setStatus'),
+            _handlePlayerDisconnect: jasmine.createSpy(
+                '_handlePlayerDisconnect'
+            ),
             players,
             _status: 'INITIALIZED',
         };
     });
 
-    it(`does not nothing when disconnected player connects back.`, () => {
+    it(`does emits event when disconnected player reconnects.`, () => {
         const disconnedtedPlayer = {
             id: backgammonGame.players[PLAYERS.BLACK].id,
             name: backgammonGame.players[PLAYERS.BLACK].name,
@@ -67,31 +66,14 @@ describe('handlePlayerDisconnect', () => {
         handlePlayerDisconnect.call(backgammonGame, disconnedtedPlayer);
 
         // Notification
-        expect(backgammonGame._emitNamespace).toHaveBeenCalledTimes(0);
+        expect(backgammonGame._emitNamespace).toHaveBeenCalledWith(
+            GAME_EVENTS.NOTIFICATION,
+            ''
+        );
+        expect(backgammonGame._emitNamespace).toHaveBeenCalledTimes(1);
 
         // Calculation
-        expect(backgammonGame._updatePlayerScore).toHaveBeenCalledTimes(0);
-
-        // recursion
-        expect(backgammonGame._handlePlayerDisconnect).toHaveBeenCalledTimes(0);
-    });
-
-    it(`clears timeout when disconnected player connects back.`, () => {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        backgammonGame._tRef = setTimeout(() => {}, ONE_SECOND);
-        const disconnedtedPlayer = {
-            id: backgammonGame.players[PLAYERS.BLACK].id,
-            name: backgammonGame.players[PLAYERS.BLACK].name,
-        };
-
-        // @ts-ignore
-        handlePlayerDisconnect.call(backgammonGame, disconnedtedPlayer);
-
-        // Notification
-        expect(backgammonGame._emitNamespace).toHaveBeenCalledTimes(0);
-
-        // Calculation
-        expect(backgammonGame._updatePlayerScore).toHaveBeenCalledTimes(0);
+        expect(backgammonGame._setStatus).toHaveBeenCalledTimes(0);
 
         // recursion
         expect(backgammonGame._handlePlayerDisconnect).toHaveBeenCalledTimes(0);
@@ -107,32 +89,14 @@ describe('handlePlayerDisconnect', () => {
         delete backgammonGame.players[PLAYERS.BLACK];
         const winner = PLAYERS.WHITE;
         const status = 'OVER';
-        const winnerId = backgammonGame.players[winner].id;
+        const payload: EmitGameOver = { winner, lose: disconnedtedPlayer.id };
 
         // @ts-ignore
         handlePlayerDisconnect.call(backgammonGame, disconnedtedPlayer, 0);
 
         // Game status
-        expect(backgammonGame._setStatus).toHaveBeenCalledWith(status);
+        expect(backgammonGame._setStatus).toHaveBeenCalledWith(status, payload);
         expect(backgammonGame._setStatus).toHaveBeenCalledTimes(1);
-
-        // Notification
-        expect(
-            backgammonGame._emitNamespace
-        ).toHaveBeenCalledWith(GAME_EVENTS.GAME_OVER, { winner });
-        expect(backgammonGame._emitNamespace).toHaveBeenCalledTimes(1);
-
-        // Win
-        expect(backgammonGame._updatePlayerScore).toHaveBeenCalledWith(
-            createUpdateParams('WIN', winnerId, SCORES.WINNER)
-        );
-
-        // Escape
-        expect(backgammonGame._updatePlayerScore).toHaveBeenCalledWith(
-            createUpdateParams('ESCAPE', disconnedtedPlayer.id, SCORES.ESCAPE)
-        );
-
-        expect(backgammonGame._updatePlayerScore).toHaveBeenCalledTimes(2);
     });
 
     it(`handles game over if the disconnected player does not exist and timeout. Winner is "${
@@ -145,54 +109,14 @@ describe('handlePlayerDisconnect', () => {
         delete backgammonGame.players[PLAYERS.WHITE];
         const winner = PLAYERS.BLACK;
         const status = 'OVER';
-        const winnerId = backgammonGame.players[winner].id;
+        const payload: EmitGameOver = { winner, lose: disconnedtedPlayer.id };
 
         // @ts-ignore
         handlePlayerDisconnect.call(backgammonGame, disconnedtedPlayer, 0);
 
         // Game status
-        expect(backgammonGame._setStatus).toHaveBeenCalledWith(status);
+        expect(backgammonGame._setStatus).toHaveBeenCalledWith(status, payload);
         expect(backgammonGame._setStatus).toHaveBeenCalledTimes(1);
-
-        // Notification
-        expect(
-            backgammonGame._emitNamespace
-        ).toHaveBeenCalledWith(GAME_EVENTS.GAME_OVER, { winner });
-        expect(backgammonGame._emitNamespace).toHaveBeenCalledTimes(1);
-
-        // Win
-        expect(backgammonGame._updatePlayerScore).toHaveBeenCalledWith(
-            createUpdateParams('WIN', winnerId, SCORES.WINNER)
-        );
-
-        // Escape
-        expect(backgammonGame._updatePlayerScore).toHaveBeenCalledWith(
-            createUpdateParams('ESCAPE', disconnedtedPlayer.id, SCORES.ESCAPE)
-        );
-
-        expect(backgammonGame._updatePlayerScore).toHaveBeenCalledTimes(2);
-    });
-
-    it(`handles game over if the disconnected player and winner player are do not exist and timeout`, () => {
-        const disconnedtedPlayer = {
-            id: backgammonGame.players[PLAYERS.WHITE].id,
-            name: backgammonGame.players[PLAYERS.WHITE].name,
-        };
-        delete backgammonGame.players[PLAYERS.BLACK];
-        delete backgammonGame.players[PLAYERS.WHITE];
-
-        // @ts-ignore
-        handlePlayerDisconnect.call(backgammonGame, disconnedtedPlayer, 0);
-
-        // Notification
-        expect(backgammonGame._emitNamespace).toHaveBeenCalledTimes(0);
-
-        // Escape
-        expect(backgammonGame._updatePlayerScore).toHaveBeenCalledWith(
-            createUpdateParams('ESCAPE', disconnedtedPlayer.id, SCORES.ESCAPE)
-        );
-
-        expect(backgammonGame._updatePlayerScore).toHaveBeenCalledTimes(1);
     });
 
     it(`emits "${GAME_EVENTS.NOTIFICATION}" event for "${

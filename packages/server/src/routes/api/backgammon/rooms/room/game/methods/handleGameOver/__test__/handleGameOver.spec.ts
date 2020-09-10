@@ -20,7 +20,7 @@ describe('handleGameOver', () => {
         handleGameOver.call(backgammonGame, payload);
 
         expect(_handlePlayersScore).toHaveBeenCalledTimes(1);
-        expect(_handlePlayersScore).toHaveBeenCalledWith(payload.winner);
+        expect(_handlePlayersScore).toHaveBeenCalledWith(payload);
 
         expect(_emitNamespace).toHaveBeenCalledTimes(1);
         expect(_emitNamespace).toHaveBeenCalledWith(

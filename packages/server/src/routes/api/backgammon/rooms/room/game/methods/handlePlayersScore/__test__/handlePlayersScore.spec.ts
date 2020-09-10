@@ -38,7 +38,7 @@ describe('handlePlayersScore', () => {
         const loserScore = SCORES.LOSER;
         // Ignore missing attirubtes of BackgammonGame
         // @ts-ignore
-        handlePlayersScore.call(backgammonGame, winner);
+        handlePlayersScore.call(backgammonGame, { winner });
 
         expect(backgammonGame._updatePlayerScore).toHaveBeenCalledTimes(2);
         expect(backgammonGame._updatePlayerScore).toHaveBeenCalledWith({
