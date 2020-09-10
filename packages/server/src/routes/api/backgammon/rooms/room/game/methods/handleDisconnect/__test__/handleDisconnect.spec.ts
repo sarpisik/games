@@ -12,6 +12,7 @@ describe('handleDisconnect', () => {
         > & {
             _resetGame: jasmine.Spy<jasmine.Func>;
             _handlePlayerDisconnect: jasmine.Spy<jasmine.Func>;
+            _setStatus: jasmine.Spy<jasmine.Func>;
         },
         clientId: string,
         socket: { broadcast: { emit: jasmine.Spy<jasmine.Func> } },
@@ -24,6 +25,7 @@ describe('handleDisconnect', () => {
             _users: new Map(),
             _resetGame: jasmine.createSpy(),
             _handlePlayerDisconnect: jasmine.createSpy(),
+            _setStatus: jasmine.createSpy('_setStatus'),
             _status: 'OVER',
         };
         clientId = 'a-unique-client-id';
@@ -58,7 +60,7 @@ describe('handleDisconnect', () => {
         expect(disconnectCb).toHaveBeenCalledTimes(0);
     });
 
-    it('should delete player from connected users list and players list.', () => {
+    it('should delete player from connected users list and players list when game status is "UNINITIALIZED".', () => {
         // register to users list
         const mockUser = {
             id: Date.now().toString(),
@@ -77,21 +79,22 @@ describe('handleDisconnect', () => {
 
         expect(backgammonGame.players).toEqual(players);
         expect(backgammonGame._users.has(clientId)).toBeFalsy();
+
         expect(socket.broadcast.emit).toHaveBeenCalledWith(
             GAME_EVENTS.DISCONNECT_USER,
             mockUser.name
         );
-        expect(backgammonGame._resetGame).toHaveBeenCalledTimes(1);
-        expect(backgammonGame._resetGame).toHaveBeenCalledWith();
-        expect(socket.broadcast.emit).toHaveBeenCalledWith(
-            GAME_EVENTS.DISCONNECT_PLAYER,
-            players
+        expect(backgammonGame._setStatus).toHaveBeenCalledWith(
+            'UNINITIALIZED',
+            backgammonGame
         );
-        expect(socket.broadcast.emit).toHaveBeenCalledTimes(2);
         expect(disconnectCb).toHaveBeenCalledWith(backgammonGame.id);
+
+        expect(backgammonGame._setStatus).toHaveBeenCalledTimes(1);
+        expect(socket.broadcast.emit).toHaveBeenCalledTimes(1);
     });
 
-    it('should delete player from connected users list and but not from players list if game is not over.', () => {
+    it('should delete player from connected users list and players list and calls "_handlePlayerDisconnect" method when game status is "INITIALIZED".', () => {
         // Game is not over
         backgammonGame._status = 'INITIALIZED';
 
@@ -125,13 +128,18 @@ describe('handleDisconnect', () => {
         expect(backgammonGame._users.has(clientId)).toBeFalsy();
 
         // User disconnected events.
-        expect(backgammonGame._handlePlayerDisconnect).toHaveBeenCalledTimes(1);
+        expect(socket.broadcast.emit).toHaveBeenCalledWith(
+            GAME_EVENTS.DISCONNECT_PLAYER,
+            players
+        );
         expect(backgammonGame._handlePlayerDisconnect).toHaveBeenCalledWith({
             id: whitePlayer.id,
             name: whitePlayer.name,
         });
-
-        expect(backgammonGame._resetGame).toHaveBeenCalledTimes(0);
         expect(disconnectCb).toHaveBeenCalledWith(backgammonGame.id);
+
+        expect(socket.broadcast.emit).toHaveBeenCalledTimes(2);
+        expect(backgammonGame._handlePlayerDisconnect).toHaveBeenCalledTimes(1);
+        expect(backgammonGame._resetGame).toHaveBeenCalledTimes(0);
     });
 });
