@@ -5,7 +5,9 @@ export interface EmitError {
     type: EVENTS;
 }
 
-export type EmitGameOver = EmitStageOver;
+export type EmitGameOver = (EmitScore | EmitStageOver) & {
+    lose?: User["id"];
+};
 
 export type EmitGameStart = Game["players"];
 

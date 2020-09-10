@@ -1,10 +1,9 @@
 import { User } from '@shared-backgammon/src/types/user';
-import BackgammonGame from '../../game';
+import { EmitGameOver, PLAYERS } from '@shared-types/backgammon';
+import { ONE_SECOND } from '@shared-types/constants';
 import { GAME_EVENTS } from '@shared-types/game';
 import logger from '@shared/Logger';
-import { EmitStageOver, PLAYERS } from '@shared-types/backgammon';
-import { SCORES } from '../../constants';
-import { ONE_SECOND } from '@shared-types/constants';
+import BackgammonGame from '../../game';
 
 export default function handlePlayerDisconnect(
     this: BackgammonGame,
@@ -24,45 +23,26 @@ export default function handlePlayerDisconnect(
     else {
         this._tRef && clearTimeout(this._tRef);
         if (secondsLeft < 1) {
-            this._setStatus('OVER');
             const winnerPlayer = players.find((p) => {
                 if (p) return p.id !== id;
                 return false;
-            });
+            }) as Exclude<typeof players[number], null>;
 
-            logger.info(`Escaped player's name is ${name} and the id: ${id}.`);
+            logger.info(
+                `Disconnected player's name is ${name} and the id: ${id}.`
+            );
 
-            // Winner
-            if (winnerPlayer) {
-                logger.info(
-                    `Winner player's name is ${winnerPlayer.name} and the id ${winnerPlayer.id}.`
-                );
-                const winner =
-                    this.players[PLAYERS.BLACK]?.id === winnerPlayer.id
-                        ? PLAYERS.BLACK
-                        : PLAYERS.WHITE;
-                const emitStageOver: EmitStageOver = { winner };
+            logger.info(
+                `Winner player's name is ${winnerPlayer.name} and the id ${winnerPlayer.id}.`
+            );
 
-                // Notify client
-                this._emitNamespace(GAME_EVENTS.GAME_OVER, emitStageOver);
+            const winner =
+                this.players[PLAYERS.BLACK]?.id === winnerPlayer.id
+                    ? PLAYERS.BLACK
+                    : PLAYERS.WHITE;
+            const payload: EmitGameOver = { winner, lose: id };
 
-                // Handle winner score
-                this._updatePlayerScore({
-                    action: 'WIN',
-                    playerId: winnerPlayer.id,
-                    _score: SCORES.WINNER,
-                });
-            } else
-                logger.error(
-                    'Winner player update score failed because of disconnected.'
-                );
-
-            // Escape
-            this._updatePlayerScore({
-                action: 'ESCAPE',
-                playerId: id,
-                _score: SCORES.ESCAPE,
-            });
+            this._setStatus('OVER', payload);
         } else {
             this._emitNamespace(
                 GAME_EVENTS.NOTIFICATION,

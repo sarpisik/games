@@ -27,7 +27,7 @@ export default class Cognito {
     }
     static timeoutSeconds(expiresIn: number) {
         // Refresh token before token expires.
-        return expiresIn * 0.9;
+        return expiresIn * 0.9 * 1000;
     }
 
     private config = { region: aws_cognito_region };

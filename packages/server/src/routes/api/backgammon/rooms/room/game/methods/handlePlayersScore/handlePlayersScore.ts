@@ -1,17 +1,20 @@
-import { OPPONENT, User } from '@shared-types/backgammon';
+import { EmitGameOver, OPPONENT, User } from '@shared-types/backgammon';
 import { SCORES } from '../../constants';
 import BackgammonGame from '../../game';
-import { Round } from '../../round';
 
 export default function handlePlayersScore(
     this: BackgammonGame,
-    winner: Round['player']
+    payload: EmitGameOver
 ) {
-    const mars = this.score[winner] - this.stages > 0;
-    const winnerScore = mars ? SCORES.MARS : SCORES.WINNER;
+    const { winner, lose } = payload;
+    const shouldMars = this.score[winner] - this.stages > 0;
+    const winnerScore = shouldMars ? SCORES.MARS : SCORES.WINNER;
+
+    const shouldEscape = typeof lose !== 'undefined';
+    const loseScore = shouldEscape ? SCORES.ESCAPE : SCORES.LOSER;
 
     const winnerId = (this.players[winner] as User).id;
-    const loserId = (this.players[OPPONENT[winner]] as User).id;
+    const loserId = lose || (this.players[OPPONENT[winner]] as User).id;
 
     this._updatePlayerScore({
         action: 'WIN',
@@ -21,6 +24,6 @@ export default function handlePlayersScore(
     this._updatePlayerScore({
         action: 'LOSE',
         playerId: loserId,
-        _score: SCORES.LOSER,
+        _score: loseScore,
     });
 }

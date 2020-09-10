@@ -210,7 +210,7 @@ const socket: () => Middleware = () => {
         s.dispatch(setNotification({ type: EVENTS.GAME_OVER, message }));
         // Reset game
         // @ts-ignore
-        s.dispatch(editGame(Object.assign(_game, { status: 'OVER' })));
+        s.dispatch(editGame(Object.assign(_game, { _status: 'OVER' })));
     };
 
     return (store) => (next) => (action) => {

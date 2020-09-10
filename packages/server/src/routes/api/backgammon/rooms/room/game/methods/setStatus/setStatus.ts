@@ -1,10 +1,10 @@
-import { EmitScore } from '@shared-types/backgammon';
+import { EmitGameOver } from '@shared-types/backgammon';
 import { GAME_EVENTS } from '@shared-types/game';
 import logger from '@shared/Logger';
 import BackgammonGame from '../../game';
 import { Round } from '../../round';
 
-type Payload = EmitScore | Partial<BackgammonGame> | Round['player'];
+type Payload = EmitGameOver | Partial<BackgammonGame> | Round['player'];
 
 export default function setStatus(
     this: BackgammonGame,
@@ -36,7 +36,7 @@ function statusStart(status: BackgammonGame['_status']) {
 function statusOver(
     status: BackgammonGame['_status'],
     _payload?: Payload
-): _payload is Extract<EmitScore, Payload> {
+): _payload is Extract<EmitGameOver, Payload> {
     return status === 'OVER';
 }
 function statusInitialized(
