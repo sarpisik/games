@@ -39,6 +39,8 @@ import { FEEDBACK_STATUS, setFeedback } from '../../slices/feedbacks/feedbacks';
 import { Room, setRoomGame } from '../../slices/room/room';
 import { store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
+import { calculateIsRoundPlayer } from './utils';
+import { onJoinGame } from './thunks';
 
 type SocketContextType = ReturnType<typeof socketIOClient> | null;
 type Game = Parameters<typeof setGame>[0];
@@ -73,26 +75,6 @@ const socket: () => Middleware = () => {
 
     const onJoinRoom = (s: typeof store) => (payload: Room) => {
         s.dispatch(setRoom(payload));
-        s.dispatch(setConnectionStatus(CONNECTION_STATUS.CONNECTED));
-    };
-
-    const onJoinGame = (s: typeof store) => (payload: GameClient) => {
-        const state = s.getState();
-        const { user } = state;
-        const { _status, players } = payload;
-        const initialized = _status === 'INITIALIZED';
-        const playersFull = Object.values(players).every(Boolean);
-        const isBlackPlayer = players?.[PLAYERS.BLACK]?.id === user.id;
-        const isWhitePlayer = players?.[PLAYERS.WHITE]?.id === user.id;
-        const isPlayer = isBlackPlayer || isWhitePlayer;
-        const shouldResume = initialized && playersFull && isPlayer;
-        if (shouldResume)
-            payload.isRoundPlayer = calculateIsRoundPlayer(
-                user.id,
-                players,
-                isBlackPlayer ? PLAYERS.BLACK : PLAYERS.WHITE
-            );
-        s.dispatch(editGame(payload));
         s.dispatch(setConnectionStatus(CONNECTION_STATUS.CONNECTED));
     };
 
@@ -257,8 +239,11 @@ const socket: () => Middleware = () => {
                     connection = socketIOClient(action.payload, {
                         query: { userId: store.getState().user?.id },
                     });
-                    // @ts-ignore
-                    connection.on(GAME_EVENTS.JOIN_GAME, onJoinGame(store));
+
+                    connection.on(
+                        GAME_EVENTS.JOIN_GAME,
+                        onJoinGame(store.dispatch, store.getState, null)
+                    );
                     connection.on(
                         GAME_EVENTS.DISCONNECT_PLAYER,
                         // @ts-ignore
@@ -393,15 +378,4 @@ function createWinnerMessage(
 
     // User is a guest.
     return `Game Over.\nThe winner is ${PLAYERS[winner]} player.`;
-}
-
-function calculateIsRoundPlayer(
-    userId: User['id'],
-    gamePlayers: Game['players'],
-    roundPlayerIndex: Game['rounds'][number]['player']
-) {
-    const roundPlayerId = gamePlayers[roundPlayerIndex]?.id;
-    const isRoundPlayer = userId === roundPlayerId;
-
-    return isRoundPlayer;
 }
