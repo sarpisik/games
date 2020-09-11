@@ -88,5 +88,5 @@ function calculateOverPoints(
 }
 
 function calculateOverFlowPerEachPoint(overSize: number, pointsCount: number) {
-    return overSize / pointsCount;
+    return (overSize / pointsCount) * 1.1;
 }

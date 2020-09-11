@@ -25,25 +25,26 @@ export default function useCollectedPoints(params: Params) {
     const containers = useContainers();
     const heightLimit = sizes.TRIANGLE_HEIGHT;
 
-    const whiteCollectedPoints = generateCollectedPoints({
-        baseContainer: containers[3],
-        image: pLight,
-        points: round?.collected[PLAYERS.WHITE],
-        width: CONTAINER_WIDTH,
-        heightLimit,
-        y: BOTTOM_BLOCK_START_Y,
-        x: 1,
-    });
+    const points = [
+        {
+            baseContainer: containers[3],
+            image: pLight,
+            points: round?.collected[PLAYERS.WHITE] || 15,
+            width: CONTAINER_WIDTH,
+            heightLimit,
+            y: BOTTOM_BLOCK_START_Y,
+            x: 1,
+        },
+        {
+            baseContainer: containers[0],
+            image: pDark,
+            points: round?.collected[PLAYERS.BLACK] || 15,
+            width: CONTAINER_WIDTH,
+            heightLimit,
+            y: TOP_BLOCK_START_Y,
+            x: 1,
+        },
+    ].map(generateCollectedPoints);
 
-    const blackCollectedPoints = generateCollectedPoints({
-        baseContainer: containers[0],
-        image: pDark,
-        points: round?.collected[PLAYERS.BLACK],
-        width: CONTAINER_WIDTH,
-        heightLimit,
-        y: TOP_BLOCK_START_Y,
-        x: 1,
-    });
-
-    return [blackCollectedPoints, whiteCollectedPoints] as const;
+    return points;
 }
