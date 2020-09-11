@@ -13,7 +13,6 @@ describe('setStatus', () => {
             _resetGame: jasmine.Spy<jasmine.Func>;
             _handleGameOver: jasmine.Spy<jasmine.Func>;
             _setStatus: jasmine.Spy<jasmine.Func>;
-            _emitNamespace: jasmine.Spy<jasmine.Func>;
             _initializeGame: jasmine.Spy<jasmine.Func>;
         },
         _status: BackgammonGame['_status'];
@@ -26,7 +25,6 @@ describe('setStatus', () => {
             _handleGameOver: jasmine.createSpy('_handleGameOver'),
             _setStatus: jasmine.createSpy('_setStatus'),
             _emitGameUpdate: jasmine.createSpy('_emitGameUpdate'),
-            _emitNamespace: jasmine.createSpy('_emitNamespace'),
             _initializeGame: jasmine.createSpy('_initializeGame'),
             players: generatePlayersObj(null, null),
         };
@@ -49,7 +47,6 @@ describe('setStatus', () => {
         expect(backgammonGame._resetGame).toHaveBeenCalledTimes(0);
         expect(backgammonGame._emitGameUpdate).toHaveBeenCalledTimes(0);
         expect(backgammonGame._handleGameOver).toHaveBeenCalledTimes(0);
-        expect(backgammonGame._emitNamespace).toHaveBeenCalledTimes(0);
         expect(backgammonGame._initializeGame).toHaveBeenCalledTimes(0);
     });
 
@@ -64,14 +61,12 @@ describe('setStatus', () => {
 
         // Reducer method.
         expect(backgammonGame._resetGame).toHaveBeenCalledWith();
-        expect(backgammonGame._emitNamespace).toHaveBeenCalledWith(
-            GAME_EVENTS.JOIN_GAME,
-            // @ts-ignore
-            reduceGameProps(backgammonGame)
+        expect(backgammonGame._emitGameUpdate).toHaveBeenCalledWith(
+            GAME_EVENTS.JOIN_GAME
         );
 
         expect(backgammonGame._resetGame).toHaveBeenCalledTimes(1);
-        expect(backgammonGame._emitNamespace).toHaveBeenCalledTimes(1);
+        expect(backgammonGame._emitGameUpdate).toHaveBeenCalledTimes(1);
     });
 
     it('reset game on status "UNINITIALIZED" with passed players param', () => {
@@ -86,17 +81,15 @@ describe('setStatus', () => {
 
         // Reducer method.
         expect(backgammonGame._resetGame).toHaveBeenCalledWith(payload.players);
-        expect(backgammonGame._emitNamespace).toHaveBeenCalledWith(
-            GAME_EVENTS.JOIN_GAME,
-            // @ts-ignore
-            reduceGameProps(backgammonGame)
+        expect(backgammonGame._emitGameUpdate).toHaveBeenCalledWith(
+            GAME_EVENTS.JOIN_GAME
         );
 
         expect(backgammonGame._resetGame).toHaveBeenCalledTimes(1);
-        expect(backgammonGame._emitNamespace).toHaveBeenCalledTimes(1);
+        expect(backgammonGame._emitGameUpdate).toHaveBeenCalledTimes(1);
     });
 
-    it(`dispatch "${GAME_EVENTS.START_GAME}" event on "START" start status.`, () => {
+    it(`dispatch "${GAME_EVENTS.JOIN_GAME}" event on "START" start status.`, () => {
         _status = 'START';
         backgammonGame._status = 'UNINITIALIZED';
 
@@ -105,7 +98,7 @@ describe('setStatus', () => {
 
         expect(backgammonGame._status).toBe(_status);
         expect(backgammonGame._emitGameUpdate).toHaveBeenCalledWith(
-            GAME_EVENTS.START_GAME
+            GAME_EVENTS.JOIN_GAME
         );
     });
 

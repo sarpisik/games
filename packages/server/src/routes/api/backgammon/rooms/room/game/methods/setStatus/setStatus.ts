@@ -3,7 +3,6 @@ import { GAME_EVENTS } from '@shared-types/game';
 import logger from '@shared/Logger';
 import BackgammonGame from '../../game';
 import { Round } from '../../round';
-import { reduceGameProps } from '../../helpers';
 
 type Payload = EmitGameOver | Partial<BackgammonGame> | Round['player'];
 
@@ -17,9 +16,8 @@ export default function setStatus(
     if (statusUninitialized(status, payload)) {
         payload?.players ? this._resetGame(payload.players) : this._resetGame();
         // Reset game client side
-        this._emitNamespace(GAME_EVENTS.JOIN_GAME, reduceGameProps(this));
-    } else if (statusStart(status))
-        this._emitGameUpdate(GAME_EVENTS.START_GAME);
+        this._emitGameUpdate(GAME_EVENTS.JOIN_GAME);
+    } else if (statusStart(status)) this._emitGameUpdate(GAME_EVENTS.JOIN_GAME);
     else if (statusInitialized(status, payload)) this._initializeGame(payload);
     else if (statusOver(status, payload)) this._handleGameOver(payload);
     else {
