@@ -2,14 +2,10 @@ import { Middleware } from '@reduxjs/toolkit';
 import socketIOClient from 'socket.io-client';
 import {
     EmitError,
-    EmitGameOver,
     EmitGameStart,
     EmitScore,
-    EmitStageOver,
     EVENTS,
     GameClient,
-    OPPONENT,
-    PLAYERS,
 } from 'types/lib/backgammon';
 import { GAME_EVENTS } from 'types/lib/game';
 import { EmitJoinRooms, OnEditGame, ROOM_EVENTS } from 'types/lib/room';
@@ -39,8 +35,8 @@ import { FEEDBACK_STATUS, setFeedback } from '../../slices/feedbacks/feedbacks';
 import { Room, setRoomGame } from '../../slices/room/room';
 import { store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
-import { calculateIsRoundPlayer } from './utils';
 import { onJoinGame } from './thunks';
+import { calculateIsRoundPlayer, createWinnerMessage } from './utils';
 
 type SocketContextType = ReturnType<typeof socketIOClient> | null;
 type Game = Parameters<typeof setGame>[0];
@@ -344,38 +340,3 @@ const socket: () => Middleware = () => {
 };
 
 export default socket();
-
-function createWinnerMessage(
-    game: Game,
-    user: User,
-    winner: (EmitStageOver | EmitGameOver)['winner']
-): string {
-    const { id } = user;
-    const { players } = game;
-    const playersList = Object.values(players) as Array<
-        typeof players[keyof typeof players]
-    >;
-    const userIsPlayer = playersList.some((_p) => _p?.id === id);
-    const shouldWinner = userIsPlayer && players[winner]?.id === id;
-
-    // User is a player
-    if (userIsPlayer) {
-        const message = shouldWinner
-            ? 'Congratulations! You won!'
-            : 'You lose!';
-
-        const restartMessage = message.concat(
-            '\nYou can click"Restart Game" on top bar to restart the game.'
-        );
-
-        if (shouldWinner) {
-            const opponentExist = Boolean(players[OPPONENT[winner]]);
-            return opponentExist ? restartMessage : message;
-        }
-
-        return restartMessage;
-    }
-
-    // User is a guest.
-    return `Game Over.\nThe winner is ${PLAYERS[winner]} player.`;
-}
