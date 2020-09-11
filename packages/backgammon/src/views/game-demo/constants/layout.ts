@@ -2,7 +2,7 @@ import { PLAYERS } from 'types/lib/backgammon';
 
 export const layout = [
     // Top left.
-    [PLAYERS.WHITE, 2],
+    [PLAYERS.BLACK, 2],
     [PLAYERS.NONE, 0],
     [PLAYERS.NONE, 0],
     [PLAYERS.NONE, 0],
@@ -16,7 +16,7 @@ export const layout = [
     [PLAYERS.NONE, 0],
     [PLAYERS.NONE, 0],
     [PLAYERS.NONE, 0],
-    [PLAYERS.WHITE, 5],
+    [PLAYERS.NONE, 0],
 
     // Bottom right.
 
@@ -24,17 +24,17 @@ export const layout = [
     [PLAYERS.NONE, 0],
     [PLAYERS.NONE, 0],
     [PLAYERS.NONE, 0],
-    [PLAYERS.WHITE, 3],
+    [PLAYERS.NONE, 0],
     [PLAYERS.NONE, 0],
 
     // Bottom left.
 
     [PLAYERS.WHITE, 5],
+    [PLAYERS.WHITE, 3],
+    [PLAYERS.WHITE, 5],
     [PLAYERS.NONE, 0],
     [PLAYERS.NONE, 0],
-    [PLAYERS.NONE, 0],
-    [PLAYERS.NONE, 0],
-    [PLAYERS.BLACK, 2],
+    [PLAYERS.WHITE, 2],
 ];
 // export default [
 //     // Top left.

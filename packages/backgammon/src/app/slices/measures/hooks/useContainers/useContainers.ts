@@ -17,7 +17,7 @@ export default function useContainers() {
 type AvailableTriangles = ReturnType<typeof useRound>['availableTriangles'];
 type Container = ReturnType<typeof useMeasures>['containers'][number];
 
-const INDEX_MAP: { [key: number]: number } = { 0: -1, 3: 24 };
+const INDEX_MAP: { [key: number]: number } = { 0: -1, 1: 24 };
 
 function handleHighlightContainer(availableTriangles?: AvailableTriangles) {
     return function highlightContainer(container: Container, i: number) {

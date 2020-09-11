@@ -1,7 +1,8 @@
 import { MAX_WIDTH } from '../../../../../config';
 import { calculateWindowDimension } from '../../../../../utils';
 
-const TRIANGLE_WIDTH = 3;
+export const TRIANGLE_WIDTH = 3;
+export const TRIANGLE_HEIGHT = 20;
 
 export default function calculateSizes() {
     const {
@@ -28,8 +29,8 @@ export default function calculateSizes() {
         BLOCK_HEIGHT: 48,
 
         // triangle
-        TRIANGLE_WIDTH: 3,
-        TRIANGLE_HEIGHT: 20,
+        TRIANGLE_WIDTH,
+        TRIANGLE_HEIGHT,
 
         // point
         POINT_SIZE: TRIANGLE_WIDTH / 2,
