@@ -9,6 +9,7 @@ describe('handleGameStart', () => {
         players: ReturnType<typeof generatePlayersObj>;
         _handlePlayerReconnect: jasmine.Spy<jasmine.Func>;
         _setStatus: jasmine.Spy<jasmine.Func>;
+        _resetGame: jasmine.Spy<jasmine.Func>;
     };
 
     beforeEach(() => {
@@ -17,6 +18,7 @@ describe('handleGameStart', () => {
             _status: 'INITIALIZED',
             _handlePlayerReconnect: jasmine.createSpy('_handlePlayerReconnect'),
             _setStatus: jasmine.createSpy('_setStatus'),
+            _resetGame: jasmine.createSpy('_resetGame'),
         };
     });
 
@@ -53,6 +55,25 @@ describe('handleGameStart', () => {
 
         // Called methods
         expect(backgammonGame._setStatus).toHaveBeenCalledWith('INITIALIZED');
+        expect(backgammonGame._setStatus).toHaveBeenCalledTimes(1);
+
+        // Un called methods
+        expect(backgammonGame._handlePlayerReconnect).toHaveBeenCalledTimes(0);
+    });
+
+    it('calls "_setStatus" method when players are full and the status is "OVER".', () => {
+        const result = generatePlayersObj({ id: '12345' }, { id: '54321' });
+        backgammonGame._status = 'OVER';
+
+        // @ts-ignore
+        handleGameStart.call(backgammonGame, result);
+
+        expect(backgammonGame.players).toEqual(result);
+
+        // Called methods
+        expect(backgammonGame._resetGame).toHaveBeenCalledWith(result);
+        expect(backgammonGame._setStatus).toHaveBeenCalledWith('START');
+        expect(backgammonGame._resetGame).toHaveBeenCalledTimes(1);
         expect(backgammonGame._setStatus).toHaveBeenCalledTimes(1);
 
         // Un called methods

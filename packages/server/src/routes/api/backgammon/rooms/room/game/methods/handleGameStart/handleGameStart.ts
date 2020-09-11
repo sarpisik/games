@@ -18,7 +18,14 @@ export default function handleGameStart(
     // and the other player is requested the same.
     else if (playersFull && this._status === 'START')
         this._setStatus('INITIALIZED');
-    // Only one of the player(s) requested start/restart the game.
-    // So will wait for the other player.
-    else this._setStatus('START');
+    else {
+        // Game was over and one of the players requested
+        // to restart the game.
+        if (playersFull && this._status === 'OVER')
+            this._resetGame(this.players);
+
+        // Only one of the player(s) requested start/restart the game.
+        // So will wait for the other player.
+        this._setStatus('START');
+    }
 }
