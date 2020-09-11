@@ -1,14 +1,19 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React from 'react';
+import { CollectedPoint } from './components';
 import { useCollectedPoints } from './hooks';
-import { FilledRectangle } from '../../../FilledRectangle';
 
-export default function CollectedPoints(): React.ReactElement {
-    const [blackCollectedPoints, whiteCollectedPoints] = useCollectedPoints();
+type Props = Parameters<typeof useCollectedPoints>[0];
+
+export default function CollectedPoints(props: Props): React.ReactElement {
+    const [blackCollectedPoints, whiteCollectedPoints] = useCollectedPoints(
+        props
+    );
 
     return (
         <React.Fragment>
-            {blackCollectedPoints.map(FilledRectangle)}
-            {whiteCollectedPoints.map(FilledRectangle)}
+            {blackCollectedPoints.map(CollectedPoint)}
+            {whiteCollectedPoints.map(CollectedPoint)}
         </React.Fragment>
     );
 }

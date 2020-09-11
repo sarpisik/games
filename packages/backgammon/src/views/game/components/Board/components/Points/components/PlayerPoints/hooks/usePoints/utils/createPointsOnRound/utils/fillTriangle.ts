@@ -6,7 +6,7 @@ interface Params {
     xOffset: number;
     yOffset: number;
     count: number;
-    color: string;
+    fillPatternImage: any;
     draggable: boolean;
     triangleIndex: number;
     heightLimit: number;
@@ -19,10 +19,10 @@ export default function fillTriangle(params: Params) {
         xOffset,
         yOffset,
         count,
-        color,
         draggable,
         triangleIndex,
         heightLimit,
+        fillPatternImage,
         onDragEnd,
         onDragStart,
     } = params;
@@ -36,8 +36,8 @@ export default function fillTriangle(params: Params) {
             key: x * y,
             x,
             y,
-            color,
             draggable,
+            fillPatternImage,
             onDragEnd: onDragEnd(triangleIndex),
             onDragStart: onDragStart(triangleIndex),
         });

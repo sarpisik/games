@@ -3,5 +3,5 @@ import { PLAYERS } from 'types/lib/backgammon';
 export default function generatePlayerColor(
     target: any
 ): keyof Pick<typeof PLAYERS, 'BLACK' | 'WHITE'> {
-    return target.attrs.fill.toUpperCase();
+    return target.attrs.image.dataset.color;
 }

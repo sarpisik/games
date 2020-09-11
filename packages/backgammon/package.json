@@ -31,7 +31,8 @@
         "react-scripts": "3.4.1",
         "socket.io-client": "2.3.0",
         "types": "*",
-        "typescript": "3.9.7"
+        "typescript": "3.9.7",
+        "use-image": "^1.0.6"
     },
     "scripts": {
         "dev": "npm start",

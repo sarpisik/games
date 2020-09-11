@@ -2,21 +2,22 @@ import { Containers } from '../../../../../../../../../../../../../../app/slices
 
 interface Params {
     key: number;
-    color: string;
+    image: HTMLImageElement;
     y: number;
+    x: number;
     baseContainer: Containers[number];
     width: number;
 }
 
 export default function generateRectangle(params: Params) {
-    const { key, color, y, baseContainer, width } = params;
+    const { key, image, x, y, baseContainer, width } = params;
 
     return Object.assign({}, baseContainer, {
-        height: 1,
+        height: width,
         width,
+        x,
         y,
-        color,
+        image,
         key,
-        strokeWidth: 0.5,
     });
 }

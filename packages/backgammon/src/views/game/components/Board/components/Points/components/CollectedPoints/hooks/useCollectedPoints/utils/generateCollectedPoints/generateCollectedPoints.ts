@@ -1,31 +1,30 @@
 import { generateRectangle } from './utils';
+import { yOffsetCalculator } from '../../../../../PlayerPoints/hooks/usePoints/utils/createPointsOnRound/utils';
 
 interface PointsParams {
     points: number;
     y: number;
+    x: number;
     baseContainer: Parameters<typeof generateRectangle>[0]['baseContainer'];
-    color: string;
-    stroke: string;
-    reverse: boolean;
+    image: Parameters<typeof generateRectangle>[0]['image'];
+    heightLimit: number;
     width: Parameters<typeof generateRectangle>[0]['width'];
 }
 
 export default function generateCollectedPoints(params: PointsParams) {
-    const { points, y, baseContainer, color, stroke, reverse, width } = params;
+    const { points, x, y, baseContainer, image, heightLimit, width } = params;
 
     return Array<number>(points)
         .fill(0)
         .map((_, i) => {
             const rectangle = generateRectangle({
                 key: i,
-                color,
-                y: reverse ? y + i : y - i,
+                image,
+                x,
+                y: yOffsetCalculator(i, points, y, heightLimit),
                 baseContainer,
                 width,
             });
-
-            // @ts-ignore
-            rectangle.stroke = stroke;
 
             return rectangle;
         });

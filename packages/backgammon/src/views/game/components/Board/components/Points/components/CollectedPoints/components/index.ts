@@ -1,0 +1,1 @@
+export { CollectedPoint } from './CollectedPoint';

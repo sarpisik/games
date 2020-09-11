@@ -15,7 +15,7 @@ import { generatePlayers } from 'types/lib/helpers';
 import { PLAYERS } from '../game/components/Board/constants';
 import { layout } from './constants/layout';
 import { useDispatch } from 'react-redux';
-import { addRound } from '../../app/slices';
+import { addRound, editGame } from '../../app/slices';
 
 export default function GameDemo(_props: RouteComponentProps) {
     const dispatch = useDispatch();
@@ -35,6 +35,7 @@ export default function GameDemo(_props: RouteComponentProps) {
             dice: [3, 5],
         };
         dispatch(addRound(round));
+        dispatch(editGame({ isRoundPlayer: true }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

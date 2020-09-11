@@ -4,32 +4,45 @@ import {
     useRound,
 } from '../../../../../../../../../../app/slices';
 import { useSizes } from '../../../../../../../../../../app/slices/measures';
+import { OFFSETS } from '../../../../../../constants';
 import { generateCollectedPoints } from './utils';
 
-export default function useCollectedPoints() {
+type Image = Parameters<typeof generateCollectedPoints>[0]['image'];
+
+interface Params {
+    pLight: Image;
+    pDark: Image;
+}
+const { TOP_BLOCK_START_Y, BOTTOM_BLOCK_START_Y } = OFFSETS;
+
+export default function useCollectedPoints(params: Params) {
+    const { pDark, pLight } = params;
     const round = useRound();
+
     const sizes = useSizes();
+    const { CONTAINER_WIDTH } = sizes;
+
     const containers = useContainers();
-    const { CONTAINER_WIDTH, CONTAINER_HEIGHT } = sizes;
+    const heightLimit = sizes.TRIANGLE_HEIGHT;
 
     const whiteCollectedPoints = generateCollectedPoints({
         baseContainer: containers[3],
-        color: '#ffffff',
+        image: pLight,
         points: round?.collected[PLAYERS.WHITE],
-        reverse: false,
-        stroke: '#000000',
         width: CONTAINER_WIDTH,
-        y: containers[3].y + CONTAINER_HEIGHT - 1,
+        heightLimit,
+        y: BOTTOM_BLOCK_START_Y,
+        x: 1,
     });
 
     const blackCollectedPoints = generateCollectedPoints({
         baseContainer: containers[0],
-        color: '#000000',
+        image: pDark,
         points: round?.collected[PLAYERS.BLACK],
-        reverse: true,
-        stroke: '#ffffff',
         width: CONTAINER_WIDTH,
-        y: containers[0].y,
+        heightLimit,
+        y: TOP_BLOCK_START_Y,
+        x: 1,
     });
 
     return [blackCollectedPoints, whiteCollectedPoints] as const;

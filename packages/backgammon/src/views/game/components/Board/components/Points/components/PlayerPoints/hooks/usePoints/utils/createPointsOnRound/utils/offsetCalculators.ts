@@ -3,18 +3,19 @@ import { DIRECTIONS } from '../../../types';
 import { calculateWindowDimension } from '../../../../../../../../../../../../../utils';
 import { MAX_WIDTH } from '../../../../../../../../../../../../../config';
 
+const CIRCLE_SIZE_FULL = CIRCLE_SIZE.RADIUS * 2;
+
 export function xOffsetCalculator(
     index: number,
     xOffset: number,
     direction: DIRECTIONS.FORMARD | DIRECTIONS.BACKWARD
 ) {
     const startFrom = xOffset;
-    const skip = calculateSkip(index);
+    const forwarddirection = direction === 'forward';
+    const skip = CIRCLE_SIZE_FULL * (forwarddirection ? index : index + 1); // calculateSkip(index);
 
-    return direction === 'forward' ? startFrom + skip : startFrom - skip;
+    return forwarddirection ? startFrom + skip : startFrom - skip;
 }
-
-const CIRCLE_SIZE_FULL = CIRCLE_SIZE.RADIUS * 2;
 
 export function yOffsetCalculator(
     index: number,
@@ -43,14 +44,16 @@ export function yOffsetCalculator(
         pointsCount
     );
 
-    let skip = calculateSkip(index) * dynamicOffset;
+    const _skip = calculateSkip(index);
+    let skip = _skip * dynamicOffset;
     if (overFlowPerEachPoint > 0) {
         // Overlay points on each other
         skip -= overFlowPerEachPoint * index;
     }
 
-    const dynamicSkip = isBottomBlock ? skip * -1 : skip;
-    return yOffset + dynamicSkip;
+    const dynamicSkip = isBottomBlock ? skip * -1 - pointSize : skip;
+    const offset = yOffset + dynamicSkip;
+    return offset;
 }
 
 function calculateOrientation(
@@ -65,8 +68,8 @@ function calculateOrientation(
 
 function calculateSkip(index: number) {
     return (
-        CIRCLE_SIZE.RADIUS * // 1.5
-        (2 * index + 1)
+        // CIRCLE_SIZE.RADIUS * // 1.5
+        CIRCLE_SIZE_FULL * index
     );
 }
 

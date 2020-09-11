@@ -7,7 +7,12 @@ import {
 import { usePointEventHandlers } from './hooks';
 import { createPointsOnRound } from './utils';
 
-export default function usePoints() {
+interface Params {
+    pLight: HTMLImageElement;
+    pDark: HTMLImageElement;
+}
+
+export default function usePoints(params: Params) {
     const layout = useLayout();
     const round = useRound();
     const sizes = useSizes();
@@ -15,6 +20,7 @@ export default function usePoints() {
     const { onDragEnd, onDragStart } = usePointEventHandlers();
 
     const reducePointsFromLayout = createPointsOnRound({
+        ...params,
         game,
         round,
         triangleHeight: sizes.TRIANGLE_HEIGHT,
