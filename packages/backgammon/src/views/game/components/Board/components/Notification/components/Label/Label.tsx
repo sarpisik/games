@@ -19,8 +19,12 @@ export default function Label(props: LabelProps): React.ReactElement {
             fill="#ffffff"
             align="center"
             verticalAlign="middle"
-            fontSize={50}
+            fontSize={setDyanmicFontSize(BOARD_HEIGHT)}
             text={text}
         />
     );
+}
+
+function setDyanmicFontSize(boardHeight: number) {
+    return boardHeight * 0.05;
 }
