@@ -5,7 +5,7 @@ import { StartButton, SurrenderButton, ResumeButton } from './components';
 export default function Buttons() {
     const { gamePlayer, game, playersFull } = usePlayer();
 
-    if (gamePlayer)
+    if (gamePlayer && playersFull)
         switch (game._status) {
             case 'UNINITIALIZED':
             case 'START':
