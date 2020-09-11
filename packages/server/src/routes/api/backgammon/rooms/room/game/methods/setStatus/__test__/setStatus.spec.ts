@@ -64,8 +64,14 @@ describe('setStatus', () => {
 
         // Reducer method.
         expect(backgammonGame._resetGame).toHaveBeenCalledWith();
+        expect(backgammonGame._emitNamespace).toHaveBeenCalledWith(
+            GAME_EVENTS.JOIN_GAME,
+            // @ts-ignore
+            reduceGameProps(backgammonGame)
+        );
+
         expect(backgammonGame._resetGame).toHaveBeenCalledTimes(1);
-        expect(backgammonGame._emitGameUpdate).toHaveBeenCalledTimes(0);
+        expect(backgammonGame._emitNamespace).toHaveBeenCalledTimes(1);
     });
 
     it('reset game on status "UNINITIALIZED" with passed players param', () => {
@@ -80,8 +86,14 @@ describe('setStatus', () => {
 
         // Reducer method.
         expect(backgammonGame._resetGame).toHaveBeenCalledWith(payload.players);
+        expect(backgammonGame._emitNamespace).toHaveBeenCalledWith(
+            GAME_EVENTS.JOIN_GAME,
+            // @ts-ignore
+            reduceGameProps(backgammonGame)
+        );
+
         expect(backgammonGame._resetGame).toHaveBeenCalledTimes(1);
-        expect(backgammonGame._emitGameUpdate).toHaveBeenCalledTimes(0);
+        expect(backgammonGame._emitNamespace).toHaveBeenCalledTimes(1);
     });
 
     it(`dispatch "${GAME_EVENTS.START_GAME}" event on "START" start status.`, () => {

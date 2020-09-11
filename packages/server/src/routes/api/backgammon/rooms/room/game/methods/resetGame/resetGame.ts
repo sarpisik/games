@@ -1,6 +1,5 @@
 import BackgammonGame from '../../game';
-import { generatePlayersObj, reduceGameProps } from '../../helpers';
-import { GAME_EVENTS } from '@shared-types/game';
+import { generatePlayersObj } from '../../helpers';
 
 export default function resetGame(
     this: BackgammonGame,
@@ -16,7 +15,4 @@ export default function resetGame(
     // Clear timers
     this._tRef && clearTimeout(this._tRef);
     delete this._t;
-
-    // Reset game client side
-    this._emitNamespace(GAME_EVENTS.JOIN_GAME, reduceGameProps(this));
 }
