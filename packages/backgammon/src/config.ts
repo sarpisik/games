@@ -5,4 +5,5 @@ export enum ROUTES {
     ROOMS = '/rooms',
     SIGN_OUT = '/signout',
     PROFILE = '/profile',
+    GAME_DEMO = '/game-demo',
 }
