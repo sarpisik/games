@@ -2,6 +2,7 @@
 import { GameServerSide } from '@shared-types/backgammon';
 import { GAME_EVENTS } from '@shared-types/game';
 import { generateBackgammonGamePath } from '@shared-types/helpers';
+import logger from '@shared/Logger';
 import { UserApi } from '@shared/userApi';
 import { SocketConnection } from '../../shared/socketConnection';
 import {
@@ -33,8 +34,6 @@ import {
     withBreakTimer,
 } from './methods';
 import { Round } from './round';
-import logger from '@shared/Logger';
-import { checkPlayersFull, checkUserIsPlayer } from './helpers';
 
 /*
  * TODO:
@@ -139,17 +138,7 @@ export default class BackgammonGame extends SocketConnection
             const user = self._users.get(clientId);
             logger.info(`Reconnected client is ${user?.name}`);
 
-            const players = self.players;
-            // Player disconnected once and now reconnected,
-            // before disconnect, clear timer and resume the game.
-            if (
-                user &&
-                self._status === 'INITIALIZED' &&
-                checkPlayersFull(players)
-            )
-                checkUserIsPlayer(players, user.id) &&
-                    self._handlePlayerReconnect();
-            else self._emitGameUpdate(GAME_EVENTS.JOIN_GAME);
+            self._emitGameUpdate(GAME_EVENTS.JOIN_GAME);
 
             socket.on(
                 GAME_EVENTS.START_GAME,
