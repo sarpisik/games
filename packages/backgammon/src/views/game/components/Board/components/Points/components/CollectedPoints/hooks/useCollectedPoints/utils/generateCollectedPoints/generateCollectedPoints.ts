@@ -14,6 +14,8 @@ interface PointsParams {
 export default function generateCollectedPoints(params: PointsParams) {
     const { points, x, y, baseContainer, image, heightLimit, width } = params;
 
+    if (typeof points === 'undefined') return [];
+
     return Array<number>(points)
         .fill(0)
         .map((_, i) => {

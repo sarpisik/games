@@ -6,6 +6,6 @@ export function useMultiply(numbers: number[]) {
     return result;
 }
 
-function numbersReducer(result: number, current: number) {
+export function numbersReducer(result: number, current: number) {
     return result * current;
 }

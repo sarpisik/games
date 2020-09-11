@@ -24,7 +24,7 @@ export default function Circle({
     const radius = useUnitMeasure(CIRCLE_SIZE.RADIUS, 'x') * 2;
     const onDragMove = useDragMoveHandler();
 
-    return fillPatternImage ? (
+    return (
         <Image
             x={posX}
             y={posY}
@@ -33,16 +33,6 @@ export default function Circle({
             draggable
             onDragMove={onDragMove}
             image={fillPatternImage}
-            {...circleProps}
-        />
-    ) : (
-        <KonvaCircle
-            x={posX}
-            y={posY}
-            radius={radius}
-            fill={fill}
-            draggable
-            onDragMove={onDragMove}
             {...circleProps}
         />
     );

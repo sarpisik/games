@@ -15,8 +15,10 @@ const usePointEventHandlers: UsePointEventhandlers = () => {
     const { paintLayout, paintAvailableTriangles } = usePaintLayout();
 
     const onDragEnd: OnDragEnd = (fromTriangleIndex) => ({ target }) => {
-        const targetX = getUnit(target.attrs.x, 'x');
-        const targetY = getUnit(target.attrs.y, 'y');
+        const { x, y, width, height } = target.attrs;
+
+        const targetX = getUnit(x + width / 2, 'x');
+        const targetY = getUnit(y + height / 2, 'y');
         const color = generatePlayerColor(target);
 
         paintLayout(fromTriangleIndex, targetX, targetY, color);

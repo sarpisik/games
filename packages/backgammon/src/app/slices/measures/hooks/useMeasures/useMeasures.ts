@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 
-export default function useNotification() {
+export default function useMeasures() {
     const measures = useSelector(selector);
 
     return measures;

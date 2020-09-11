@@ -6,6 +6,7 @@ import {
 import { useSizes } from '../../../../../../../../../../app/slices/measures';
 import { OFFSETS } from '../../../../../../constants';
 import { generateCollectedPoints } from './utils';
+import { useUnitMeasure } from '../useUnitMeasure';
 
 type Image = Parameters<typeof generateCollectedPoints>[0]['image'];
 
@@ -18,6 +19,8 @@ const { TOP_BLOCK_START_Y, BOTTOM_BLOCK_START_Y } = OFFSETS;
 export default function useCollectedPoints(params: Params) {
     const { pDark, pLight } = params;
     const round = useRound();
+
+    const unitMeasure = useUnitMeasure();
 
     const sizes = useSizes();
     const { CONTAINER_WIDTH } = sizes;
@@ -44,7 +47,23 @@ export default function useCollectedPoints(params: Params) {
             y: TOP_BLOCK_START_Y,
             x: 1,
         },
-    ].map(generateCollectedPoints);
+    ]
+        .map(generateCollectedPoints)
+        .map((_points) =>
+            _points.length > 0
+                ? _points.map((_point) => {
+                      const width = unitMeasure(_point.width, 'x');
+
+                      return {
+                          ..._point,
+                          x: unitMeasure(_point.x, 'x'),
+                          y: unitMeasure(_point.y, 'y'),
+                          width,
+                          height: width,
+                      };
+                  })
+                : _points
+        );
 
     return points;
 }
