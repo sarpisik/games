@@ -1,4 +1,4 @@
-import { OPPONENT, PLAYERS } from '@shared-types/backgammon';
+import { OPPONENT, PLAYERS, EmitGameOver } from '@shared-types/backgammon';
 import { ONE_SECOND } from '@shared-types/constants';
 import { GAME_EVENTS } from '@shared-types/game';
 import BackgammonGame from '../../game';
@@ -17,11 +17,12 @@ export default async function recursivelySetTimer(
             // Exit loop on game over.
             const winner = OPPONENT[roundPlayer];
             this.score[winner] = this.stages;
-            this._handleGameOver({
+            const payload: EmitGameOver = {
                 winner,
                 score: this.score,
                 stages: this.stages,
-            });
+            };
+            this._setStatus('OVER', payload);
         } else {
             this._emitNamespace(GAME_EVENTS.TIMER, this.timer);
 

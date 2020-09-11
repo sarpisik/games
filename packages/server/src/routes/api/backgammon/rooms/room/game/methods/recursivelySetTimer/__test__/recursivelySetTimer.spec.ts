@@ -10,7 +10,7 @@ describe('recursivelySetTimer', () => {
             BackgammonGame,
             '_t' | '_tRef' | 'timer' | 'score' | 'stages'
         > & {
-            _handleGameOver: jasmine.Spy<jasmine.Func>;
+            _setStatus: jasmine.Spy<jasmine.Func>;
             _emitNamespace: jasmine.Spy<jasmine.Func>;
             _recursivelySetTimer: (
                 latestRoundPlayer: PLAYERS | undefined
@@ -25,9 +25,9 @@ describe('recursivelySetTimer', () => {
             timer: generatePlayersObj(60, 60),
             score: generatePlayersObj(0, 0),
             stages: 3,
-            _emitNamespace: jasmine.createSpy(),
-            _handleGameOver: jasmine.createSpy(),
-            _recursivelySetTimer: jasmine.createSpy(),
+            _emitNamespace: jasmine.createSpy('_emitNamespace'),
+            _setStatus: jasmine.createSpy('_setStatus'),
+            _recursivelySetTimer: jasmine.createSpy('_recursivelySetTimer'),
         };
         latestRoundPlayer = player;
     });
@@ -38,7 +38,7 @@ describe('recursivelySetTimer', () => {
         // @ts-ignore
         recursivelySetTimer.call(backgammonGame, latestRoundPlayer).then(() => {
             expect(backgammonGame._emitNamespace).toHaveBeenCalledTimes(0);
-            expect(backgammonGame._handleGameOver).toHaveBeenCalledTimes(0);
+            expect(backgammonGame._setStatus).toHaveBeenCalledTimes(0);
             expect(backgammonGame._recursivelySetTimer).toHaveBeenCalledTimes(
                 0
             );
@@ -53,7 +53,7 @@ describe('recursivelySetTimer', () => {
                 GAME_EVENTS.TIMER,
                 generatePlayersObj(59, 60)
             );
-            expect(backgammonGame._handleGameOver).toHaveBeenCalledTimes(0);
+            expect(backgammonGame._setStatus).toHaveBeenCalledTimes(0);
             expect(_latestRoundPlayer).toBe(latestRoundPlayer);
             done();
         };
@@ -68,8 +68,8 @@ describe('recursivelySetTimer', () => {
         // @ts-ignore
         recursivelySetTimer.call(backgammonGame, latestRoundPlayer).then(() => {
             expect(backgammonGame._emitNamespace).toHaveBeenCalledTimes(0);
-            expect(backgammonGame._handleGameOver).toHaveBeenCalledTimes(1);
-            expect(backgammonGame._handleGameOver).toHaveBeenCalledWith({
+            expect(backgammonGame._setStatus).toHaveBeenCalledTimes(1);
+            expect(backgammonGame._setStatus).toHaveBeenCalledWith('OVER', {
                 winner: PLAYERS.WHITE,
                 score: generatePlayersObj(0, backgammonGame.stages),
                 stages: backgammonGame.stages,
