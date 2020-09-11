@@ -29,7 +29,7 @@ export default function useCollectedPoints(params: Params) {
         {
             baseContainer: containers[3],
             image: pLight,
-            points: round?.collected[PLAYERS.WHITE] || 15,
+            points: round?.collected[PLAYERS.WHITE],
             width: CONTAINER_WIDTH,
             heightLimit,
             y: BOTTOM_BLOCK_START_Y,
@@ -38,7 +38,7 @@ export default function useCollectedPoints(params: Params) {
         {
             baseContainer: containers[0],
             image: pDark,
-            points: round?.collected[PLAYERS.BLACK] || 15,
+            points: round?.collected[PLAYERS.BLACK],
             width: CONTAINER_WIDTH,
             heightLimit,
             y: TOP_BLOCK_START_Y,

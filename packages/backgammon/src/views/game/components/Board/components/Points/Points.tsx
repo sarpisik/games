@@ -18,7 +18,7 @@ export default function Points() {
             <React.Fragment>
                 <CollectedPoints pLight={pLight} pDark={pDark} />
                 <PlayerPoints pLight={pLight} pDark={pDark} />
-                <BrokenPoints />
+                <BrokenPoints pLight={pLight} pDark={pDark} />
             </React.Fragment>
         );
     }
