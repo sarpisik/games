@@ -29,13 +29,22 @@ export default function GameDemo(_props: RouteComponentProps) {
             attempt: 0,
             turn: 1,
             brokens: generatePlayers(1, 10),
-            collected: generatePlayers(15, 0),
+            collected: generatePlayers(15, 15),
             player: PLAYERS.WHITE,
             layout,
             dice: [3, 5],
         };
         dispatch(addRound(round));
-        dispatch(editGame({ isRoundPlayer: true }));
+        dispatch(
+            editGame({
+                isRoundPlayer: true,
+                // @ts-ignore
+                players: generatePlayers(
+                    { name: 'black player' },
+                    { name: 'white player' }
+                ),
+            })
+        );
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

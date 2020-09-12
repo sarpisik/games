@@ -1,20 +1,19 @@
 import React from 'react';
-
 import { Layer, useStrictMode } from 'react-konva';
+import { PLAYERS } from 'types/lib/backgammon';
 import useImage from 'use-image';
-
+import pointDark from '../../../../assets/point_dark.png';
+import pointLight from '../../../../assets/point_light.png';
 import {
     Basement,
     Blocks,
     Containers,
-    Triangles,
     Frame,
-    Points,
     Notification,
+    Points,
+    Sidebar,
+    Triangles,
 } from './components';
-
-import pointLight from '../../../../assets/point_light.png';
-import pointDark from '../../../../assets/point_dark.png';
 
 useStrictMode(true);
 
@@ -35,6 +34,12 @@ export default function Board() {
                     <Blocks />
                     <Triangles />
                     <Points pLight={pLight} pDark={pDark} />
+                    <Sidebar
+                        images={{
+                            [PLAYERS.BLACK]: pDark,
+                            [PLAYERS.WHITE]: pLight,
+                        }}
+                    />
                     <Notification />
                 </Layer>
             </Frame>

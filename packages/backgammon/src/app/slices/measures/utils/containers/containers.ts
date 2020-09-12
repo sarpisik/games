@@ -5,6 +5,7 @@ const {
     BOTTOM_CONTAINER_START_Y,
     LEFT_CONTAINER_START_X,
     TOP_CONTAINER_START_Y,
+    CONTAINER_HEIGHT,
 } = OFFSETS;
 
 export default function calculateContainers(
@@ -19,16 +20,20 @@ export default function calculateContainers(
         // Bottom left
         {
             x: LEFT_CONTAINER_START_X,
-            y: BOTTOM_CONTAINER_START_Y,
+            y:
+                CONTAINER_HEIGHT +
+                (BOTTOM_CONTAINER_START_Y - CONTAINER_HEIGHT * 2),
         },
     ].map((container, key) => {
-        const reverse = container.y > 25;
         return {
             ...container,
             color: COLORS.BOARD_INNER,
-            height: sizes.CONTAINER_HEIGHT * (reverse ? -1 : 1),
+            height: sizes.CONTAINER_HEIGHT,
             key,
             width: sizes.CONTAINER_WIDTH,
+            shadowColor: 'black',
+            shadowBlur: 10,
+            cornerRadius: 10,
         };
     });
 

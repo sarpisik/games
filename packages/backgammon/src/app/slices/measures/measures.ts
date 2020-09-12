@@ -3,6 +3,7 @@ import { PIXEL } from '../../../config';
 import {
     calculateBlocks,
     calculateContainers,
+    calculateSidebar,
     calculateSizes,
     calculateTriangles,
     calculateUnit,
@@ -12,11 +13,13 @@ const sizes = calculateSizes();
 const blocks = calculateBlocks(sizes);
 const containers = calculateContainers(sizes);
 const triangles = calculateTriangles(sizes);
+const sidebar = calculateSidebar(sizes);
 const unit = calculateUnit(sizes, PIXEL);
 
-export type Blocks = typeof containers;
-export type Containers = typeof blocks;
+export type Blocks = typeof blocks;
+export type Containers = typeof containers;
 export type Triangles = typeof triangles;
+export type Sidebar = typeof sidebar;
 export type Unit = typeof unit;
 export type Pixel = typeof PIXEL;
 
@@ -24,6 +27,7 @@ interface Measures {
     blocks: Blocks;
     containers: Containers;
     triangles: Triangles;
+    sidebar: Sidebar;
     pixel: Pixel;
     sizes: typeof sizes;
     unit: Unit;
@@ -33,6 +37,7 @@ const initialState: Measures = {
     blocks,
     containers,
     triangles,
+    sidebar,
     pixel: PIXEL,
     sizes,
     unit,

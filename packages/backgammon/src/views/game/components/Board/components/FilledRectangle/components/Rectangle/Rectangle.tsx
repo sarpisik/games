@@ -4,19 +4,29 @@ import { Rect } from 'react-konva';
 
 import { useUnitMeasure } from '../../../../hooks';
 
-type RectangleProps = React.ComponentProps<typeof Rect>;
+type Calculation = 'x' | 'y';
+type RectangleProps = React.ComponentProps<typeof Rect> & {
+    calculation?: {
+        width: Calculation;
+        height: Calculation;
+    };
+};
 
-export default function Rectangle({
-    x = 1,
-    y = 1,
-    width = 1,
-    height = 1,
-    ...rectProps
-}: RectangleProps): React.ReactElement {
+const _calculation = { width: 'x', height: 'y' } as const;
+
+export default function Rectangle(props: RectangleProps): React.ReactElement {
+    const {
+        x = 1,
+        y = 1,
+        width = 1,
+        height = 1,
+        calculation = _calculation,
+        ...rectProps
+    } = props;
     const posX = useUnitMeasure(x, 'x');
     const posY = useUnitMeasure(y, 'y');
-    const sizeX = useUnitMeasure(width, 'x');
-    const sizeY = useUnitMeasure(height, 'y');
+    const sizeX = useUnitMeasure(width, calculation.width);
+    const sizeY = useUnitMeasure(height, calculation.height);
 
     return (
         <Rect x={posX} y={posY} width={sizeX} height={sizeY} {...rectProps} />
