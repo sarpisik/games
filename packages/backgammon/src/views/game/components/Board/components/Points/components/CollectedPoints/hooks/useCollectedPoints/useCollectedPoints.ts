@@ -4,9 +4,9 @@ import {
     useRound,
 } from '../../../../../../../../../../app/slices';
 import { useSizes } from '../../../../../../../../../../app/slices/measures';
-import { OFFSETS } from '../../../../../../constants';
-import { generateCollectedPoints } from './utils';
+import { OFFSETS } from '../../../../../../../../../../app/slices/measures/contants';
 import { useUnitMeasure } from '../useUnitMeasure';
+import { generateCollectedPoints } from './utils';
 
 type Image = Parameters<typeof generateCollectedPoints>[0]['image'];
 

@@ -1,6 +1,6 @@
+import { OFFSETS } from '../../../../../../../app/slices/measures/contants';
 import { TOP_TRIANGLE, BOTTOM_TRIANGLE, TRIANGLE_SIZE } from './triangle';
 import { TrianglesLayout, TrianglesRow } from './types';
-import OFFSETS from '../../offsets';
 
 const {
     BOTTOM_BLOCK_START_Y,
