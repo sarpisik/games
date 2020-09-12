@@ -1,7 +1,7 @@
 import React from 'react';
 import { Point } from '../../../shared/components';
 import { BrokenPointProps } from '../../shared/types';
-import { Label } from './components';
+// import { Label } from './components';
 
 export default function BrokenPoint(
     props: BrokenPointProps
@@ -10,7 +10,7 @@ export default function BrokenPoint(
 
     return (
         <React.Fragment key={key}>
-            <Label {...label} />
+            {/* <Label {...label} /> */}
             <Point {...pointProps} />
         </React.Fragment>
     );

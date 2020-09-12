@@ -1,27 +1,27 @@
 import React from 'react';
 
-import { Circle as KonvaCircle } from 'react-konva';
+import { Image } from 'react-konva';
 
 import { useUnitMeasure } from '../../../../../../../../hooks';
 
 import { CIRCLE_SIZE } from './constants';
 import { useDragMoveHandler } from './hooks';
-import { Image } from 'react-konva';
 
-export type CircleProps = React.ComponentProps<typeof KonvaCircle>;
+export type CircleProps = React.ComponentProps<typeof Image>;
 
 export default function Circle({
     x = 1,
     y = 1,
+    width = CIRCLE_SIZE.RADIUS,
     fill,
     fillPatternImage,
     stroke,
     strokeWidth,
     ...circleProps
-}: Omit<CircleProps, 'radius'>): React.ReactElement {
+}: CircleProps): React.ReactElement {
     const posX = useUnitMeasure(x, 'x');
     const posY = useUnitMeasure(y, 'y');
-    const radius = useUnitMeasure(CIRCLE_SIZE.RADIUS, 'x') * 2;
+    const radius = useUnitMeasure(width, 'x') * 2;
     const onDragMove = useDragMoveHandler();
 
     return (

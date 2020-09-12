@@ -3,7 +3,7 @@ import { TRIANGLE_SIZE } from '../../../../views/game/components/Board/constants
 export default {
     // Y offet
     TOP_CONTAINER_START_Y: 1,
-    BOTTOM_CONTAINER_START_Y: 29,
+    BOTTOM_CONTAINER_START_Y: 49,
     TOP_BLOCK_START_Y: 1,
     BOTTOM_BLOCK_START_Y: 49,
 

@@ -2,13 +2,14 @@ import {
     useGame,
     usePaintLayout,
     useRound,
+    useSizes,
 } from '../../../../../../../../../../app/slices';
 import { PLAYERS } from '../../../../../../constants';
 import { useUnit } from '../../../../../../hooks/useUnit';
 import { CircleProps } from '../../../shared/components/Point/components/Circle';
 import { generatePlayerColor } from '../../../shared/utils';
 import { BrokenPointProps } from '../../shared/types';
-import { filterBrokenPoint, generateBrokenPointProps } from './utils';
+import { filterBrokenPoint, generateBrokenPoints } from './utils';
 
 type OnDragEnd = CircleProps['onDragEnd'];
 type OnDragStart = CircleProps['onDragStart'];
@@ -18,12 +19,18 @@ interface Params {
     pDark: HTMLImageElement;
 }
 
-export default function useBrokenPoints(params: Params): BrokenPointProps[] {
+export default function useBrokenPoints(
+    params: Params
+): (boolean | BrokenPointProps[])[] {
     const { pLight, pDark } = params;
+
     const { isRoundPlayer } = useGame().game;
     const round = useRound();
     const { getUnit } = useUnit();
+    const sizes = useSizes();
     const { paintTriangle, paintBrokenPointTriangles } = usePaintLayout();
+
+    const dynamicPointWidth = getUnit(sizes.BOARD_HEIGHT * 0.027, 'y');
 
     const onDragEnd: OnDragEnd = ({ target }) => {
         const { x, width, y, height } = target.attrs;
@@ -44,27 +51,33 @@ export default function useBrokenPoints(params: Params): BrokenPointProps[] {
 
     const brokens = [
         round?.brokens[PLAYERS.BLACK] > 0 &&
-            generateBrokenPointProps(
+            generateBrokenPoints({
                 isRoundPlayer,
                 round,
-                PLAYERS.BLACK,
-                pDark
-            ),
+                pointPlayer: PLAYERS.BLACK,
+                fillPatternImage: pDark,
+                width: dynamicPointWidth,
+            }),
         round?.brokens[PLAYERS.WHITE] > 0 &&
-            generateBrokenPointProps(
+            generateBrokenPoints({
                 isRoundPlayer,
                 round,
-                PLAYERS.WHITE,
-                pLight
-            ),
+                pointPlayer: PLAYERS.WHITE,
+                fillPatternImage: pLight,
+                width: dynamicPointWidth,
+            }),
     ]
         .filter(filterBrokenPoint)
-        .map((props) => {
-            props.onDragEnd = onDragEnd;
-            props.onDragStart = onDragStart;
+        .map((player) =>
+            player
+                ? player.map((props) => {
+                      props.onDragEnd = onDragEnd;
+                      props.onDragStart = onDragStart;
 
-            return props;
-        });
+                      return props;
+                  })
+                : player
+        );
 
     return brokens;
 }

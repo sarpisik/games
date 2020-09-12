@@ -21,13 +21,16 @@ export default function calculateContainers(
             x: LEFT_CONTAINER_START_X,
             y: BOTTOM_CONTAINER_START_Y,
         },
-    ].map((container, key) => ({
-        ...container,
-        color: COLORS.BOARD_INNER,
-        height: sizes.CONTAINER_HEIGHT,
-        key,
-        width: sizes.CONTAINER_WIDTH,
-    }));
+    ].map((container, key) => {
+        const reverse = container.y > 25;
+        return {
+            ...container,
+            color: COLORS.BOARD_INNER,
+            height: sizes.CONTAINER_HEIGHT * (reverse ? -1 : 1),
+            key,
+            width: sizes.CONTAINER_WIDTH,
+        };
+    });
 
     return containers;
 }

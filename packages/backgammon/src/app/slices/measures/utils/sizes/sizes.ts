@@ -22,7 +22,7 @@ export default function calculateSizes() {
 
         // container
         CONTAINER_WIDTH: 3,
-        CONTAINER_HEIGHT: 20,
+        CONTAINER_HEIGHT: 17,
 
         // block
         BLOCK_WIDTH: 18,

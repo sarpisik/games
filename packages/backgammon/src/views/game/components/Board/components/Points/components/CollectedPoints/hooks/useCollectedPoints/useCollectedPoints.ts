@@ -14,7 +14,11 @@ interface Params {
     pLight: Image;
     pDark: Image;
 }
-const { TOP_BLOCK_START_Y, BOTTOM_BLOCK_START_Y } = OFFSETS;
+const {
+    TOP_BLOCK_START_Y,
+    BOTTOM_BLOCK_START_Y,
+    LEFT_CONTAINER_START_X,
+} = OFFSETS;
 
 export default function useCollectedPoints(params: Params) {
     const { pDark, pLight } = params;
@@ -26,7 +30,7 @@ export default function useCollectedPoints(params: Params) {
     const { CONTAINER_WIDTH } = sizes;
 
     const containers = useContainers();
-    const heightLimit = sizes.TRIANGLE_HEIGHT;
+    const heightLimit = sizes.CONTAINER_HEIGHT;
 
     const points = [
         {
@@ -36,7 +40,7 @@ export default function useCollectedPoints(params: Params) {
             width: CONTAINER_WIDTH,
             heightLimit,
             y: BOTTOM_BLOCK_START_Y,
-            x: 1,
+            x: LEFT_CONTAINER_START_X,
         },
         {
             baseContainer: containers[0],
@@ -45,7 +49,7 @@ export default function useCollectedPoints(params: Params) {
             width: CONTAINER_WIDTH,
             heightLimit,
             y: TOP_BLOCK_START_Y,
-            x: 1,
+            x: LEFT_CONTAINER_START_X,
         },
     ]
         .map(generateCollectedPoints)
