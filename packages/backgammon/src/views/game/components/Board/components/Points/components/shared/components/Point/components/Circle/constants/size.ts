@@ -1,3 +1,3 @@
-import { TRIANGLE_SIZE } from '../../../../../../../../Triangles/components/Triangle/constants';
+import { TRIANGLE_WIDTH } from '../../../../../../../../../../../../../app/slices/measures/utils/sizes/sizes';
 
-export default { RADIUS: TRIANGLE_SIZE.WIDTH / 2 };
+export default { RADIUS: TRIANGLE_WIDTH / 2 };

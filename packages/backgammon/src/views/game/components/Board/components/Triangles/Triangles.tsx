@@ -1,11 +1,11 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { useRound } from '../../../../../../app/slices';
 import { LAYOUTS } from '../../constants';
 import { TriangleEven, TriangleHighlight, TriangleOdd } from './components';
 import { useTriangles } from './hooks';
 import { isEven } from './lib';
 
-export default function Triangles(): ReactElement {
+export default function Triangles(): React.ReactElement {
     const triangles = useTriangles();
 
     return <React.Fragment>{triangles.map(RenderTriangle)}</React.Fragment>;

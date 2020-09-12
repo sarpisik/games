@@ -1,4 +1,4 @@
-import { COLORS, OFFSETS } from '../../contants';
+import { COLORS, OFFSETS } from '../../../../../config';
 import { calculateSizes } from '../sizes';
 
 const {

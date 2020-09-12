@@ -1,24 +1,24 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { PIXEL } from '../../../config';
 import {
+    calculateBlocks,
     calculateContainers,
     calculateSizes,
-    calculateBlocks,
-    calculateUnit,
     calculateTriangles,
+    calculateUnit,
 } from './utils';
-import { PIXEL } from './contants';
 
 const sizes = calculateSizes();
 const blocks = calculateBlocks(sizes);
 const containers = calculateContainers(sizes);
 const triangles = calculateTriangles(sizes);
-const unit = calculateUnit(sizes, PIXEL.PIXEL);
+const unit = calculateUnit(sizes, PIXEL);
 
 export type Blocks = typeof containers;
 export type Containers = typeof blocks;
 export type Triangles = typeof triangles;
 export type Unit = typeof unit;
-export type Pixel = typeof PIXEL['PIXEL'];
+export type Pixel = typeof PIXEL;
 
 interface Measures {
     blocks: Blocks;
@@ -33,7 +33,7 @@ const initialState: Measures = {
     blocks,
     containers,
     triangles,
-    pixel: PIXEL['PIXEL'],
+    pixel: PIXEL,
     sizes,
     unit,
 };

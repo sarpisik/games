@@ -1,6 +1,6 @@
 import React from 'react';
+import { COLORS } from '../../../../../../../../../../config';
 import { TriangleBase } from './components';
-import { COLORS } from './constants';
 
 type TriangleBaseProps = React.ComponentProps<typeof TriangleBase>;
 interface FilledTriangleProps extends Omit<TriangleBaseProps, 'fill'> {

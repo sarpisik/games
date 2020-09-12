@@ -1,5 +1,5 @@
-import { OFFSETS } from '../../../../../../../app/slices/measures/contants';
-import { TOP_TRIANGLE, BOTTOM_TRIANGLE, TRIANGLE_SIZE } from './triangle';
+import { OFFSETS } from '../../../../../../../config';
+import { BOTTOM_TRIANGLE, TOP_TRIANGLE, TRIANGLE_SIZE } from './triangle';
 import { TrianglesLayout, TrianglesRow } from './types';
 
 const {

@@ -1,4 +1,4 @@
-import { OFFSETS } from '../../../../../../../../../../../../../../app/slices/measures/contants';
+import { OFFSETS } from '../../../../../../../../../../../../../../config';
 import { useUnit } from '../../../../../../../../../../hooks/useUnit';
 import { CircleProps } from '../../Circle';
 import { CIRCLE_SIZE } from '../../constants';

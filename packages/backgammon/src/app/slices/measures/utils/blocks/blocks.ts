@@ -1,4 +1,4 @@
-import { COLORS, OFFSETS } from '../../contants';
+import { COLORS, OFFSETS } from '../../../../../config';
 import { calculateSizes } from '../sizes';
 
 const { LEFT_BLOCK_START_X, RIGHT_BLOCK_START_X, TOP_BLOCK_START_Y } = OFFSETS;

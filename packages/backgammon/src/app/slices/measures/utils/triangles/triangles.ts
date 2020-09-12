@@ -1,4 +1,4 @@
-import { OFFSETS } from '../../contants';
+import { OFFSETS } from '../../../../../config';
 import { calculateSizes } from '../sizes';
 import { TRIANGLE_SIZE } from './triangle';
 import { TrianglesLayout, TrianglesRow } from './types';

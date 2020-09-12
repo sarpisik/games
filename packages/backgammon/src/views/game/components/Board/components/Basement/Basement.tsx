@@ -1,7 +1,7 @@
 import React from 'react';
 import { Rect } from 'react-konva';
 import { useSizes } from '../../../../../../app/slices/measures';
-import { COLORS } from '../../constants';
+import { COLORS } from '../../../../../../config';
 
 const { BOARD_BORDER } = COLORS;
 

@@ -1,4 +1,4 @@
-import { OFFSETS } from '../../../../../../../../../../../../../app/slices/measures/contants';
+import { OFFSETS } from '../../../../../../../../../../../../../config';
 import { PLAYERS } from '../../../../../../../../../constants';
 
 const { LEFT_CONTAINER_START_X } = OFFSETS;

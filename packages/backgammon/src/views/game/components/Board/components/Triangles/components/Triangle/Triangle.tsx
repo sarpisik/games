@@ -1,6 +1,6 @@
 import React from 'react';
+import { COLORS } from '../../../../../../../../config';
 import { FilledTriangle } from './components';
-import { COLORS } from './constants';
 
 type ColoredTriangleType = Omit<
     React.ComponentProps<typeof FilledTriangle>,
