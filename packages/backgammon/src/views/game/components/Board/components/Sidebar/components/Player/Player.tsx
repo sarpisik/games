@@ -15,16 +15,16 @@ interface Props {
     name: NameProps;
 }
 
+// Calculate width by "y" unit size.
+const CALCULATION = { width: 'y', height: 'y' };
+
 export default function Player(props: Props): React.ReactElement {
     const { container, col1, point, score, name } = props;
 
     return (
         <React.Fragment>
             <FilledRectangle {...container} />
-            <FilledRectangle
-                calculation={{ width: 'y', height: 'y' }}
-                {...col1}
-            />
+            <FilledRectangle calculation={CALCULATION} {...col1} />
             <Point {...point} />
             <Score {...score} />
             <Name {...name} />
