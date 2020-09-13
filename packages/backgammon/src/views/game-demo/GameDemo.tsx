@@ -28,8 +28,8 @@ export default function GameDemo(_props: RouteComponentProps) {
             loading: false,
             attempt: 0,
             turn: 1,
-            brokens: generatePlayers(1, 10),
-            collected: generatePlayers(15, 15),
+            brokens: generatePlayers(0, 0),
+            collected: generatePlayers(15, 0),
             player: PLAYERS.WHITE,
             layout,
             dice: [3, 5],
@@ -41,7 +41,7 @@ export default function GameDemo(_props: RouteComponentProps) {
                 // @ts-ignore
                 players: generatePlayers(
                     { name: 'black player' },
-                    { name: 'white player' }
+                    { name: 'white player white player' }
                 ),
             })
         );

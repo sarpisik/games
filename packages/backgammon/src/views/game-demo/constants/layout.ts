@@ -35,41 +35,39 @@ export const layout = [
     [PLAYERS.NONE, 0],
     [PLAYERS.NONE, 0],
     [PLAYERS.BLACK, 2],
+    // // Top left.
+
+    // [PLAYERS.BLACK, 15],
+    // [PLAYERS.NONE, 0],
+    // [PLAYERS.NONE, 0],
+    // [PLAYERS.NONE, 0],
+    // [PLAYERS.NONE, 0],
+    // [PLAYERS.NONE, 0],
+
+    // // Top right.
+
+    // [PLAYERS.NONE, 0],
+    // [PLAYERS.NONE, 0],
+    // [PLAYERS.NONE, 0],
+    // [PLAYERS.NONE, 0],
+    // [PLAYERS.NONE, 0],
+    // [PLAYERS.NONE, 0],
+
+    // // Bottom right.
+
+    // [PLAYERS.NONE, 0],
+    // [PLAYERS.NONE, 0],
+    // [PLAYERS.NONE, 0],
+    // [PLAYERS.NONE, 0],
+    // [PLAYERS.NONE, 0],
+    // [PLAYERS.NONE, 0],
+
+    // // Bottom left.
+
+    // [PLAYERS.NONE, 0],
+    // [PLAYERS.NONE, 0],
+    // [PLAYERS.NONE, 0],
+    // [PLAYERS.NONE, 0],
+    // [PLAYERS.NONE, 0],
+    // [PLAYERS.WHITE, 15],
 ];
-// export default [
-//     // Top left.
-
-//     [PLAYERS.BLACK, 15],
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-
-//     // Top right.
-
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-
-//     // Bottom right.
-
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-
-//     // Bottom left.
-
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.NONE, 0],
-//     [PLAYERS.WHITE, 15],
-// ];

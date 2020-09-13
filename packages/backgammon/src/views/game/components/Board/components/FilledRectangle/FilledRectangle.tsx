@@ -7,9 +7,10 @@ export interface FilledRectangleProps extends Omit<RectangleProps, 'fill'> {
     color: RectangleProps['fill'];
 }
 
-export default function FilledRectangle({
-    color,
-    ...rectProps
-}: FilledRectangleProps): React.ReactElement {
+export default function FilledRectangle(
+    props: FilledRectangleProps
+): React.ReactElement {
+    const { color, ...rectProps } = props;
+
     return <Rectangle fill={color} {...rectProps} />;
 }

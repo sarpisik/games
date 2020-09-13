@@ -1,4 +1,6 @@
 import React from 'react';
+import { SIDEBAR_FONT_SIZE } from '../../../../../../../../../../config';
+import { shortenString } from '../../../../../../../../../../utils';
 import { useUnitMeasure } from '../../../../../../hooks';
 import { Label } from '../../../../../Label';
 
@@ -11,8 +13,9 @@ interface Props {
 }
 
 export default function Name(props: Props): React.ReactElement {
-    const { name, x, y, offsetY, height } = props;
+    const { name = '', x, y, offsetY, height } = props;
 
+    const _name = shortenString(name);
     const _x = useUnitMeasure(x, 'x');
     const _y = useUnitMeasure(y, 'y');
     const _offsetY = useUnitMeasure(offsetY, 'y');
@@ -27,8 +30,8 @@ export default function Name(props: Props): React.ReactElement {
             fill="#ffffff"
             align="center"
             verticalAlign="top"
-            text={name || ''}
-            fontSize={0.017}
+            text={_name}
+            fontSize={SIDEBAR_FONT_SIZE}
         />
     );
 }

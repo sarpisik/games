@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaRegUser, FaUser } from 'react-icons/fa';
 import { PLAYERS } from 'types/lib/backgammon';
+import { shortenString } from '../../../../../../../../../../utils';
 import { Sit } from './components';
 
 interface UserProps extends React.ComponentProps<typeof Sit> {
@@ -17,7 +18,7 @@ export default function User(props: UserProps): React.ReactElement {
     const Icon = ICONS_MAP[sitProps.color];
     const children =
         typeof name === 'string' ? (
-            <p>{shortenName(name)}</p>
+            <p>{shortenString(name)}</p>
         ) : (
             <Sit {...sitProps} />
         );
@@ -28,8 +29,4 @@ export default function User(props: UserProps): React.ReactElement {
             {children}
         </div>
     );
-}
-
-function shortenName(name: string) {
-    return name.length > 8 ? name.slice(0, 8).concat('...') : name;
 }
