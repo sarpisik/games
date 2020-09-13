@@ -1,5 +1,5 @@
+import { layout } from '@routes/api/backgammon/rooms/room/game/constants';
 import { PLAYERS } from '@shared-types/backgammon';
-import { layout } from '../../../../constants';
 import calculateUsedDices from '../calculateUsedDices';
 import { createArea } from '../utils/calculateMovable/utils/calculateDiceMovable/__test__/calculateDiceMovable.spec';
 
@@ -28,11 +28,20 @@ describe('calculateUsedDices', () => {
 
     it('should return an empty array when not movable', (done) => {
         const result: number[] = [];
-        const startIndex = 2;
+        const startIndex = 4;
         const dices = [3, 4];
         const params = Object.assign({}, _params, {
             dices,
-            layout: createArea(_params.player, startIndex),
+            layout: createArea(_params.player, startIndex).map((t, i) => {
+                switch (i) {
+                    case 0: // 1st triangle
+                    case 1: // 2nd triangle
+                        return [PLAYERS.BLACK, 2];
+
+                    default:
+                        return t;
+                }
+            }),
             startIndex,
         });
 

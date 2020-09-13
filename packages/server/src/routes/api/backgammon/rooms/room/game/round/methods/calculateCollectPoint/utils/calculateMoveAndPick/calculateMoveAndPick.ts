@@ -1,7 +1,7 @@
 import { calculateCollectArea, calculateUsedDices } from './utils';
 
 type _Params = Parameters<typeof calculateUsedDices>[0];
-interface Params extends Omit<_Params, 'startIndex'> {
+export interface Params extends Omit<_Params, 'startIndex'> {
     dices: number[];
     triangleIndex: _Params['startIndex'];
 }

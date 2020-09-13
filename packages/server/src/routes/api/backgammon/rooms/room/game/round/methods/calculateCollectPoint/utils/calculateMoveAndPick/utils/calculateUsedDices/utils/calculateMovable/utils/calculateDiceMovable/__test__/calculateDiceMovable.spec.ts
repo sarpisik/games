@@ -48,13 +48,35 @@ describe('calculateDiceMovable', () => {
         });
     });
 
-    it('should return false when the triangle is blocked.', (done) => {
+    it('should return true when only on of the triangles is blocked.', (done) => {
         const player = PLAYERS.WHITE;
         const startIndex = 3;
         const validDices = generateValidDices(3, 4);
         const layout = createArea(player, startIndex).map((t, i) => {
             if (i === validDices[0] - 1) return [OPPONENT[PLAYERS.WHITE], 2];
             return t;
+        });
+        const params = generateParams(validDices, layout, startIndex, player);
+
+        calculateDiceMovable(params).then((movable) => {
+            expect(movable).toBeTrue();
+            done();
+        });
+    });
+
+    it('should return false when all the triangles are blocked.', (done) => {
+        const player = PLAYERS.WHITE;
+        const startIndex = 3;
+        const validDices = generateValidDices(3, 4);
+        const layout = createArea(player, startIndex).map((t, i) => {
+            switch (i) {
+                case 2:
+                case 3:
+                    return [OPPONENT[PLAYERS.WHITE], 2];
+
+                default:
+                    return t;
+            }
         });
         const params = generateParams(validDices, layout, startIndex, player);
 

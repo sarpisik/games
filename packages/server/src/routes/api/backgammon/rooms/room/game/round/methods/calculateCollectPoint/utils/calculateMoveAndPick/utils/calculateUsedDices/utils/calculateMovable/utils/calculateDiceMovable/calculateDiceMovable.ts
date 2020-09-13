@@ -4,6 +4,7 @@ import { MovableParams } from '../../shared/types';
 
 export default async function calculateDiceMovable(params: MovableParams) {
     const { validDices, layout, startIndex, player } = params;
+    let isBlockedAlready = false;
     let shouldMovable = true;
 
     await customPromiseLoop(validDices.length - 1, function onLoopTriangleIndex(
@@ -21,8 +22,12 @@ export default async function calculateDiceMovable(params: MovableParams) {
         const triangle = layout[tIndex];
         const blocked = triangleIsBlocked(player, triangle);
         if (blocked) {
-            shouldMovable = false;
-            return COMMANDS.BREAK;
+            if (isBlockedAlready) {
+                shouldMovable = false;
+                return COMMANDS.BREAK;
+            }
+
+            isBlockedAlready = true;
         }
 
         return COMMANDS.CONTINUE;
