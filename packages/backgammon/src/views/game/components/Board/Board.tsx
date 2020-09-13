@@ -1,9 +1,6 @@
 import React from 'react';
 import { Layer, useStrictMode } from 'react-konva';
 import { PLAYERS } from 'types/lib/backgammon';
-import useImage from 'use-image';
-import pointDark from '../../../../assets/point_dark.png';
-import pointLight from '../../../../assets/point_light.png';
 import {
     Basement,
     Blocks,
@@ -14,14 +11,15 @@ import {
     Sidebar,
     Triangles,
 } from './components';
+import { allElements, useLoadAssets } from './hooks';
 
 useStrictMode(true);
 
 export default function Board() {
-    const [pLight, sLight] = useImage(pointLight);
-    const [pDark, sDark] = useImage(pointDark);
+    const [assets, allSuccess, someFailed] = useLoadAssets();
 
-    if (pLight && pDark) {
+    if (allSuccess && allElements(assets)) {
+        const [pLight, pDark, ...dices] = assets;
         // Will be accessible by drag start event handler
         pLight.dataset.color = 'WHITE';
         pDark.dataset.color = 'BLACK';
@@ -38,6 +36,7 @@ export default function Board() {
                         images={{
                             [PLAYERS.BLACK]: pDark,
                             [PLAYERS.WHITE]: pLight,
+                            dices,
                         }}
                     />
                     <Notification />
@@ -46,9 +45,12 @@ export default function Board() {
         );
     }
 
-    if (sLight === 'failed')
-        console.error('Failed to load assets ' + pointLight);
-    if (sDark === 'failed') console.error('Failed to load assets ' + pointDark);
+    if (someFailed) {
+        console.error('Some assets failed to load.');
+        console.error(assets);
 
-    return null;
+        return <p>Sorry, board can not be initialized rgit now.</p>;
+    }
+
+    return <p>Loading assets. Please wait...</p>;
 }

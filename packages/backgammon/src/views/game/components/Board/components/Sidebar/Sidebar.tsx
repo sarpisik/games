@@ -5,11 +5,13 @@ import { OFFSETS } from '../../../../../../config';
 import { Container, Player } from './components';
 
 type PlayerProps = React.ComponentProps<typeof Player>;
+type ImageElement = PlayerProps['point']['image'];
 
 interface Props {
     images: {
-        [PLAYERS.BLACK]: PlayerProps['point']['image'];
-        [PLAYERS.WHITE]: PlayerProps['point']['image'];
+        [PLAYERS.BLACK]: ImageElement;
+        [PLAYERS.WHITE]: ImageElement;
+        dices: ImageElement[];
     };
 }
 
