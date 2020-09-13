@@ -2,9 +2,9 @@ import { EmitCollectPointRound } from '@shared-types/backgammon';
 import Round from '../../round';
 import { calculateShouldCollect } from '../../utils';
 import {
-    calculateCollectArea,
+    calculateMoveAndPick,
     calculatePickable,
-    calculateUsedDices,
+    shouldMoveAndPick,
     shouldPickable,
     transformCollectAreaIndex,
 } from './utils';
@@ -23,31 +23,27 @@ export default async function calculateCollectPoint(
             fromTriangleIndex
         );
 
-        const pickable = await calculatePickable({
+        const params: Parameters<typeof calculatePickable>[0] = {
             dices,
             fromTriangleIndex,
             layout,
             player,
             triangleIndex,
-        });
+        };
+        const pickable = await calculatePickable(params);
 
         if (shouldPickable(pickable)) {
             const { deleteDicesFrom, tIndex } = pickable;
             return this._handleCollect(deleteDicesFrom, 1, tIndex);
         }
 
-        const collectArea = await calculateCollectArea(player, layout);
-        const usedIndexes = await calculateUsedDices({
-            dices,
-            layout: collectArea,
-            player,
-            startIndex: triangleIndex,
-        });
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        delete params.fromTriangleIndex;
+        const moveAndPick = await calculateMoveAndPick(params);
 
-        const deleteDicesCount = usedIndexes.length;
-        const shouldMoveAndPick = deleteDicesCount > 0;
-        if (shouldMoveAndPick)
-            return this._handleCollect(0, deleteDicesCount, triangleIndex);
+        if (shouldMoveAndPick(moveAndPick))
+            return this._handleCollect(0, moveAndPick, triangleIndex);
 
         return this._handleNotCollected();
     }

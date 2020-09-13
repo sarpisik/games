@@ -1,4 +1,6 @@
-export { calculateCollectArea } from './calculateCollectArea';
+export {
+    calculateMoveAndPick,
+    shouldMoveAndPick,
+} from './calculateMoveAndPick';
 export { calculatePickable, shouldPickable } from './calculatePickable';
-export { calculateUsedDices } from './calculateUsedDices';
 export { transformCollectAreaIndex } from './shared';
