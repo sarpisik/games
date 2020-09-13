@@ -109,6 +109,11 @@ export const OFFSETS = {
     SIDEBAR_START_X,
     SIDEBAR_WIDTH,
 
+    // // dices
+    // DICES(count: number) {
+    //     const height=
+    //     return count > 2 ? {} : {};
+    // },
     // player label
     PLAYER_LABELS: {
         [PLAYERS.BLACK]: {

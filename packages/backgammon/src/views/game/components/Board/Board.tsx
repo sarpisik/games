@@ -28,7 +28,7 @@ export default function Board() {
             <Frame>
                 <Layer>
                     <Basement />
-                    <Containers />
+                    {/* <Containers />
                     <Blocks />
                     <Triangles />
                     <Points pLight={pLight} pDark={pDark} />
@@ -39,7 +39,7 @@ export default function Board() {
                             dices,
                         }}
                     />
-                    <Notification />
+                    <Notification /> */}
                 </Layer>
             </Frame>
         );

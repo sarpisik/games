@@ -1,21 +1,33 @@
 import React from 'react';
-import { Rect } from 'react-konva';
+import { Image } from 'react-konva';
+import useImage from 'use-image';
 import { useSizes } from '../../../../../../app/slices/measures';
-import { COLORS } from '../../../../../../config';
+// import { COLORS } from '../../../../../../config';
+import board from '../../../../../../assets/board.png';
 
-const { BOARD_BORDER } = COLORS;
+// const { BOARD_BORDER } = COLORS;
 
 export default function Basement(): React.ReactElement {
     const sizes = useSizes();
     const { BOARD_WIDTH, BOARD_HEIGHT } = sizes;
+    const [image] = useImage(board);
 
     return (
-        <Rect
+        <Image
             x={0}
             y={0}
             width={BOARD_WIDTH}
             height={BOARD_HEIGHT}
-            fill={BOARD_BORDER}
+            image={image}
         />
     );
+    // return (
+    //     <Rect
+    //         x={0}
+    //         y={0}
+    //         width={BOARD_WIDTH}
+    //         height={BOARD_HEIGHT}
+    //         fill={BOARD_BORDER}
+    //     />
+    // );
 }

@@ -5,15 +5,10 @@ export const TRIANGLE_WIDTH = 3;
 export const TRIANGLE_HEIGHT = 20;
 
 export default function calculateSizes() {
-    const {
-        isLandscape,
-        windowHeight,
-        windowWidth,
-        orientation,
-    } = calculateWindowDimension();
+    const { isLandscape, windowWidth } = calculateWindowDimension();
 
     const BOARD_WIDTH = isLandscape ? windowWidth * MAX_WIDTH : windowWidth;
-    const BOARD_HEIGHT = isLandscape ? windowHeight : windowWidth * orientation;
+    const BOARD_HEIGHT = BOARD_WIDTH * (768 / 1366);
 
     return Object.assign(
         {
