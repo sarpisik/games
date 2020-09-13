@@ -46,6 +46,5 @@ export default async function calculateStackIndex(
         const _stackIndex = STACK_INDEX_MAP[player];
         stackIndex.push(_stackIndex);
     }
-
     return stackIndex;
 }

@@ -1,14 +1,8 @@
-export { calculateCollectArea } from './calculateCollectArea';
 export { calculateShouldCollect } from './calculateShouldCollect';
-export { calculateUsedDices } from './calculateUsedDices';
 export { deleteUsedDice } from './deleteUsedDice';
-export { filterFarthestTriangle } from './filterFarthestTriangle';
-export { filterMaxDice } from './filterMaxDice';
 export { filterValidDice } from './filterValidDice';
-export { filterValidDiceIndex } from './filterValidDiceIndex';
 export { filterValidTriangleIndexes } from './filterValidTriangleIndexes';
 export { generateAsyncObj } from './generateAsyncObj';
 export { handleTriangleLayout } from './handleTriangleLayout';
 export { rollDice } from './rollDice';
-export { transformCollectAreaIndex } from './transformCollectAreaIndex';
 export { validateTargetTriangle } from './validateTargetTriangle';

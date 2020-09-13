@@ -1,0 +1,1 @@
+export { calculateCollectPoint } from './calculateCollectPoint';
