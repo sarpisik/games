@@ -22,7 +22,7 @@ export default async function recursivelyCalculatePickableTriangle(
         const [player] = triangle;
         const roundPlayerTriangle = player === roundPlayer;
 
-        const diceOnTriangle = i + 1;
+        const diceOnTriangle = limit - i;
         const pickable =
             roundPlayerTriangle &&
             (await customPromiseIncludes(dices, diceOnTriangle));

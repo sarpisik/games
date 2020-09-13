@@ -48,6 +48,33 @@ describe('calculateAvailableTriangleExist', () => {
                 done();
             });
         });
+
+        it('should return false in collectable mode', (done) => {
+            _params.layout = Array(24)
+                .fill([PLAYERS.NONE, 0])
+                .map((t, i) => {
+                    switch (i) {
+                        // Black points
+                        case 23: // 1st triangle from whites area
+                            return [PLAYERS.BLACK, 2];
+
+                        // White points
+                        case 22: // 2nd triangle from whites area
+                            return [PLAYERS.WHITE, 5];
+                        case 20: // 4th triangle from whites area
+                            return [PLAYERS.WHITE, 3];
+
+                        default:
+                            return t;
+                    }
+                });
+            _params.dice = [3];
+
+            calculateAvailableTriangleExist(_params).then((result) => {
+                expect(result).toBeFalse();
+                done();
+            });
+        });
     });
 
     describe(`"${PLAYERS[PLAYERS.BLACK]}" player:`, () => {
