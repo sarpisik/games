@@ -10,7 +10,7 @@ const {
     LEFT_BLOCK_TRIANGLE_END_X,
     RIGHT_BLOCK_TRIANGLE_END_X,
     TOP_BLOCK_START_Y,
-    BOTTOM_BLOCK_START_Y,
+    POINT_BOTTOM_START_Y,
 } = OFFSETS;
 
 type FillTriangleParams = Parameters<typeof fillTriangle>[0];
@@ -54,7 +54,7 @@ export default function createPointsOnRound(params: Params) {
             : isLeftBlock
             ? LEFT_BLOCK_TRIANGLE_END_X
             : RIGHT_BLOCK_TRIANGLE_END_X;
-        const yBlock = isTop ? TOP_BLOCK_START_Y : BOTTOM_BLOCK_START_Y;
+        const yBlock = isTop ? TOP_BLOCK_START_Y : POINT_BOTTOM_START_Y;
         const isRoundPlayer = game.isRoundPlayer && roundPlayer === player;
         const hasNoBroken = isPlayer(player) && round?.brokens[player] < 1;
         const draggable = isRoundPlayer && hasNoBroken;

@@ -29,8 +29,8 @@ export default function Board() {
                     <Basement />
                     <Containers />
                     <Triangles />
-                    {/*
                     <Points pLight={pLight} pDark={pDark} />
+                    {/*
                     <Sidebar
                         images={{
                             [PLAYERS.BLACK]: pDark,

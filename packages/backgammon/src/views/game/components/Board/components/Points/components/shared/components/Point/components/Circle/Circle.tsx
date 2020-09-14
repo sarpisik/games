@@ -14,7 +14,7 @@ export type CircleProps = React.ComponentProps<typeof Image>;
 export default function Circle({
     x = 1,
     y = 1,
-    width = TRIANGLE_WIDTH / 2,
+    width = TRIANGLE_WIDTH,
     fill,
     fillPatternImage,
     stroke,
@@ -23,7 +23,7 @@ export default function Circle({
 }: CircleProps): React.ReactElement {
     const posX = useUnitMeasure(x, 'x');
     const posY = useUnitMeasure(y, 'y');
-    const radius = useUnitMeasure(width, 'x') * 2;
+    const radius = useUnitMeasure(width, 'x');
     const onDragMove = useDragMoveHandler();
 
     return (

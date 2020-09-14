@@ -29,7 +29,7 @@ export default function GameDemo(_props: RouteComponentProps) {
             attempt: 0,
             turn: 1,
             brokens: generatePlayers(0, 0),
-            collected: generatePlayers(15, 0),
+            collected: generatePlayers(15, 1),
             player: PLAYERS.WHITE,
             layout,
             dice: [1, 4],

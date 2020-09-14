@@ -16,7 +16,7 @@ interface Params {
 }
 const {
     TOP_BLOCK_START_Y,
-    BOTTOM_BLOCK_START_Y,
+    POINT_BOTTOM_START_Y,
     LEFT_CONTAINER_START_X,
 } = OFFSETS;
 
@@ -39,7 +39,7 @@ export default function useCollectedPoints(params: Params) {
             points: round?.collected[PLAYERS.WHITE],
             width: CONTAINER_WIDTH,
             heightLimit,
-            y: BOTTOM_BLOCK_START_Y,
+            y: POINT_BOTTOM_START_Y,
             x: LEFT_CONTAINER_START_X,
         },
         {

@@ -7,7 +7,7 @@ const {
     TOP_BLOCK_START_Y,
     BOTTOM_BLOCK_START_Y,
     LEFT_CONTAINER_START_X,
-    TRIANGLE_WIDTH: POINT_SIZE,
+    POINT_SIZE,
 } = OFFSETS;
 
 export type OnDragMove = CircleProps['onDragMove'];
