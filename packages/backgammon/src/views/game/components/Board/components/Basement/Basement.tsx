@@ -12,22 +12,22 @@ export default function Basement(): React.ReactElement {
     const { BOARD_WIDTH, BOARD_HEIGHT } = sizes;
     const [image] = useImage(board);
 
-    // return (
-    //     <Image
-    //         x={0}
-    //         y={0}
-    //         width={BOARD_WIDTH}
-    //         height={BOARD_HEIGHT}
-    //         image={image}
-    //     />
-    // );
     return (
-        <Rect
+        <Image
             x={0}
             y={0}
             width={BOARD_WIDTH}
             height={BOARD_HEIGHT}
-            fill={BOARD_BORDER}
+            image={image}
         />
     );
+    // return (
+    //     <Rect
+    //         x={0}
+    //         y={0}
+    //         width={BOARD_WIDTH}
+    //         height={BOARD_HEIGHT}
+    //         fill={BOARD_BORDER}
+    //     />
+    // );
 }

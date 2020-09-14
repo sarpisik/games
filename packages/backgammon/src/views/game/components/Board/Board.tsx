@@ -28,6 +28,7 @@ export default function Board() {
             <Frame>
                 <Layer>
                     <Basement />
+                    {/*
                     <Containers />
                     <Blocks />
                     <Triangles />
@@ -39,6 +40,7 @@ export default function Board() {
                             dices,
                         }}
                     />
+                    */}
                     <Notification />
                 </Layer>
             </Frame>
