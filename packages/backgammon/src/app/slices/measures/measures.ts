@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { PIXEL } from '../../../config';
 import {
-    calculateBlocks,
     calculateContainers,
     calculateSidebar,
     calculateSizes,
@@ -10,13 +9,11 @@ import {
 } from './utils';
 
 const sizes = calculateSizes();
-const blocks = calculateBlocks(sizes);
 const containers = calculateContainers(sizes);
 const triangles = calculateTriangles(sizes);
 const sidebar = calculateSidebar(sizes);
 const unit = calculateUnit(sizes, PIXEL);
 
-export type Blocks = typeof blocks;
 export type Containers = typeof containers;
 export type Triangles = typeof triangles;
 export type Sidebar = typeof sidebar;
@@ -24,7 +21,6 @@ export type Unit = typeof unit;
 export type Pixel = typeof PIXEL;
 
 interface Measures {
-    blocks: Blocks;
     containers: Containers;
     triangles: Triangles;
     sidebar: Sidebar;
@@ -34,7 +30,6 @@ interface Measures {
 }
 
 const initialState: Measures = {
-    blocks,
     containers,
     triangles,
     sidebar,

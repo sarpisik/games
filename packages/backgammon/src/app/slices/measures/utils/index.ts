@@ -1,4 +1,3 @@
-export { calculateBlocks } from './blocks';
 export { calculateContainers } from './containers';
 export { calculateSidebar } from './sidebar';
 export { calculateSizes } from './sizes';

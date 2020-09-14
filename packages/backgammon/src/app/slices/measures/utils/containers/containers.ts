@@ -1,4 +1,4 @@
-import { COLORS, OFFSETS } from '../../../../../config';
+import { OFFSETS } from '../../../../../config';
 import { calculateSizes } from '../sizes';
 
 const {
@@ -27,13 +27,9 @@ export default function calculateContainers(
     ].map((container, key) => {
         return {
             ...container,
-            color: COLORS.BOARD_INNER,
             height: sizes.CONTAINER_HEIGHT,
             key,
             width: sizes.CONTAINER_WIDTH,
-            shadowColor: 'black',
-            shadowBlur: 10,
-            cornerRadius: 10,
         };
     });
 

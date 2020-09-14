@@ -28,8 +28,8 @@ export default function Board() {
             <Frame>
                 <Layer>
                     <Basement />
-                    {/*
                     <Containers />
+                    {/*
                     <Blocks />
                     <Triangles />
                     <Points pLight={pLight} pDark={pDark} />

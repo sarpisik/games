@@ -28,6 +28,8 @@ function handleHighlightContainer(availableTriangles?: AvailableTriangles) {
         if (shouldHighlight) {
             container = Object.assign({}, container, {
                 color: COLORS.HIGHLIGHT,
+                shadowColor: 'black',
+                shadowBlur: 10,
             });
         }
 

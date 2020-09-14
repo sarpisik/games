@@ -28,11 +28,11 @@ export const COLORS = {
 
 export const PIXEL = 0.02; // 1 square = 2 unit.
 
-const TOP_BLOCK_START_Y = 1;
-const LEFT_CONTAINER_START_X = 1;
+const TOP_BLOCK_START_Y = 1.5;
+const LEFT_CONTAINER_START_X = 33.05;
+const CONTAINER_HEIGHT = 18.5;
+const CONTAINER_WIDTH = 2.45;
 const BOTTOM_BLOCK_START_Y = 49;
-const CONTAINER_HEIGHT = 17;
-const CONTAINER_WIDTH = 3;
 const TRIANGLE_WIDTH = 3;
 const TRIANGLE_HEIGHT = 20;
 const RIGHT_BLOCK_TRIANGLE_END_X = 39 + TRIANGLE_WIDTH;
@@ -43,8 +43,6 @@ const PLAYERS_LABEL_HEIGHT = 6;
 const PLAYERS_LABEL_POINT_HEIGHT = PLAYERS_LABEL_HEIGHT / 3;
 const LEFT_BLOCK_START_X = 5;
 const LEFT_BLOCK_END_X = 20;
-const BLOCK_WIDTH = 18;
-const BLOCK_HEIGHT = 48;
 const RIGHT_BLOCK_START_X = 24;
 export const OFFSETS = {
     /*
@@ -55,7 +53,7 @@ export const OFFSETS = {
 
     // Y offet
     TOP_CONTAINER_START_Y: TOP_BLOCK_START_Y,
-    BOTTOM_CONTAINER_START_Y: 49,
+    BOTTOM_CONTAINER_START_Y: 48.5,
     BOTTOM_BLOCK_START_Y,
 
     // X offset
@@ -71,22 +69,6 @@ export const OFFSETS = {
      *
      */
 
-    // block
-    BLOCKS: Array(2)
-        .fill({
-            x: LEFT_BLOCK_START_X,
-            y: TOP_BLOCK_START_Y,
-            height: BLOCK_HEIGHT,
-            width: BLOCK_WIDTH,
-            shadowColor: 'black',
-            shadowBlur: 10,
-            cornerRadius: 10,
-            color: COLORS.BOARD_INNER,
-        })
-        .map((container, i) => ({
-            ...container,
-            x: i > 0 ? RIGHT_BLOCK_START_X : container.x,
-        })),
     LEFT_BLOCK_END_X,
     LEFT_BLOCK_START_X,
     RIGHT_BLOCK_START_X,
