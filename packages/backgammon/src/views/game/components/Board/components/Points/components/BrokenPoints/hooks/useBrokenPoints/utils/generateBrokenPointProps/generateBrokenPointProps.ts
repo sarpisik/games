@@ -1,4 +1,5 @@
 import { GameClient, PLAYERS, Round } from 'types/lib/backgammon';
+import { OFFSETS } from '../../../../../../../../../../../../config';
 import { BrokenPointProps } from '../../../../shared/types';
 import { COORDINATES } from './constants';
 import { xOffsetCalculator } from './utils';
@@ -8,20 +9,12 @@ interface Params {
     round: Round;
     pointPlayer: Round['player'];
     fillPatternImage: HTMLImageElement;
-    width: number;
     points: number;
 }
 
 export default function generateBrokenPointProps(
     i: number,
-    {
-        isRoundPlayer,
-        round,
-        pointPlayer,
-        fillPatternImage,
-        width,
-        points,
-    }: Params
+    { isRoundPlayer, round, pointPlayer, fillPatternImage, points }: Params
 ): BrokenPointProps {
     const { x, y } = COORDINATES[pointPlayer];
 
@@ -29,7 +22,7 @@ export default function generateBrokenPointProps(
         key: PLAYERS[pointPlayer] + i,
         x: xOffsetCalculator(x, i, points),
         y,
-        width,
+        width: OFFSETS.POINT_SIZE,
         fillPatternImage,
         draggable: Boolean(isRoundPlayer && round.player === pointPlayer),
     };

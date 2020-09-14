@@ -4,6 +4,7 @@ import {
     useRound,
     useSizes,
 } from '../../../../../../../../../../app/slices';
+import { OFFSETS } from '../../../../../../../../../../config';
 import { PLAYERS } from '../../../../../../constants';
 import { useUnit } from '../../../../../../hooks/useUnit';
 import { CircleProps } from '../../../shared/components/Point/components/Circle';
@@ -56,7 +57,6 @@ export default function useBrokenPoints(
                 round,
                 pointPlayer: PLAYERS.BLACK,
                 fillPatternImage: pDark,
-                width: dynamicPointWidth,
             }),
         round?.brokens[PLAYERS.WHITE] > 0 &&
             generateBrokenPoints({
@@ -64,7 +64,6 @@ export default function useBrokenPoints(
                 round,
                 pointPlayer: PLAYERS.WHITE,
                 fillPatternImage: pLight,
-                width: dynamicPointWidth,
             }),
     ]
         .filter(filterBrokenPoint)
