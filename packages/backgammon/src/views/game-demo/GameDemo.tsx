@@ -28,7 +28,7 @@ export default function GameDemo(_props: RouteComponentProps) {
             loading: false,
             attempt: 0,
             turn: 1,
-            brokens: generatePlayers(1, 3),
+            brokens: generatePlayers(0, 0),
             collected: generatePlayers(8, 8),
             player: PLAYERS.WHITE,
             layout,
