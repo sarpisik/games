@@ -1,6 +1,5 @@
-import { OFFSETS } from '../../../../../config';
+import { COLORS, OFFSETS } from '../../../../../config';
 import { calculateSizes } from '../sizes';
-import { TRIANGLE_SIZE } from './triangle';
 import { TrianglesLayout, TrianglesRow } from './types';
 
 const {
@@ -10,6 +9,7 @@ const {
     RIGHT_BLOCK_END_X,
     RIGHT_BLOCK_START_X,
     TOP_BLOCK_START_Y,
+    TRIANGLE_WIDTH,
 } = OFFSETS;
 
 export default function calculateTriangles(
@@ -61,7 +61,7 @@ function setOffsets(triangles: TrianglesLayout[number], index: number) {
 
 function setOffset(xOffset: number, yOffset: number, operator = '+') {
     return (triangle: TrianglesRow[number], index: number) => {
-        const skip = index * TRIANGLE_SIZE.width;
+        const skip = index * TRIANGLE_WIDTH;
         const x =
             operator === '+'
                 ? setPositive(xOffset, skip)
@@ -69,7 +69,15 @@ function setOffset(xOffset: number, yOffset: number, operator = '+') {
         const y = yOffset;
         const key = x * y;
 
-        return { ...triangle, x, y, key };
+        return {
+            ...triangle,
+            x,
+            y,
+            key,
+            color: COLORS.HIGHLIGHT,
+            shadowColor: 'black',
+            shadowBlur: 10,
+        };
     };
 }
 

@@ -3,7 +3,6 @@ import { Layer, useStrictMode } from 'react-konva';
 import { PLAYERS } from 'types/lib/backgammon';
 import {
     Basement,
-    Blocks,
     Containers,
     Frame,
     Notification,
@@ -29,9 +28,8 @@ export default function Board() {
                 <Layer>
                     <Basement />
                     <Containers />
-                    {/*
-                    <Blocks />
                     <Triangles />
+                    {/*
                     <Points pLight={pLight} pDark={pDark} />
                     <Sidebar
                         images={{

@@ -1,9 +1,11 @@
-import { CIRCLE_SIZE } from '../../../../../../shared/components/Point/components/Circle/constants';
-import { DIRECTIONS } from '../../../types';
+import {
+    MAX_WIDTH,
+    OFFSETS,
+} from '../../../../../../../../../../../../../config';
 import { calculateWindowDimension } from '../../../../../../../../../../../../../utils';
-import { MAX_WIDTH } from '../../../../../../../../../../../../../config';
+import { DIRECTIONS } from '../../../types';
 
-const CIRCLE_SIZE_FULL = CIRCLE_SIZE.RADIUS * 2;
+const CIRCLE_SIZE_FULL = OFFSETS.TRIANGLE_WIDTH;
 
 export function xOffsetCalculator(
     index: number,

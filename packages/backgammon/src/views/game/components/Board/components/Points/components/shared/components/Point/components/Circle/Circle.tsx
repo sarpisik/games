@@ -1,18 +1,20 @@
 import React from 'react';
 
 import { Image } from 'react-konva';
+import { OFFSETS } from '../../../../../../../../../../../../config';
 
 import { useUnitMeasure } from '../../../../../../../../hooks';
 
-import { CIRCLE_SIZE } from './constants';
 import { useDragMoveHandler } from './hooks';
+
+const { TRIANGLE_WIDTH } = OFFSETS;
 
 export type CircleProps = React.ComponentProps<typeof Image>;
 
 export default function Circle({
     x = 1,
     y = 1,
-    width = CIRCLE_SIZE.RADIUS,
+    width = TRIANGLE_WIDTH / 2,
     fill,
     fillPatternImage,
     stroke,

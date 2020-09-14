@@ -1,14 +1,13 @@
 import { OFFSETS } from '../../../../../../../../../../../../../../config';
 import { useUnit } from '../../../../../../../../../../hooks/useUnit';
 import { CircleProps } from '../../Circle';
-import { CIRCLE_SIZE } from '../../constants';
 
-const POINT_SIZE = CIRCLE_SIZE.RADIUS * 2;
 const {
     RIGHT_BLOCK_END_X,
     TOP_BLOCK_START_Y,
     BOTTOM_BLOCK_START_Y,
     LEFT_CONTAINER_START_X,
+    TRIANGLE_WIDTH: POINT_SIZE,
 } = OFFSETS;
 
 export type OnDragMove = CircleProps['onDragMove'];

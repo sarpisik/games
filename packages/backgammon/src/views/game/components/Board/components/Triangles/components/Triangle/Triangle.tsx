@@ -1,20 +1,16 @@
 import React from 'react';
-import { COLORS } from '../../../../../../../../config';
 import { FilledTriangle } from './components';
 
-type ColoredTriangleType = Omit<
-    React.ComponentProps<typeof FilledTriangle>,
-    'color'
->;
+type ColoredTriangleType = React.ComponentProps<typeof FilledTriangle>;
 
 export const TriangleHighlight: React.FC<ColoredTriangleType> = (props) => (
-    <FilledTriangle strokeWidth={0} color={COLORS.HIGHLIGHT} {...props} />
+    <FilledTriangle {...props} />
 );
 
 export const TriangleEven: React.FC<ColoredTriangleType> = (props) => (
-    <FilledTriangle stroke="black" color={COLORS.EVEN} {...props} />
+    <FilledTriangle {...props} />
 );
 
 export const TriangleOdd: React.FC<ColoredTriangleType> = (props) => (
-    <FilledTriangle color={COLORS.ODD} {...props} />
+    <FilledTriangle {...props} />
 );

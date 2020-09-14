@@ -22,13 +22,7 @@ export {
     useTimer,
     useUndoHistory,
 } from './game';
-export {
-    measures,
-    useBlocks,
-    useContainers,
-    useSizes,
-    useStoreUnit,
-} from './measures';
+export { measures, useContainers, useSizes, useStoreUnit } from './measures';
 export {
     deleteNotification,
     notification,
