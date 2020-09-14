@@ -1,6 +1,6 @@
-import TRIANGLE_SIZE from './size';
+import { OFFSETS } from '../../../../../../../../config';
 
 export default {
-    width: TRIANGLE_SIZE.width,
-    height: TRIANGLE_SIZE.height * -1,
+    width: OFFSETS.TRIANGLE_WIDTH,
+    height: OFFSETS.TRIANGLE_HEIGHT * -1,
 };

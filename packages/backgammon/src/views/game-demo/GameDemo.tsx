@@ -32,7 +32,7 @@ export default function GameDemo(_props: RouteComponentProps) {
             collected: generatePlayers(8, 8),
             player: PLAYERS.WHITE,
             layout,
-            dice: [1, 4],
+            dice: [1, 5],
         };
         dispatch(addRound(round));
         dispatch(

@@ -1,5 +1,5 @@
 import { OFFSETS } from '../../../../../../../config';
-import { BOTTOM_TRIANGLE, TOP_TRIANGLE, TRIANGLE_SIZE } from './triangle';
+import { BOTTOM_TRIANGLE, TOP_TRIANGLE } from './triangle';
 import { TrianglesLayout, TrianglesRow } from './types';
 
 const {
@@ -9,6 +9,7 @@ const {
     RIGHT_BLOCK_END_X,
     RIGHT_BLOCK_START_X,
     TOP_BLOCK_START_Y,
+    TRIANGLE_WIDTH,
 } = OFFSETS;
 
 const TRIANGLES = [
@@ -41,7 +42,7 @@ function setOffsets(triangles: typeof TRIANGLES[number], index: number) {
 
 function setOffset(xOffset: number, yOffset: number, operator = '+') {
     return (triangle: TrianglesRow[number], index: number) => {
-        const skip = index * TRIANGLE_SIZE.width;
+        const skip = index * TRIANGLE_WIDTH;
         const x =
             operator === '+'
                 ? setPositive(xOffset, skip)
