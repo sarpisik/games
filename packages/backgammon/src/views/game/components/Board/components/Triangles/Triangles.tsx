@@ -1,9 +1,7 @@
 import React from 'react';
 import { useRound } from '../../../../../../app/slices';
-import { LAYOUTS } from '../../constants';
-import { TriangleEven, TriangleHighlight, TriangleOdd } from './components';
+import { TriangleHighlight } from './components';
 import { useTriangles } from './hooks';
-import { isEven } from './lib';
 
 export default function Triangles(): React.ReactElement {
     const triangles = useTriangles();
@@ -19,10 +17,5 @@ function RenderTriangle(
 
     const shouldHightlight = round?.availableTriangles?.includes(index);
     if (shouldHightlight) return <TriangleHighlight {...props} />;
-
-    return isEven(index) ? (
-        <TriangleEven {...props} />
-    ) : (
-        <TriangleOdd {...props} />
-    );
+    return null;
 }

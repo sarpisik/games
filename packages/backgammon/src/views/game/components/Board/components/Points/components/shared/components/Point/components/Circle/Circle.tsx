@@ -22,7 +22,7 @@ export default function Circle({
     ...circleProps
 }: CircleProps): React.ReactElement {
     const posX = useUnitMeasure(x, 'x');
-    const posY = useUnitMeasure(y, 'y');
+    const posY = useUnitMeasure(y, 'x');
     const radius = useUnitMeasure(width, 'x');
     const onDragMove = useDragMoveHandler();
 

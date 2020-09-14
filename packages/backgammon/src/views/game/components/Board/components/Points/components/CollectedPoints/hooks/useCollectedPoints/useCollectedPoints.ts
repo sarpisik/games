@@ -15,7 +15,7 @@ interface Params {
     pDark: Image;
 }
 const {
-    TOP_BLOCK_START_Y,
+    POINT_TOP_START_Y,
     POINT_BOTTOM_START_Y,
     LEFT_CONTAINER_START_X,
 } = OFFSETS;
@@ -48,7 +48,7 @@ export default function useCollectedPoints(params: Params) {
             points: round?.collected[PLAYERS.BLACK],
             width: CONTAINER_WIDTH,
             heightLimit,
-            y: TOP_BLOCK_START_Y,
+            y: POINT_TOP_START_Y,
             x: LEFT_CONTAINER_START_X,
         },
     ]
@@ -61,7 +61,7 @@ export default function useCollectedPoints(params: Params) {
                       return {
                           ..._point,
                           x: unitMeasure(_point.x, 'x'),
-                          y: unitMeasure(_point.y, 'y'),
+                          y: unitMeasure(_point.y, 'x'),
                           width,
                           height: width,
                       };

@@ -3,11 +3,10 @@ import { useUnit } from '../../../../../../../../../../hooks/useUnit';
 import { CircleProps } from '../../Circle';
 
 const {
-    RIGHT_BLOCK_END_X,
-    TOP_BLOCK_START_Y,
-    BOTTOM_BLOCK_START_Y,
+    LEFT_BLOCK_START_X,
     LEFT_CONTAINER_START_X,
-    POINT_SIZE,
+    POINT_BOTTOM_START_Y,
+    POINT_TOP_START_Y,
 } = OFFSETS;
 
 export type OnDragMove = CircleProps['onDragMove'];
@@ -17,13 +16,13 @@ export default function useDragMoveHandler(): OnDragMove {
 
     const onDragMove: OnDragMove = ({ target }) => {
         const targetX = getUnit(target.attrs.x, 'x');
-        const targetY = getUnit(target.attrs.y, 'y');
+        const targetY = getUnit(target.attrs.y, 'x');
 
-        const isOverLeft = targetX < LEFT_CONTAINER_START_X;
-        const isOverRight = targetX > RIGHT_BLOCK_END_X;
+        const isOverLeft = targetX < LEFT_BLOCK_START_X;
+        const isOverRight = targetX > LEFT_CONTAINER_START_X;
 
-        const isOverTop = targetY < TOP_BLOCK_START_Y;
-        const isOverBottom = targetY + POINT_SIZE > BOTTOM_BLOCK_START_Y - 1;
+        const isOverTop = targetY < POINT_TOP_START_Y;
+        const isOverBottom = targetY > POINT_BOTTOM_START_Y;
 
         const pointIsOverTheFrame =
             isOverLeft || isOverRight || isOverTop || isOverBottom;
@@ -31,19 +30,19 @@ export default function useDragMoveHandler(): OnDragMove {
         if (pointIsOverTheFrame) {
             const x = getUnitReverse(
                 isOverLeft
-                    ? LEFT_CONTAINER_START_X
+                    ? LEFT_BLOCK_START_X
                     : isOverRight
-                    ? RIGHT_BLOCK_END_X
+                    ? LEFT_CONTAINER_START_X
                     : targetX,
                 'x'
             );
             const y = getUnitReverse(
                 isOverTop
-                    ? TOP_BLOCK_START_Y
+                    ? POINT_TOP_START_Y
                     : isOverBottom
-                    ? BOTTOM_BLOCK_START_Y - 1 - POINT_SIZE
+                    ? POINT_BOTTOM_START_Y
                     : targetY,
-                'y'
+                'x'
             );
 
             target.position({ x, y });

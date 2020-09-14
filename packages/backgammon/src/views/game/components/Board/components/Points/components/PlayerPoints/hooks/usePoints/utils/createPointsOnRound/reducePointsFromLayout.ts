@@ -9,7 +9,7 @@ const {
     RIGHT_BLOCK_START_X,
     LEFT_BLOCK_TRIANGLE_END_X,
     RIGHT_BLOCK_TRIANGLE_END_X,
-    TOP_BLOCK_START_Y,
+    POINT_TOP_START_Y,
     POINT_BOTTOM_START_Y,
 } = OFFSETS;
 
@@ -18,7 +18,6 @@ type FillTriangleParams = Parameters<typeof fillTriangle>[0];
 interface Params {
     game: GameClient;
     round: Round;
-    triangleHeight: number;
     pLight?: HTMLImageElement;
     pDark?: HTMLImageElement;
     onDragEnd: FillTriangleParams['onDragEnd'];
@@ -26,15 +25,7 @@ interface Params {
 }
 
 export default function createPointsOnRound(params: Params) {
-    const {
-        game,
-        round,
-        triangleHeight,
-        pLight,
-        pDark,
-        onDragEnd,
-        onDragStart,
-    } = params;
+    const { game, round, pLight, pDark, onDragEnd, onDragStart } = params;
 
     const roundPlayer = round?.player;
 
@@ -54,7 +45,7 @@ export default function createPointsOnRound(params: Params) {
             : isLeftBlock
             ? LEFT_BLOCK_TRIANGLE_END_X
             : RIGHT_BLOCK_TRIANGLE_END_X;
-        const yBlock = isTop ? TOP_BLOCK_START_Y : POINT_BOTTOM_START_Y;
+        const yBlock = isTop ? POINT_TOP_START_Y : POINT_BOTTOM_START_Y;
         const isRoundPlayer = game.isRoundPlayer && roundPlayer === player;
         const hasNoBroken = isPlayer(player) && round?.brokens[player] < 1;
         const draggable = isRoundPlayer && hasNoBroken;
@@ -74,7 +65,6 @@ export default function createPointsOnRound(params: Params) {
                     direction
                 ),
                 yOffset: yBlock,
-                heightLimit: triangleHeight,
                 onDragEnd,
                 onDragStart,
             };

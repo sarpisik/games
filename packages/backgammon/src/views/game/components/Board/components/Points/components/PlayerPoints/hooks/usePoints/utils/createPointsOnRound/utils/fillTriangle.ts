@@ -9,7 +9,6 @@ interface Params {
     fillPatternImage: any;
     draggable: boolean;
     triangleIndex: number;
-    heightLimit: number;
     onDragEnd: OnDragEnd;
     onDragStart: OnDragStart;
 }
@@ -21,7 +20,6 @@ export default function fillTriangle(params: Params) {
         count,
         draggable,
         triangleIndex,
-        heightLimit,
         fillPatternImage,
         onDragEnd,
         onDragStart,
@@ -30,7 +28,7 @@ export default function fillTriangle(params: Params) {
 
     for (let i = 0; i < count; i++) {
         const x = xOffset;
-        const y = yOffsetCalculator(i, count, yOffset, heightLimit);
+        const y = yOffsetCalculator(i, count, yOffset);
 
         points.push({
             key: x * y,

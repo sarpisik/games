@@ -7,12 +7,11 @@ interface PointsParams {
     x: number;
     baseContainer: Parameters<typeof generateRectangle>[0]['baseContainer'];
     image: Parameters<typeof generateRectangle>[0]['image'];
-    heightLimit: number;
     width: Parameters<typeof generateRectangle>[0]['width'];
 }
 
 export default function generateCollectedPoints(params: PointsParams) {
-    const { points, x, y, baseContainer, image, heightLimit, width } = params;
+    const { points, x, y, baseContainer, image, width } = params;
 
     if (typeof points === 'undefined') return [];
 
@@ -23,7 +22,7 @@ export default function generateCollectedPoints(params: PointsParams) {
                 key: i,
                 image,
                 x,
-                y: yOffsetCalculator(i, points, y, heightLimit),
+                y: yOffsetCalculator(i, points, y),
                 baseContainer,
                 width,
             });

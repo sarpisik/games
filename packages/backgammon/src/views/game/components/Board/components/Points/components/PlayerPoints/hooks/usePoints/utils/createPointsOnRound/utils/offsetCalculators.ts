@@ -1,11 +1,7 @@
-import {
-    MAX_WIDTH,
-    OFFSETS,
-} from '../../../../../../../../../../../../../config';
-import { calculateWindowDimension } from '../../../../../../../../../../../../../utils';
+import { OFFSETS } from '../../../../../../../../../../../../../config';
 import { DIRECTIONS } from '../../../types';
 
-const CIRCLE_SIZE_FULL = OFFSETS.TRIANGLE_WIDTH;
+const { POINT_SIZE, POINT_BOTTOM_START_Y } = OFFSETS;
 
 export function xOffsetCalculator(
     index: number,
@@ -14,7 +10,7 @@ export function xOffsetCalculator(
 ) {
     const startFrom = xOffset;
     const forwarddirection = direction === 'forward';
-    const skip = CIRCLE_SIZE_FULL * (forwarddirection ? index : index + 1); // calculateSkip(index);
+    const skip = POINT_SIZE * (forwarddirection ? index : index + 1); // calculateSkip(index);
 
     return forwarddirection ? startFrom + skip : startFrom - skip;
 }
@@ -22,73 +18,17 @@ export function xOffsetCalculator(
 export function yOffsetCalculator(
     index: number,
     pointsCount: number,
-    yOffset: number,
-    heightLimit: number
+    yOffset: number
 ) {
-    const {
-        isLandscape,
-        windowWidth,
-        windowHeight,
-    } = calculateWindowDimension();
-    const orientation = calculateOrientation(
-        isLandscape,
-        windowWidth,
-        windowHeight
-    );
+    const isTopBlock = yOffset < POINT_BOTTOM_START_Y;
 
-    const dynamicOffset = orientation;
-    const isBottomBlock = yOffset > 25;
+    const shouldOverlay = pointsCount > 4;
 
-    const pointSize = calculatePointSize(dynamicOffset);
-    const overPoints = calculateOverPoints(pointsCount, pointSize, heightLimit);
-    const overFlowPerEachPoint = calculateOverFlowPerEachPoint(
-        overPoints,
-        pointsCount
-    );
+    let skip = index * (isTopBlock ? 1 : -1);
 
-    const _skip = calculateSkip(index);
-    let skip = _skip * dynamicOffset;
-    if (overFlowPerEachPoint > 0) {
-        // Overlay points on each other
-        skip -= overFlowPerEachPoint * index;
-    }
+    skip *= shouldOverlay ? 8.5 / pointsCount : POINT_SIZE;
 
-    const dynamicSkip = isBottomBlock ? skip * -1 - pointSize : skip;
-    const offset = yOffset + dynamicSkip;
+    const offset = yOffset + skip;
+
     return offset;
-}
-
-function calculateOrientation(
-    isLandscape: boolean,
-    _width: number,
-    height: number,
-    maxWidth = MAX_WIDTH
-) {
-    const width = isLandscape ? _width * maxWidth : _width;
-    return isLandscape ? width / height : height / width;
-}
-
-function calculateSkip(index: number) {
-    return (
-        // CIRCLE_SIZE.RADIUS * // 1.5
-        CIRCLE_SIZE_FULL * index
-    );
-}
-
-function calculatePointSize(dynamicOffset: number) {
-    return CIRCLE_SIZE_FULL * dynamicOffset;
-}
-
-function calculateOverPoints(
-    count: number,
-    pointSize: number,
-    heightLimit: number
-) {
-    const pointsSize = count * pointSize;
-    const overPoints = pointsSize - heightLimit;
-    return overPoints;
-}
-
-function calculateOverFlowPerEachPoint(overSize: number, pointsCount: number) {
-    return (overSize / pointsCount) * 1.1;
 }
