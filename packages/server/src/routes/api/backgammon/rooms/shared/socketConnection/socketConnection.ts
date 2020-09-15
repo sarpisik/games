@@ -5,8 +5,11 @@ import { authMiddleware } from './methods';
 export default class SocketConnection {
     protected _namespace: SocketIO.Namespace;
     protected _userApi = new UserApi();
-    _users: Map<string, User>;
+
     private _authMiddleware: typeof authMiddleware;
+
+    // connected users
+    public _users = new Map<string, User>();
 
     constructor(_io: SocketIO.Server, _path: string) {
         // methods
@@ -15,8 +18,5 @@ export default class SocketConnection {
         // socket connection
         this._namespace = _io.of(_path);
         this._namespace.use(this._authMiddleware.bind(this));
-
-        // connected users
-        this._users = new Map();
     }
 }

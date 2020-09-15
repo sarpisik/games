@@ -1,3 +1,4 @@
+import logger from '@shared/Logger';
 import SocketConnection from '../../socketConnection';
 
 export default async function authMiddleware(
@@ -24,11 +25,18 @@ export default async function authMiddleware(
             }
 
             // Delete prev connection
-            userExistWithDifferentId &&
+            if (userExistWithDifferentId) {
                 this._users.delete(userExistWithDifferentId);
+                logger.warn(
+                    `Duplicate client connection. Deleting ${userExistWithDifferentId}`
+                );
+            }
 
             // Save new connection
             this._users.set(socket.client.id, user);
+            logger.info(
+                `Client ${user.name} connected by id ${socket.client.id}`
+            );
 
             next();
         } else next(new Error('User does not exist.'));

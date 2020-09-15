@@ -3,7 +3,6 @@ import { EmitEditGame, OnEditGame, ROOM_EVENTS } from '@shared-types/room';
 import { customPromise } from '@shared/customPromise';
 import { SocketConnection } from '../shared/socketConnection';
 import { BackgammonGame } from './game';
-import { generatePlayersObj } from './game/helpers';
 import { RoomType } from './types';
 
 export default class BackgammonRoom extends SocketConnection

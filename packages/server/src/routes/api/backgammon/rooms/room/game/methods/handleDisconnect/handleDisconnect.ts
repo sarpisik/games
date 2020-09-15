@@ -50,6 +50,9 @@ export default function handleDisconnect(
                 // Notify the room users.
                 disconnectCb(self.id);
             }
-        }
+        } else
+            logger.error(
+                `Can not find user on disonnection by client id ${clientId}`
+            );
     };
 }

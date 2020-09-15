@@ -135,8 +135,6 @@ export default class BackgammonGame extends SocketConnection
 
         return function _onClientConnection(socket: SocketIO.Socket) {
             const clientId = socket.client.id;
-            const user = self._users.get(clientId);
-            logger.info(`Reconnected client is ${user?.name}`);
 
             self._emitGameUpdate(GAME_EVENTS.JOIN_GAME);
 
