@@ -18,7 +18,7 @@ export default function handleDisconnect(
 
         if (connectedUsers.has(clientId)) {
             const players = self.players;
-            const user = connectedUsers.get(clientId) as User;
+            const user = connectedUsers.get(clientId)?.user as User;
             const { id, name } = user;
 
             const wasPlayer = checkIsPlayer(id, players);

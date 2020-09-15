@@ -13,27 +13,23 @@ export default async function authMiddleware(
         const user = response?.data?.getUser;
 
         if (this._userApi.validateUser(user)) {
-            let userExistWithDifferentId = '';
-
             const entires = this._users[Symbol.iterator]();
             for (const entry of entires) {
-                const [socketClientId, _user] = entry;
-                if (_user.id === user.id) {
-                    userExistWithDifferentId = socketClientId;
+                const [socketClientId, data] = entry;
+                const duplicateConnection = data.user.id === user.id;
+                if (duplicateConnection) {
+                    // Delete prev connection only. Delete of duplicated user
+                    // will be handled by related api controller.
+                    data.socket.disconnect(true);
+                    logger.warn(
+                        `Duplicate client connection. Deleting ${socketClientId}`
+                    );
                     break;
                 }
             }
 
-            // Delete prev connection
-            if (userExistWithDifferentId) {
-                this._users.delete(userExistWithDifferentId);
-                logger.warn(
-                    `Duplicate client connection. Deleting ${userExistWithDifferentId}`
-                );
-            }
-
             // Save new connection
-            this._users.set(socket.client.id, user);
+            this._users.set(socket.client.id, { socket, user });
             logger.info(
                 `Client ${user.name} connected by id ${socket.client.id}`
             );
@@ -41,6 +37,10 @@ export default async function authMiddleware(
             next();
         } else next(new Error('User does not exist.'));
     } catch (error) {
+        logger.error(
+            error?.message,
+            'Something went wrong in "authMiddleware" method.'
+        );
         next(error);
     }
 }

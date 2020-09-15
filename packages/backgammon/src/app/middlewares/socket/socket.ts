@@ -157,6 +157,15 @@ const socket: () => Middleware = () => {
         s.dispatch(addRound(round));
     };
 
+    const onDisconnectByServer = (s: typeof store) => () => {
+        s.dispatch(
+            setNotification({
+                type: GAME_EVENTS.DISCONNECT_FROM_SERVER,
+                message: 'Error disconnected.',
+            })
+        );
+    };
+
     const onError = (s: typeof store) => (data: EmitError) => {
         s.dispatch(setNotification(data));
     };
@@ -235,6 +244,8 @@ const socket: () => Middleware = () => {
                     connection = socketIOClient(action.payload, {
                         query: { userId: store.getState().user?.id },
                     });
+                    // @ts-ignore
+                    connection.on('disconnect', onDisconnectByServer(store));
 
                     connection.on(
                         GAME_EVENTS.JOIN_GAME,

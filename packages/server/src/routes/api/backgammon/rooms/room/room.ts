@@ -4,6 +4,7 @@ import { customPromise } from '@shared/customPromise';
 import { SocketConnection } from '../shared/socketConnection';
 import { BackgammonGame } from './game';
 import { RoomType } from './types';
+import { parseGame, parseUser } from './utils';
 
 export default class BackgammonRoom extends SocketConnection
     implements RoomType {
@@ -32,14 +33,17 @@ export default class BackgammonRoom extends SocketConnection
         const id = this.id;
         const clientId = socket.client.id;
         const _users = this._users;
-        const users = [..._users.values()];
+        const users = [..._users.values()].map(parseUser);
         const _games = this._games;
-        const games = [..._games.values()].map(this._parseGame);
+        const games = [..._games.values()].map(parseGame);
         // Send room details to connected client.
         socket.emit(ROOM_EVENTS.JOIN_ROOM, { id, games, users });
 
         // Send details of the joined client
-        socket.broadcast.emit(ROOM_EVENTS.NEW_USER, this._users.get(clientId));
+        socket.broadcast.emit(
+            ROOM_EVENTS.NEW_USER,
+            this._users.get(clientId)?.user
+        );
 
         socket.on(
             ROOM_EVENTS.EDIT_GAME,
@@ -52,7 +56,7 @@ export default class BackgammonRoom extends SocketConnection
                 // Broadcast disconnected client.
                 socket.broadcast.emit(
                     ROOM_EVENTS.DISCONNECT_USER,
-                    _users.get(clientId)?.id
+                    _users.get(clientId)?.user.id
                 );
 
                 // Delete client from the users list.
@@ -71,7 +75,7 @@ export default class BackgammonRoom extends SocketConnection
                 await customPromise(() => {
                     Object.assign(game, data);
                 });
-                const parsedGame = this._parseGame(game);
+                const parsedGame = parseGame(game);
                 const payload: OnEditGame = await customPromise(() =>
                     Object.assign({}, parsedGame, { roomId })
                 );
@@ -83,21 +87,11 @@ export default class BackgammonRoom extends SocketConnection
 
     private _handleGameUpdate(gameId: number) {
         const _game = this._games.get(gameId) as BackgammonGame;
-        const game = this._parseGame(_game);
+        const game = parseGame(_game);
         this._emitEditGame(game);
     }
 
     private _emitEditGame<P>(payload: P) {
         this._namespace.emit(ROOM_EVENTS.EDIT_GAME, payload);
-    }
-
-    private _parseGame(game: BackgammonGame) {
-        return {
-            id: game.id,
-            stages: game.stages,
-            duration: game.duration,
-            players: game.players,
-            score: game.score,
-        };
     }
 }
