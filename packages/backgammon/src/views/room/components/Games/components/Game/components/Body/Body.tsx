@@ -3,25 +3,34 @@ import { GameClient, PLAYERS } from 'types/lib/backgammon';
 import { Info, User } from './components';
 
 type UserProps = React.ComponentProps<typeof User>;
+type _Player = GameClient['players'][keyof GameClient['players']];
+type Players = _Player & { disabled: boolean };
 
-interface Props
-    extends Pick<GameClient, 'score' | 'stages' | 'players'>,
-        Pick<UserProps, 'gameId'> {}
+export interface BodyProps
+    extends Pick<GameClient, 'score' | 'stages'>,
+        Pick<UserProps, 'gameId'> {
+    players: { [key in keyof GameClient['players']]: Players | null };
+}
 
-export default function Body(props: Props): React.ReactElement {
+export default function Body(props: BodyProps): React.ReactElement {
     const { players, score, stages, gameId } = props;
+
+    const blackPlayer = players[PLAYERS.BLACK];
+    const whitePlayer = players[PLAYERS.WHITE];
 
     return (
         <React.Fragment>
             <User
                 color="BLACK"
-                name={players[PLAYERS.BLACK]?.name}
+                name={blackPlayer?.name}
+                disabled={blackPlayer?.disabled}
                 gameId={gameId}
             />
             <Info stages={stages} score={score} />
             <User
                 color="WHITE"
-                name={players[PLAYERS.WHITE]?.name}
+                name={whitePlayer?.name}
+                disabled={whitePlayer?.disabled}
                 gameId={gameId}
             />
         </React.Fragment>

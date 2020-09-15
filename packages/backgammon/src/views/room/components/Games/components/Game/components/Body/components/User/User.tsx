@@ -6,6 +6,7 @@ import { Sit } from './components';
 
 interface UserProps extends React.ComponentProps<typeof Sit> {
     name?: string;
+    disabled?: boolean;
 }
 
 const ICONS_MAP = {
@@ -14,12 +15,12 @@ const ICONS_MAP = {
 };
 
 export default function User(props: UserProps): React.ReactElement {
-    const { name, ...sitProps } = props;
+    const { name, disabled, ...sitProps } = props;
     const Icon = ICONS_MAP[sitProps.color];
     const children =
         typeof name === 'string' ? (
             <p>{shortenString(name)}</p>
-        ) : (
+        ) : disabled ? null : (
             <Sit {...sitProps} />
         );
 
