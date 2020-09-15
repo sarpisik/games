@@ -12,18 +12,23 @@ export default async function authMiddleware(
         const user = response?.data?.getUser;
 
         if (this._userApi.validateUser(user)) {
-            let userExistWithDifferentId = false;
+            let userExistWithDifferentId = '';
 
-            const users = this._users.values();
-            for (const _user of users) {
+            const entires = this._users[Symbol.iterator]();
+            for (const entry of entires) {
+                const [socketClientId, _user] = entry;
                 if (_user.id === user.id) {
-                    userExistWithDifferentId = true;
+                    userExistWithDifferentId = socketClientId;
                     break;
                 }
             }
 
-            if (!userExistWithDifferentId)
-                this._users.set(socket.client.id, user);
+            // Delete prev connection
+            userExistWithDifferentId &&
+                this._users.delete(userExistWithDifferentId);
+
+            // Save new connection
+            this._users.set(socket.client.id, user);
 
             next();
         } else next(new Error('User does not exist.'));
