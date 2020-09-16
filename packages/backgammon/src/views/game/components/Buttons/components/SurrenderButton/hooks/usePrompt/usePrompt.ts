@@ -19,7 +19,7 @@ export default function usePrompt(
         if (shouldPrompt) {
             const opponent = getOpponent(players, userId);
 
-            const accept = window.prompt(
+            const accept = window.confirm(
                 `${opponent?.name} requests to surrender. Would you like to accept?`
             );
 

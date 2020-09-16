@@ -117,6 +117,18 @@ const socket: () => Middleware = () => {
     const onShortTimer = (s: typeof store) => (seconds: number) => {
         s.dispatch(setShortTimer({ seconds }));
     };
+    const withTimer = (
+        wrappedFunction: typeof onTimer | typeof onShortTimer
+    ) => (s: typeof store) => (payload: any) => {
+        s.dispatch(editGame({ _status: 'INITIALIZED' }));
+
+        const { notification } = s.getState();
+        const { type, message } = notification;
+        const shouldClearNotification = type && message;
+        shouldClearNotification && s.dispatch(deleteNotification());
+
+        wrappedFunction(s)(payload);
+    };
 
     const onUndoRound = (s: typeof store) => (rounds: UndoRound) => {
         onSetRoundPlayer(s, rounds[rounds.length - 1]);
@@ -264,9 +276,12 @@ const socket: () => Middleware = () => {
                     // @ts-ignore
                     connection.on(GAME_EVENTS.ERROR, onError(store));
                     // @ts-ignore
-                    connection.on(GAME_EVENTS.TIMER, onTimer(store));
-                    // @ts-ignore
-                    connection.on(GAME_EVENTS.SHORT_TIMER, onShortTimer(store));
+                    connection.on(GAME_EVENTS.TIMER, withTimer(onTimer)(store));
+                    connection.on(
+                        GAME_EVENTS.SHORT_TIMER,
+                        // @ts-ignore
+                        withTimer(onShortTimer)(store)
+                    );
                     // @ts-ignore
                     connection.on(GAME_EVENTS.ROUND, onRound(store));
                     // @ts-ignore

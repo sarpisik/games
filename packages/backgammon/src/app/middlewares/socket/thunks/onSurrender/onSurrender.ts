@@ -1,4 +1,6 @@
+import { GameClient } from 'types/lib/backgammon';
 import { EmitSurrender, GAME_EVENTS } from 'types/lib/game';
+import { editGame } from '../../../../slices';
 import { AppThunk } from '../../../../store';
 import {
     actionNotification,
@@ -21,7 +23,9 @@ const onSurrender: AppThunk<(payload: EmitSurrender) => void> = (
     const shouldAnswerer = checkIsPlayer(players, id);
     const opponentPlayer = getOpponent(players, id);
 
-    let message: string, action: GAME_EVENTS | undefined;
+    let message: string = '',
+        action: GAME_EVENTS | undefined,
+        _status: GameClient['_status'] = 'SURRENDER';
 
     switch (type) {
         case 'REQUEST': {
@@ -44,18 +48,27 @@ const onSurrender: AppThunk<(payload: EmitSurrender) => void> = (
             );
             break;
 
-        default:
+        case 'REJECT':
             message = (shouldAsker
                 ? `You have rejected the ${opponentPlayer?.name}'s surrender.`
                 : shouldAnswerer
                 ? `${opponentPlayer?.name} has rejected your surrender.`
                 : `${opponentPlayer?.name} has rejected the surrender.`
             ).concat(' Game will continue.');
+
+            // Continue game
+            _status = 'INITIALIZED';
             break;
+
+        default:
+            console.error(`invalid type of surrender. Received ${type}`);
     }
 
     // Display notification.
     message && dispatch(actionNotification(message, action));
+
+    // Prompt/toggle buttons.
+    dispatch(editGame({ _status }));
 };
 
 export default onSurrender;

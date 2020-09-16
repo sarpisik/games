@@ -15,6 +15,7 @@ export default function Buttons() {
                 return <StartButton children="Restart" />;
 
             case 'INITIALIZED':
+            case 'SURRENDER':
                 return <SurrenderButton />;
 
             default:
