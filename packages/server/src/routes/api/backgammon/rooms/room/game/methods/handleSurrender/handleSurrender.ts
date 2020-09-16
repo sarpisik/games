@@ -1,4 +1,6 @@
+import { PLAYERS } from '@shared-types/backgammon';
 import { EmitSurrender, GAME_EVENTS } from '@shared-types/game';
+import logger from '@shared/Logger';
 import BackgammonGame from '../../game';
 
 export default function handleSurrender(
@@ -19,7 +21,23 @@ export default function handleSurrender(
             break;
         }
 
+        case 'ACCEPT': {
+            const acceptedPlayerId = data.payload.id;
+            const players = this.players;
+            const winnerIndex =
+                players[PLAYERS.BLACK]?.id === acceptedPlayerId
+                    ? PLAYERS.BLACK
+                    : PLAYERS.WHITE;
+            const round = this.rounds[this.rounds.length - 1];
+
+            // Increase collected so that stage will be over.
+            round.collected[winnerIndex] = 15;
+            this._handleNextRound(round);
+            break;
+        }
+
         default:
+            logger.error(`Invalid surrender data type. Received ${data.type}.`);
             break;
     }
 }

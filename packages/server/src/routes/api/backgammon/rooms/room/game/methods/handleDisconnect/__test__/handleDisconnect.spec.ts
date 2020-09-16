@@ -46,7 +46,7 @@ describe('handleDisconnect', () => {
         // register to users list
         const mockUser = { id: Date.now().toString(), name: 'Mock User' };
         // @ts-ignore
-        backgammonGame._users.set(clientId, mockUser);
+        backgammonGame._users.set(clientId, { user: mockUser });
 
         // @ts-ignore
         handleDisconnect.call(backgammonGame, clientId, socket, disconnectCb)();
@@ -68,7 +68,7 @@ describe('handleDisconnect', () => {
             email: 'mock_user@example.com',
         };
         // @ts-ignore
-        backgammonGame._users.set(clientId, mockUser);
+        backgammonGame._users.set(clientId, { user: mockUser });
         // register user as player
         backgammonGame.players[PLAYERS.BLACK] = mockUser;
         // result players
@@ -111,10 +111,13 @@ describe('handleDisconnect', () => {
                 email: 'mock_user_black@example.com',
             },
         ];
+
         // @ts-ignore
-        backgammonGame._users.set(clientId, whitePlayer);
-        // @ts-ignore
-        backgammonGame._users.set('black-layer-client-id', blackPlayer);
+        backgammonGame._users.set(clientId, { user: whitePlayer });
+        backgammonGame._users.set('black-layer-client-id', {
+            // @ts-ignore
+            user: blackPlayer,
+        });
         // register user as player
         backgammonGame.players[PLAYERS.WHITE] = whitePlayer;
         backgammonGame.players[PLAYERS.BLACK] = blackPlayer;
