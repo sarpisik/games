@@ -23,7 +23,7 @@ export default function Buttons() {
                 );
                 return null;
         }
-    else if (game._status === 'INITIALIZED' && !playersFull)
+    else if (game._status === 'INITIALIZED' && !playersFull && !gamePlayer)
         return <ResumeButton />;
     else return null;
 }
