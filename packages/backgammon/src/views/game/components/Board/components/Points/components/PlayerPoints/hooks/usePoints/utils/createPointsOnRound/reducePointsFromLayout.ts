@@ -5,10 +5,10 @@ import { DIRECTIONS } from '../../types';
 import { fillTriangle, isPlayer, isTopBlock, xOffsetCalculator } from './utils';
 
 const {
-    LEFT_BLOCK_START_X,
-    RIGHT_BLOCK_START_X,
-    LEFT_BLOCK_TRIANGLE_END_X,
-    RIGHT_BLOCK_TRIANGLE_END_X,
+    TOP_LEFT_POINTS_START_X,
+    TOP_RIGHT_POINTS_START_X,
+    BOTTOM_LEFT_POINTS_START_X,
+    BOTTOM_RIGHT_POINTS_START_X,
     POINT_TOP_START_Y,
     POINT_BOTTOM_START_Y,
 } = OFFSETS;
@@ -40,11 +40,11 @@ export default function createPointsOnRound(params: Params) {
 
         const xBlock = isTop
             ? isLeftBlock
-                ? LEFT_BLOCK_START_X
-                : RIGHT_BLOCK_START_X
+                ? TOP_LEFT_POINTS_START_X
+                : TOP_RIGHT_POINTS_START_X
             : isLeftBlock
-            ? LEFT_BLOCK_TRIANGLE_END_X
-            : RIGHT_BLOCK_TRIANGLE_END_X;
+            ? BOTTOM_LEFT_POINTS_START_X
+            : BOTTOM_RIGHT_POINTS_START_X;
         const yBlock = isTop ? POINT_TOP_START_Y : POINT_BOTTOM_START_Y;
         const isRoundPlayer = game.isRoundPlayer && roundPlayer === player;
         const hasNoBroken = isPlayer(player) && round?.brokens[player] < 1;

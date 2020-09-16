@@ -2,9 +2,7 @@ import {
     useGame,
     usePaintLayout,
     useRound,
-    useSizes,
 } from '../../../../../../../../../../app/slices';
-import { OFFSETS } from '../../../../../../../../../../config';
 import { PLAYERS } from '../../../../../../constants';
 import { useUnit } from '../../../../../../hooks/useUnit';
 import { CircleProps } from '../../../shared/components/Point/components/Circle';
@@ -28,10 +26,7 @@ export default function useBrokenPoints(
     const { isRoundPlayer } = useGame().game;
     const round = useRound();
     const { getUnit } = useUnit();
-    const sizes = useSizes();
     const { paintTriangle, paintBrokenPointTriangles } = usePaintLayout();
-
-    const dynamicPointWidth = getUnit(sizes.BOARD_HEIGHT * 0.027, 'y');
 
     const onDragEnd: OnDragEnd = ({ target }) => {
         const { x, width, y, height } = target.attrs;

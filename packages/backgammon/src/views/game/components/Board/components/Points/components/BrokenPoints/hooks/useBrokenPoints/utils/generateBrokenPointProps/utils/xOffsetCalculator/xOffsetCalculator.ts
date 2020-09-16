@@ -3,7 +3,7 @@ export default function xOffsetCalculator(
     i: number,
     counts: number
 ) {
-    const skip = 1 / counts - (1 + 0.5 * i) / counts;
+    const skip = (1 + 0.5 * i) / counts - 1 / counts;
 
     const _offset = xOffset + skip;
 

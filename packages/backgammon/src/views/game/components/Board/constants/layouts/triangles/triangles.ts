@@ -4,10 +4,10 @@ import { TrianglesLayout, TrianglesRow } from './types';
 
 const {
     BOTTOM_BLOCK_START_Y,
-    LEFT_BLOCK_END_X,
-    LEFT_BLOCK_START_X,
-    RIGHT_BLOCK_END_X,
-    RIGHT_BLOCK_START_X,
+    BOTTOM_LEFT_TRIANGLES_START,
+    TOP_LEFT_TRIANGLES_START,
+    BOTTOM_RIGHT_TRIANGLES_START,
+    TOP_RIGHT_TRIANGLES_START,
     TOP_BLOCK_START_Y,
     TRIANGLE_WIDTH,
 } = OFFSETS;
@@ -23,19 +23,27 @@ function setOffsets(triangles: typeof TRIANGLES[number], index: number) {
     switch (index) {
         case 0:
             return triangles.map(
-                setOffset(LEFT_BLOCK_START_X, TOP_BLOCK_START_Y)
+                setOffset(TOP_LEFT_TRIANGLES_START, TOP_BLOCK_START_Y)
             );
         case 1:
             return triangles.map(
-                setOffset(RIGHT_BLOCK_START_X, TOP_BLOCK_START_Y)
+                setOffset(TOP_RIGHT_TRIANGLES_START, TOP_BLOCK_START_Y)
             );
         case 2:
             return triangles.map(
-                setOffset(RIGHT_BLOCK_END_X, BOTTOM_BLOCK_START_Y, '-')
+                setOffset(
+                    BOTTOM_RIGHT_TRIANGLES_START,
+                    BOTTOM_BLOCK_START_Y,
+                    '-'
+                )
             );
         default:
             return triangles.map(
-                setOffset(LEFT_BLOCK_END_X, BOTTOM_BLOCK_START_Y, '-')
+                setOffset(
+                    BOTTOM_LEFT_TRIANGLES_START,
+                    BOTTOM_BLOCK_START_Y,
+                    '-'
+                )
             );
     }
 }
