@@ -7,7 +7,7 @@ import {
     EVENTS,
     GameClient,
 } from 'types/lib/backgammon';
-import { GAME_EVENTS } from 'types/lib/game';
+import { EmitSurrender, GAME_EVENTS } from 'types/lib/game';
 import { EmitJoinRooms, OnEditGame, ROOM_EVENTS } from 'types/lib/room';
 import { ROOMS_EVENTS } from 'types/lib/rooms';
 import { ROUTES } from '../../../config';
@@ -35,7 +35,7 @@ import { FEEDBACK_STATUS, setFeedback } from '../../slices/feedbacks/feedbacks';
 import { Room, setRoomGame } from '../../slices/room/room';
 import { store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
-import { onJoinGame } from './thunks';
+import { onJoinGame, onSurrender } from './thunks';
 import { calculateIsRoundPlayer, createWinnerMessage } from './utils';
 
 type SocketContextType = ReturnType<typeof socketIOClient> | null;
@@ -280,6 +280,10 @@ const socket: () => Middleware = () => {
                     );
                     // @ts-ignore
                     connection.on(GAME_EVENTS.UNDO_ROUND, onUndoRound(store));
+                    connection.on(
+                        GAME_EVENTS.SURRENDER,
+                        onSurrender(store.dispatch, store.getState, null)
+                    );
                     // @ts-ignore
                     connection.on(GAME_EVENTS.GAME_OVER, onGameOver(store));
                     connection.on(
@@ -338,6 +342,13 @@ const socket: () => Middleware = () => {
                         GAME_EVENTS.START_GAME,
                         action.payload ||
                             (store.getState().game.players as EmitGameStart)
+                    );
+                    break;
+
+                case GAME_EVENTS.SURRENDER:
+                    connection?.emit(
+                        GAME_EVENTS.SURRENDER,
+                        action as EmitSurrender
                     );
                     break;
 

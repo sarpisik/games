@@ -1,16 +1,9 @@
 import { GameClient, PLAYERS } from 'types/lib/backgammon';
-import { GAME_EVENTS } from 'types/lib/game';
-import {
-    editGame,
-    setConnectionStatus,
-    setNotification,
-} from '../../../../slices';
+import { editGame, setConnectionStatus } from '../../../../slices';
 import { CONNECTION_STATUS } from '../../../../slices/connection/connection';
 import { AppThunk } from '../../../../store';
 import { calculateIsRoundPlayer } from '../../utils';
-
-const actionNotification = (message: string) =>
-    setNotification({ type: GAME_EVENTS.NOTIFICATION, message });
+import { actionNotification, checkIsPlayer } from '../shared/helpers';
 
 const onJoinGame: AppThunk<(payload: GameClient) => void> = (
     dispatch,
@@ -22,8 +15,7 @@ const onJoinGame: AppThunk<(payload: GameClient) => void> = (
 
     const playersFull = Object.values(players).every(Boolean);
     const isBlackPlayer = players?.[PLAYERS.BLACK]?.id === user.id;
-    const isWhitePlayer = players?.[PLAYERS.WHITE]?.id === user.id;
-    const isPlayer = isBlackPlayer || isWhitePlayer;
+    const isPlayer = checkIsPlayer(players, user.id);
 
     // Handle notification
     if (isPlayer) {
