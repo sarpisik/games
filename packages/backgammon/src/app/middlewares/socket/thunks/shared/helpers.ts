@@ -24,6 +24,9 @@ export function getOpponent(
     return player;
 }
 
-export function actionNotification(message: string) {
-    return setNotification({ type: GAME_EVENTS.NOTIFICATION, message });
+export function actionNotification(
+    message: string,
+    type = GAME_EVENTS.NOTIFICATION
+) {
+    return setNotification({ message, type });
 }

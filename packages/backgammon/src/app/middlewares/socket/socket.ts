@@ -345,12 +345,15 @@ const socket: () => Middleware = () => {
                     );
                     break;
 
-                case GAME_EVENTS.SURRENDER:
+                case GAME_EVENTS.SURRENDER: {
+                    // Inform the subscribed UI elements.
+                    store.dispatch(editGame({ _status: 'SURRENDER' }));
                     connection?.emit(
                         GAME_EVENTS.SURRENDER,
-                        action as EmitSurrender
+                        action.payload as EmitSurrender
                     );
                     break;
+                }
 
                 default:
                     next(action);

@@ -1,5 +1,4 @@
-import { EmitSurrender } from 'types/lib/game';
-import { editGame } from '../../../../slices';
+import { EmitSurrender, GAME_EVENTS } from 'types/lib/game';
 import { AppThunk } from '../../../../store';
 import {
     actionNotification,
@@ -22,14 +21,19 @@ const onSurrender: AppThunk<(payload: EmitSurrender) => void> = (
     const shouldAnswerer = checkIsPlayer(players, id);
     const opponentPlayer = getOpponent(players, id);
 
-    let message: string;
+    let message: string, action: GAME_EVENTS | undefined;
 
     switch (type) {
-        case 'REQUEST':
+        case 'REQUEST': {
+            // If we need to confirm the surrender,
+            // inform the UI element to prompt.
+            if (!shouldAsker && shouldAnswerer) action = GAME_EVENTS.SURRENDER;
+
             message = shouldAsker
                 ? 'Waiting opponent to confirm your request to surrender.'
                 : `${opponentPlayer?.name} requests to surrender.`;
             break;
+        }
         case 'ACCEPT':
             message = `${opponentPlayer?.name} has `.concat(
                 shouldAsker
@@ -51,10 +55,7 @@ const onSurrender: AppThunk<(payload: EmitSurrender) => void> = (
     }
 
     // Display notification.
-    message && dispatch(actionNotification(message));
-
-    // Prompt/toggle buttons.
-    dispatch(editGame({ _status: 'SURRENDER' }));
+    message && dispatch(actionNotification(message, action));
 };
 
 export default onSurrender;
