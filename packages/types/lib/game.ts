@@ -1,4 +1,4 @@
-import { Game } from "./backgammon";
+import { Game, User } from "./backgammon";
 
 export enum GAME_EVENTS {
     // ROOM
@@ -35,3 +35,8 @@ export enum GAME_EVENTS {
 }
 
 export type EmitGame = Game;
+
+export interface EmitSurrender {
+    type: "REQUEST" | "ACCEPT" | "REJECT";
+    payload: Pick<User, "id">;
+}
