@@ -17,6 +17,7 @@ export { handleTimer } from './handleTimer';
 export { handleUndoRound } from './handleUndoRound';
 export { initializeGame } from './initializeGame';
 export { initializeRound } from './initializeRound';
+export { onSurrender } from './onSurrender';
 export { recursivelySetShortTimer } from './recursivelySetShortTimer';
 export { recursivelySetTimer } from './recursivelySetTimer';
 export { resetGame } from './resetGame';

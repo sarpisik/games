@@ -2,7 +2,6 @@
 import { GameServerSide } from '@shared-types/backgammon';
 import { GAME_EVENTS } from '@shared-types/game';
 import { generateBackgammonGamePath } from '@shared-types/helpers';
-import logger from '@shared/Logger';
 import { UserApi } from '@shared/userApi';
 import { SocketConnection } from '../../shared/socketConnection';
 import {
@@ -25,6 +24,7 @@ import {
     handleUndoRound,
     initializeGame,
     initializeRound,
+    onSurrender,
     recursivelySetShortTimer,
     recursivelySetTimer,
     resetGame,
@@ -53,7 +53,7 @@ export default class BackgammonGame extends SocketConnection
     _userApi = new UserApi();
     _t?: GameServerSide['rounds'][number]['player'];
     _tRef?: NodeJS.Timeout;
-    _status!: 'UNINITIALIZED' | 'INITIALIZED' | 'OVER' | 'START';
+    _status!: 'UNINITIALIZED' | 'INITIALIZED' | 'OVER' | 'START' | 'SURRENDER';
     _emitGameUpdate: typeof emitGameUpdate;
     _emitNamespace: typeof emitNamespace;
     _emitNextRound: typeof emitNextRound;
@@ -73,6 +73,7 @@ export default class BackgammonGame extends SocketConnection
     _handleUndoRound: typeof handleUndoRound;
     _initializeGame: typeof initializeGame;
     _initializeRound: typeof initializeRound;
+    _onSurrender: typeof onSurrender;
     _recursivelySetShortTimer: typeof recursivelySetShortTimer;
     _recursivelySetTimer: typeof recursivelySetTimer;
     _resetGame: typeof resetGame;
@@ -110,6 +111,7 @@ export default class BackgammonGame extends SocketConnection
         this._handleUndoRound = handleUndoRound.bind(this);
         this._initializeGame = initializeGame.bind(this);
         this._initializeRound = initializeRound.bind(this);
+        this._onSurrender = onSurrender.bind(this);
         this._recursivelySetShortTimer = recursivelySetShortTimer.bind(this);
         this._recursivelySetTimer = recursivelySetTimer.bind(this);
         this._resetGame = resetGame.bind(this);
@@ -158,7 +160,7 @@ export default class BackgammonGame extends SocketConnection
             socket.on(
                 GAME_EVENTS.SURRENDER,
                 // @ts-ignore
-                self._withBreakTimer(self._handleSurrender).bind(self)
+                self._withBreakTimer(self._onSurrender).bind(self)
             );
             socket.on(GAME_EVENTS.UNDO_ROUND, self._handleUndoRound.bind(self));
             socket.on(GAME_EVENTS.RESTART_GAME, self._restartGame.bind(self));

@@ -2,7 +2,7 @@
 import BackgammonGame from '../../../game';
 import setStatus from '../setStatus';
 import { generatePlayersObj, reduceGameProps } from '../../../helpers';
-import { GAME_EVENTS } from '@shared-types/game';
+import { EmitSurrender, GAME_EVENTS } from '@shared-types/game';
 import { EmitScore, PLAYERS } from '@shared-types/backgammon';
 
 describe('setStatus', () => {
@@ -12,6 +12,7 @@ describe('setStatus', () => {
         > & {
             _resetGame: jasmine.Spy<jasmine.Func>;
             _handleGameOver: jasmine.Spy<jasmine.Func>;
+            _handleSurrender: jasmine.Spy<jasmine.Func>;
             _setStatus: jasmine.Spy<jasmine.Func>;
             _initializeGame: jasmine.Spy<jasmine.Func>;
         },
@@ -23,6 +24,7 @@ describe('setStatus', () => {
             _status,
             _resetGame: jasmine.createSpy('_resetGame'),
             _handleGameOver: jasmine.createSpy('_handleGameOver'),
+            _handleSurrender: jasmine.createSpy('_handleSurrender'),
             _setStatus: jasmine.createSpy('_setStatus'),
             _emitGameUpdate: jasmine.createSpy('_emitGameUpdate'),
             _initializeGame: jasmine.createSpy('_initializeGame'),
@@ -119,6 +121,23 @@ describe('setStatus', () => {
 
         expect(backgammonGame._handleGameOver).toHaveBeenCalledWith(payload);
         expect(backgammonGame._handleGameOver).toHaveBeenCalledTimes(1);
+    });
+
+    it('set status "SURRENDER" and calls "_handleSurrender" method with passed payload.', () => {
+        _status = 'SURRENDER';
+        backgammonGame._status = 'INITIALIZED';
+        const payload: EmitSurrender = {
+            type: 'REQUEST',
+            payload: { id: '12345' },
+        };
+
+        // @ts-ignore
+        setStatus.call(backgammonGame, _status, payload);
+
+        expect(backgammonGame._status).toBe(_status);
+
+        expect(backgammonGame._handleSurrender).toHaveBeenCalledWith(payload);
+        expect(backgammonGame._handleSurrender).toHaveBeenCalledTimes(1);
     });
 
     it('set status "INITIALIZED" and calls "_initializeGame" method with passed payload.', () => {

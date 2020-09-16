@@ -60,7 +60,7 @@ export interface Game {
     duration: number;
     timer: PlayersMap;
     rounds: Round[];
-    _status: "UNINITIALIZED" | "INITIALIZED" | "OVER" | "START";
+    _status: "UNINITIALIZED" | "INITIALIZED" | "OVER" | "START" | "SURRENDER";
 }
 
 interface UsersMap {
