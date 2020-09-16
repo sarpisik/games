@@ -37,10 +37,7 @@ import { Round } from './round';
 
 /*
  * TODO:
- * - [x] reset game on both players disconnected.
- * - [x] handle restart game event.
- * - [] Bug, auto timer start on restart game.
- * - [x] Handle player escapes.
+ * - [] Fix crash on both players disconnected.
  */
 
 export default class BackgammonGame extends SocketConnection
