@@ -20,6 +20,7 @@ import {
     handlePlayersScore,
     handleRoundCalculate,
     handleRoundResult,
+    handleSurrender,
     handleTimer,
     handleUndoRound,
     initializeGame,
@@ -67,6 +68,7 @@ export default class BackgammonGame extends SocketConnection
     _handlePlayersScore: typeof handlePlayersScore;
     _handleRoundCalculate: typeof handleRoundCalculate;
     _handleRoundResult: typeof handleRoundResult;
+    _handleSurrender: typeof handleSurrender;
     _handleTimer: typeof handleTimer;
     _handleUndoRound: typeof handleUndoRound;
     _initializeGame: typeof initializeGame;
@@ -103,6 +105,7 @@ export default class BackgammonGame extends SocketConnection
         this._handlePlayersScore = handlePlayersScore.bind(this);
         this._handleRoundCalculate = handleRoundCalculate.bind(this);
         this._handleRoundResult = handleRoundResult.bind(this);
+        this._handleSurrender = handleSurrender.bind(this);
         this._handleTimer = handleTimer.bind(this);
         this._handleUndoRound = handleUndoRound.bind(this);
         this._initializeGame = initializeGame.bind(this);
@@ -151,6 +154,11 @@ export default class BackgammonGame extends SocketConnection
             socket.on(
                 GAME_EVENTS.COLLECT_POINT_ROUND,
                 self._withBreakTimer(self._handleCollectPoint).bind(self)
+            );
+            socket.on(
+                GAME_EVENTS.SURRENDER,
+                // @ts-ignore
+                self._withBreakTimer(self._handleSurrender).bind(self)
             );
             socket.on(GAME_EVENTS.UNDO_ROUND, self._handleUndoRound.bind(self));
             socket.on(GAME_EVENTS.RESTART_GAME, self._restartGame.bind(self));

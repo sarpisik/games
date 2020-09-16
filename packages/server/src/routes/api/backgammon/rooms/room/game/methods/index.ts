@@ -12,6 +12,7 @@ export { handlePlayerReconnect } from './handlePlayerReconnect';
 export { handlePlayersScore } from './handlePlayersScore';
 export { handleRoundCalculate } from './handleRoundCalculate';
 export { handleRoundResult } from './handleRoundResult';
+export { handleSurrender } from './handleSurrender';
 export { handleTimer } from './handleTimer';
 export { handleUndoRound } from './handleUndoRound';
 export { initializeGame } from './initializeGame';
