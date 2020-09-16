@@ -3,7 +3,7 @@ import { calculateSizes } from '../sizes';
 
 const {
     BOTTOM_CONTAINER_START_Y,
-    LEFT_CONTAINER_START_X,
+    LEFT_BLOCK_START_X,
     TOP_CONTAINER_START_Y,
     CONTAINER_HEIGHT,
 } = OFFSETS;
@@ -14,12 +14,12 @@ export default function calculateContainers(
     const containers = [
         // Top left
         {
-            x: LEFT_CONTAINER_START_X,
+            x: LEFT_BLOCK_START_X,
             y: TOP_CONTAINER_START_Y,
         },
         // Bottom left
         {
-            x: LEFT_CONTAINER_START_X,
+            x: LEFT_BLOCK_START_X,
             y:
                 CONTAINER_HEIGHT +
                 (BOTTOM_CONTAINER_START_Y - CONTAINER_HEIGHT * 2),
