@@ -10,6 +10,15 @@ export default function handleSurrender(
             this._emitNamespace(GAME_EVENTS.SURRENDER, data);
             break;
 
+        case 'REJECT': {
+            this._emitNamespace(GAME_EVENTS.SURRENDER, data);
+            setTimeout(() => {
+                this._status = 'INITIALIZED';
+                this._handleTimer();
+            }, 2000);
+            break;
+        }
+
         default:
             break;
     }
