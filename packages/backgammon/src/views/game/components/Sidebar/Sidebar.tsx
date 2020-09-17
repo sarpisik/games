@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './Sidebar.module.css';
 
 interface Props {
     children: React.ReactNode;
@@ -8,5 +7,5 @@ interface Props {
 export default function Sidebar(props: Props): React.ReactElement {
     const { children } = props;
 
-    return <aside className={styles.sidebar}>{children}</aside>;
+    return <aside className="flex-grow-1 p-3 text-light">{children}</aside>;
 }

@@ -1,13 +1,11 @@
 import React from 'react';
 import { Layer, useStrictMode } from 'react-konva';
-import { PLAYERS } from 'types/lib/backgammon';
 import {
     Basement,
     Containers,
     Frame,
     Notification,
     Points,
-    Sidebar,
     Triangles,
 } from './components';
 import { allElements, useLoadAssets } from './hooks';

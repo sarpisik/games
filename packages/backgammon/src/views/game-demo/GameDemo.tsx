@@ -1,21 +1,13 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { useDynamicLayout, useResetGame } from '../game/hooks';
-import {
-    Board,
-    Buttons,
-    RoundBoard,
-    ScoreBoard,
-    Sidebar,
-    Timer,
-    Undo,
-} from '../game/components';
 import { GameClient } from 'types/lib/backgammon';
 import { generatePlayers } from 'types/lib/helpers';
-import { PLAYERS } from '../game/components/Board/constants';
-import { layout } from './constants/layout';
-import { useDispatch } from 'react-redux';
 import { addRound, editGame } from '../../app/slices';
+import { PLAYERS } from '../game/components/Board/constants';
+import { Game } from '../game/Game';
+import { useDynamicLayout, useResetGame } from '../game/hooks';
+import { layout } from './constants/layout';
 
 export default function GameDemo(_props: RouteComponentProps) {
     const dispatch = useDispatch();
@@ -48,20 +40,6 @@ export default function GameDemo(_props: RouteComponentProps) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    return (
-        <div className="Game">
-            <Board />
-            <Sidebar>
-                <ScoreBoard />
-                <hr />
-                <RoundBoard />
-                <hr />
-                <Timer />
-                <hr />
-                <Undo />
-                <hr />
-                <Buttons />
-            </Sidebar>
-        </div>
-    );
+    // @ts-ignore
+    return <Game />;
 }

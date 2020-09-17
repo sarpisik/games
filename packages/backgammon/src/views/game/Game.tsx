@@ -15,12 +15,12 @@ import { useDynamicLayout, useResetGame } from './hooks';
 
 export default withAuthorization(withGameConnection(Game));
 
-function Game(_props: RouteComponentProps) {
+export function Game(_props: RouteComponentProps) {
     useResetGame();
     useDynamicLayout();
 
     return (
-        <div className="Game">
+        <div className="align-content-center d-flex flex-wrap min-vh-100 justify-content-center bg-dark">
             <Board />
             <Sidebar>
                 <ScoreBoard />
