@@ -1,0 +1,23 @@
+.type_msg {
+    border-top: 1px solid #c4c4c4;
+    position: relative;
+}
+
+.input_msg_write input {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    border: medium none;
+    color: #ffffff;
+    font-size: 3vh;
+    min-height: 48px;
+    width: 100%;
+}
+
+.msg_send_btn {
+    background: #05728f none repeat scroll 0 0;
+    border: medium none;
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    font-size: 17px;
+    padding: 2vh;
+}

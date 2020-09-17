@@ -4,6 +4,7 @@ import { withAuthorization } from '../../components';
 import {
     Board,
     Buttons,
+    Chat,
     RoundBoard,
     ScoreBoard,
     Sidebar,
@@ -17,13 +18,17 @@ export default withAuthorization(withGameConnection(Game));
 
 export function Game(_props: RouteComponentProps) {
     useResetGame();
-    useDynamicLayout();
+    const orientation = useDynamicLayout();
+    const className = 'align-items-center d-flex h-100 justify-content-center bg-dark overflow-auto'.concat(
+        orientation === 'portrait' ? ' flex-wrap' : ''
+    );
 
     return (
-        <div className="align-content-center d-flex flex-wrap min-vh-100 justify-content-center bg-dark">
+        <div className={className}>
             <Board />
             <Sidebar>
-                <ScoreBoard />
+                <Chat />
+                {/* <ScoreBoard />
                 <hr />
                 <RoundBoard />
                 <hr />
@@ -31,7 +36,7 @@ export function Game(_props: RouteComponentProps) {
                 <hr />
                 <Undo />
                 <hr />
-                <Buttons />
+                <Buttons /> */}
             </Sidebar>
         </div>
     );

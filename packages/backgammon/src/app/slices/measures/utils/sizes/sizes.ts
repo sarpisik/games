@@ -15,6 +15,7 @@ export default function calculateSizes() {
             // board
             BOARD_WIDTH,
             BOARD_HEIGHT,
+            ORIENTATION: isLandscape ? 'landscape' : 'portrait',
         },
         OFFSETS
     );

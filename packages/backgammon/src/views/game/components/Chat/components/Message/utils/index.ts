@@ -1,0 +1,1 @@
+export { dateToHours } from './dateToHours';

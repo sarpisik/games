@@ -1,5 +1,6 @@
 export { Board } from './Board';
 export { Buttons } from './Buttons';
+export { Chat } from './Chat';
 export { RoundBoard } from './RoundBoard';
 export { ScoreBoard } from './ScoreBoard';
 export { Sidebar } from './Sidebar';
