@@ -20,13 +20,14 @@ function Button(_props: Props): React.ReactElement {
 
     return (
         <React.Fragment>
-            <Image image={image} {...props} />
+            <Image image={image} onTap={props.onClick} {...props} />
             <Label
                 fill="#ffffff"
                 align="center"
                 verticalAlign="middle"
                 text={text}
                 fontSize={SIDEBAR_FONT_SIZE}
+                onTap={props.onClick}
                 {...props}
             />
         </React.Fragment>
