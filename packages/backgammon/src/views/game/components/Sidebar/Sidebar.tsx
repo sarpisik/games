@@ -7,7 +7,7 @@ interface Props {
 
 export default function Sidebar(props: Props): React.ReactElement {
     const { children } = props;
-    const className = `${styles.sidebar} flex-grow-1 text-light h-100`;
+    const className = `${styles.sidebar} flex-grow-1 text-light h-100 overflow-auto`;
 
     return <aside className={className}>{children}</aside>;
 }

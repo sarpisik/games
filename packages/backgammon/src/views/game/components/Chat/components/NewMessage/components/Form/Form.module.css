@@ -8,8 +8,7 @@
     border: medium none;
     color: #ffffff;
     font-size: 3vh;
-    min-height: 48px;
-    width: 100%;
+    width: 80%;
 }
 
 .msg_send_btn {
@@ -19,5 +18,5 @@
     color: #fff;
     cursor: pointer;
     font-size: 17px;
-    padding: 2vh;
+    padding: 1vh;
 }
