@@ -1,16 +1,7 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { withAuthorization } from '../../components';
-import {
-    Board,
-    Buttons,
-    Chat,
-    RoundBoard,
-    ScoreBoard,
-    Sidebar,
-    Undo,
-    withGameConnection,
-} from './components';
+import { Board, Chat, Sidebar, Undo, withGameConnection } from './components';
 import { useDynamicLayout, useResetGame } from './hooks';
 
 export default withAuthorization(withGameConnection(Game));
@@ -27,15 +18,6 @@ export function Game(_props: RouteComponentProps) {
             <Board />
             <Sidebar>
                 <Chat />
-                {/* <ScoreBoard />
-                <hr />
-                <RoundBoard />
-                <hr />
-                <Timer />
-                <hr />
-                <Undo />
-                <hr />
-                <Buttons /> */}
             </Sidebar>
         </div>
     );
