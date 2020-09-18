@@ -1,11 +1,13 @@
 import React from 'react';
 import { Layer, useStrictMode } from 'react-konva';
+import { PLAYERS } from 'types/lib/backgammon';
 import {
     Basement,
     Containers,
     Frame,
     Notification,
     Points,
+    Sidebar,
     Triangles,
 } from './components';
 import { allElements, useLoadAssets } from './hooks';
@@ -16,7 +18,14 @@ export default function Board() {
     const [assets, allSuccess, someFailed] = useLoadAssets();
 
     if (allSuccess && allElements(assets)) {
-        const [pLight, pDark, ...dices] = assets;
+        const [
+            pLight,
+            pDark,
+            startBg,
+            surrenderBg,
+            resumeBg,
+            ...dices
+        ] = assets;
         // Will be accessible by drag start event handler
         pLight.dataset.color = 'WHITE';
         pDark.dataset.color = 'BLACK';
@@ -28,15 +37,16 @@ export default function Board() {
                     <Containers />
                     <Triangles />
                     <Points pLight={pLight} pDark={pDark} />
-                    {/*
+
                     <Sidebar
                         images={{
                             [PLAYERS.BLACK]: pDark,
                             [PLAYERS.WHITE]: pLight,
                             dices,
+                            btnBackgrounds: [startBg, surrenderBg, resumeBg],
                         }}
                     />
-                    */}
+
                     <Notification />
                 </Layer>
             </Frame>

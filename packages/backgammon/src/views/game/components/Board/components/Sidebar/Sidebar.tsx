@@ -1,31 +1,26 @@
 import React from 'react';
 import { PLAYERS } from 'types/lib/backgammon';
-import { useGame } from '../../../../../../app/slices';
-import { OFFSETS } from '../../../../../../config';
-import { Container, Player } from './components';
+import { OFFSETS } from '../../../../../../configs';
+import { Buttons, Dices, Player } from './components';
 
 type PlayerProps = React.ComponentProps<typeof Player>;
-type ImageElement = PlayerProps['point']['image'];
+type ImageElement = Exclude<PlayerProps['point']['image'], undefined>;
 
 interface Props {
     images: {
         [PLAYERS.BLACK]: ImageElement;
         [PLAYERS.WHITE]: ImageElement;
         dices: ImageElement[];
+        btnBackgrounds: ImageElement[];
     };
 }
 
 export default function Sidebar(props: Props): React.ReactElement {
     const { images } = props;
-    const { game } = useGame();
-    const { score, players } = game;
 
     return (
         <React.Fragment>
-            <Container />
             <Player
-                container={OFFSETS.PLAYER_LABELS[PLAYERS.BLACK].CONTAINER}
-                col1={OFFSETS.PLAYER_LABELS[PLAYERS.BLACK].COL_1}
                 point={Object.assign(
                     {},
                     OFFSETS.PLAYER_LABELS[PLAYERS.BLACK].POINT,
@@ -34,17 +29,26 @@ export default function Sidebar(props: Props): React.ReactElement {
                 score={Object.assign(
                     {},
                     OFFSETS.PLAYER_LABELS[PLAYERS.BLACK].SCORE,
-                    { score: score[PLAYERS.BLACK] }
+                    { player: PLAYERS.BLACK as const }
+                )}
+                shortTimer={Object.assign(
+                    {},
+                    OFFSETS.PLAYER_LABELS[PLAYERS.BLACK].SHORT_TIMER,
+                    { player: PLAYERS.BLACK as const }
+                )}
+                timer={Object.assign(
+                    {},
+                    OFFSETS.PLAYER_LABELS[PLAYERS.BLACK].TIMER,
+                    { player: PLAYERS.BLACK as const }
                 )}
                 name={Object.assign(
                     {},
                     OFFSETS.PLAYER_LABELS[PLAYERS.BLACK].NAME,
-                    { name: players[PLAYERS.BLACK]?.name }
+                    { player: PLAYERS.BLACK as const }
                 )}
             />
+            <Dices images={images.dices} />
             <Player
-                container={OFFSETS.PLAYER_LABELS[PLAYERS.WHITE].CONTAINER}
-                col1={OFFSETS.PLAYER_LABELS[PLAYERS.WHITE].COL_1}
                 point={Object.assign(
                     {},
                     OFFSETS.PLAYER_LABELS[PLAYERS.WHITE].POINT,
@@ -53,14 +57,25 @@ export default function Sidebar(props: Props): React.ReactElement {
                 score={Object.assign(
                     {},
                     OFFSETS.PLAYER_LABELS[PLAYERS.WHITE].SCORE,
-                    { score: score[PLAYERS.WHITE] }
+                    { player: PLAYERS.WHITE as const }
+                )}
+                shortTimer={Object.assign(
+                    {},
+                    OFFSETS.PLAYER_LABELS[PLAYERS.WHITE].SHORT_TIMER,
+                    { player: PLAYERS.WHITE as const }
+                )}
+                timer={Object.assign(
+                    {},
+                    OFFSETS.PLAYER_LABELS[PLAYERS.WHITE].TIMER,
+                    { player: PLAYERS.WHITE as const }
                 )}
                 name={Object.assign(
                     {},
                     OFFSETS.PLAYER_LABELS[PLAYERS.WHITE].NAME,
-                    { name: players[PLAYERS.WHITE]?.name }
+                    { player: PLAYERS.WHITE as const }
                 )}
             />
+            <Buttons backgrounds={images.btnBackgrounds} />
         </React.Fragment>
     );
 }

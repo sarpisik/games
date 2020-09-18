@@ -1,37 +1,35 @@
 import React from 'react';
-import { SIDEBAR_FONT_SIZE } from '../../../../../../../../../../config';
+import { Round } from 'types/lib/backgammon';
+import { useGame } from '../../../../../../../../../../app/slices';
+import { SIDEBAR_FONT_SIZE } from '../../../../../../../../../../configs';
 import { shortenString } from '../../../../../../../../../../utils';
-import { useUnitMeasure } from '../../../../../../hooks';
 import { Label } from '../../../../../Label';
+import { withUnitMeasure } from '../../../withUnitMeasure';
 
 interface Props {
-    name?: string;
+    player: Round['player'];
     x: number;
     y: number;
-    offsetY: number;
+    width: number;
     height: number;
 }
 
-export default function Name(props: Props): React.ReactElement {
-    const { name = '', x, y, offsetY, height } = props;
+export default withUnitMeasure(Name);
 
-    const _name = shortenString(name);
-    const _x = useUnitMeasure(x, 'x');
-    const _y = useUnitMeasure(y, 'y');
-    const _offsetY = useUnitMeasure(offsetY, 'y');
-    const _height = useUnitMeasure(height, 'y');
+function Name(_props: Props): React.ReactElement {
+    const { player, ...props } = _props;
+    const { game } = useGame();
+    const _name = game.players[player]?.name || '';
+    const name = shortenString(_name, 11);
 
     return (
         <Label
-            x={_x}
-            y={_y}
-            offsetY={_offsetY}
-            height={_height}
             fill="#ffffff"
-            align="center"
+            align="left"
             verticalAlign="top"
-            text={_name}
+            text={name}
             fontSize={SIDEBAR_FONT_SIZE}
+            {...props}
         />
     );
 }

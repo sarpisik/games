@@ -1,4 +1,4 @@
-import { COLORS, OFFSETS } from '../../../../../config';
+import { COLORS, OFFSETS } from '../../../../../configs';
 import { calculateSizes } from '../sizes';
 import { TrianglesLayout, TrianglesRow } from './types';
 

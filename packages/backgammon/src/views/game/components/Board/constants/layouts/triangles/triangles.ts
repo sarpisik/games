@@ -1,4 +1,4 @@
-import { OFFSETS } from '../../../../../../../config';
+import { OFFSETS } from '../../../../../../../configs';
 import { BOTTOM_TRIANGLE, TOP_TRIANGLE } from './triangle';
 import { TrianglesLayout, TrianglesRow } from './types';
 

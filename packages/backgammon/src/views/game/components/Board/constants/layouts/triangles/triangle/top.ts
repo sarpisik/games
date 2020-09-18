@@ -1,4 +1,4 @@
-import { OFFSETS } from '../../../../../../../../config';
+import { OFFSETS } from '../../../../../../../../configs';
 
 export default {
     width: OFFSETS.TRIANGLE_WIDTH,

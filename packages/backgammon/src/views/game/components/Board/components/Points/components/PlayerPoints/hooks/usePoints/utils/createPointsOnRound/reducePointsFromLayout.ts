@@ -1,5 +1,5 @@
 import { GameClient, PLAYERS, Round } from 'types/lib/backgammon';
-import { OFFSETS } from '../../../../../../../../../../../../config';
+import { OFFSETS } from '../../../../../../../../../../../../configs';
 import { Point } from '../../../../../shared/components';
 import { DIRECTIONS } from '../../types';
 import { fillTriangle, isPlayer, isTopBlock, xOffsetCalculator } from './utils';

@@ -1,1 +1,1 @@
-export { Basement } from './Basement';
+export { Message } from './Message';

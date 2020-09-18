@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { Game, Room, Rooms, Home, NotFound, Profile, GameDemo } from './views';
 import { withAuthentication } from './components';
-import { ROUTES } from './config';
+import { ROUTES } from './configs';
 
 /*
  * TODO:

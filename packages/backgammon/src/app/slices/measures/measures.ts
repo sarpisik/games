@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { PIXEL } from '../../../config';
+import { PIXEL } from '../../../configs';
 import {
     calculateContainers,
     calculateSidebar,

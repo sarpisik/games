@@ -1,3 +1,5 @@
+import useImage from 'use-image';
+
 // Points
 import pointDark from '../../../../../assets/point_dark.png';
 import pointLight from '../../../../../assets/point_light.png';
@@ -9,7 +11,11 @@ import dice3 from '../../../../../assets/dice_3.png';
 import dice4 from '../../../../../assets/dice_4.png';
 import dice5 from '../../../../../assets/dice_5.png';
 import dice6 from '../../../../../assets/dice_6.png';
-import useImage from 'use-image';
+
+// Buttons
+import startBg from '../../../../../assets/start_bg.png';
+import surrenderBg from '../../../../../assets/surrender_bg.png';
+import resumeBg from '../../../../../assets/resume_bg.png';
 
 type Statuses = ReturnType<typeof useImage>[1];
 type El = ReturnType<typeof useImage>[0];
@@ -23,10 +29,16 @@ export function useLoadAssets() {
     const [sDice4, eDice4] = useImage(dice4);
     const [sDice5, eDice5] = useImage(dice5);
     const [sDice6, eDice6] = useImage(dice6);
+    const [sStartBg, eStartBg] = useImage(startBg);
+    const [sSurrenderBg, eSurrenderBg] = useImage(surrenderBg);
+    const [sResumeBg, eResumeBg] = useImage(resumeBg);
 
     const assets = [
         pLight,
         pDark,
+        sStartBg,
+        sSurrenderBg,
+        sResumeBg,
         sDice1,
         sDice2,
         sDice3,
@@ -38,6 +50,9 @@ export function useLoadAssets() {
     const statuses = [
         sLight,
         sDark,
+        eStartBg,
+        eSurrenderBg,
+        eResumeBg,
         eDice1,
         eDice2,
         eDice3,

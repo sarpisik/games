@@ -15,7 +15,7 @@ import {
 } from 'types/lib/game';
 import { EmitJoinRooms, OnEditGame, ROOM_EVENTS } from 'types/lib/room';
 import { ROOMS_EVENTS } from 'types/lib/rooms';
-import { ROUTES } from '../../../config';
+import { ROUTES } from '../../../configs';
 import { history } from '../../../lib';
 import { User } from '../../../types/user';
 import {

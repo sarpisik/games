@@ -1,4 +1,4 @@
-import { OFFSETS } from '../../../../../../../../../../../../../config';
+import { OFFSETS } from '../../../../../../../../../../../../../configs';
 import { DIRECTIONS } from '../../../types';
 
 const { POINT_SIZE, POINT_BOTTOM_START_Y } = OFFSETS;

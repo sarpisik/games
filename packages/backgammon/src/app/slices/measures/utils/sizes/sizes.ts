@@ -1,4 +1,4 @@
-import { MAX_WIDTH, OFFSETS } from '../../../../../config';
+import { MAX_WIDTH, OFFSETS } from '../../../../../configs';
 import { calculateWindowDimension } from '../../../../../utils';
 
 export const TRIANGLE_WIDTH = 3;

@@ -1,4 +1,4 @@
-import { COLORS } from '../../../../../config';
+import { COLORS } from '../../../../../configs';
 import { calculateSizes } from '../sizes';
 
 export default function calculateSidebar(

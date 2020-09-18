@@ -1,33 +1,30 @@
 import React from 'react';
-import { useUnitMeasure } from '../../../../../../hooks';
+import { Round } from 'types/lib/backgammon';
+import { useGame } from '../../../../../../../../../../app/slices';
 import { Label } from '../../../../../Label';
+import { withUnitMeasure } from '../../../withUnitMeasure';
 
 interface Props {
-    score: number;
+    player: Round['player'];
     x: number;
     y: number;
     width: number;
     height: number;
 }
 
-export default function Score(props: Props): React.ReactElement {
-    const { score, x, y, width, height } = props;
+export default withUnitMeasure(Score);
 
-    const _x = useUnitMeasure(x, 'x');
-    const _y = useUnitMeasure(y, 'y');
-    const _width = useUnitMeasure(width, 'y');
-    const _height = useUnitMeasure(height, 'y');
+function Score(_props: Props): React.ReactElement {
+    const { player, ...props } = _props;
+    const { game } = useGame();
 
     return (
         <Label
-            x={_x}
-            y={_y}
-            width={_width}
-            height={_height}
-            fill="#ffffff"
+            fill="#000000"
             align="center"
             verticalAlign="middle"
-            text={score.toString()}
+            text={game.score[player].toString()}
+            {...props}
         />
     );
 }

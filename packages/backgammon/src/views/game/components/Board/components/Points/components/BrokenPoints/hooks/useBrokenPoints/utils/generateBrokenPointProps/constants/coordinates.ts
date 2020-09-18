@@ -1,4 +1,4 @@
-import { OFFSETS } from '../../../../../../../../../../../../../config';
+import { OFFSETS } from '../../../../../../../../../../../../../configs';
 import { PLAYERS } from '../../../../../../../../../constants';
 
 const { LEFT_BLOCK_START_X } = OFFSETS;

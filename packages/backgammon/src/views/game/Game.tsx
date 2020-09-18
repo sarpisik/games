@@ -8,7 +8,6 @@ import {
     RoundBoard,
     ScoreBoard,
     Sidebar,
-    Timer,
     Undo,
     withGameConnection,
 } from './components';

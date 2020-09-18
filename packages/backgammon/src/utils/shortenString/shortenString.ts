@@ -1,3 +1,3 @@
-export default function shortenString(name: string) {
-    return name.length > 8 ? name.slice(0, 8).concat('...') : name;
+export default function shortenString(name: string, limit = 8) {
+    return name.length > limit ? name.slice(0, limit).concat('...') : name;
 }

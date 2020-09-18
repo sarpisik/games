@@ -1,7 +1,7 @@
 import React from 'react';
 import { User } from './components';
 import { Link } from 'react-router-dom';
-import { ROUTES } from '../../config';
+import { ROUTES } from '../../configs';
 
 export default function Home(): React.ReactElement {
     return (

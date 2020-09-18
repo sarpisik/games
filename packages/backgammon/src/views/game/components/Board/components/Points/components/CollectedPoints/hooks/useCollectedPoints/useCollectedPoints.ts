@@ -4,7 +4,7 @@ import {
     useRound,
 } from '../../../../../../../../../../app/slices';
 import { useSizes } from '../../../../../../../../../../app/slices/measures';
-import { OFFSETS } from '../../../../../../../../../../config';
+import { OFFSETS } from '../../../../../../../../../../configs';
 import { useUnitMeasure } from '../useUnitMeasure';
 import { generateCollectedPoints } from './utils';
 

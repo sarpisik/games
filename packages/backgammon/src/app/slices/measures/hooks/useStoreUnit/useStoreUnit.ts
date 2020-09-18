@@ -1,4 +1,4 @@
-import { PIXEL } from '../../../../../config';
+import { PIXEL } from '../../../../../configs';
 import { calculateUnit } from '../../utils';
 import { useSizes } from '../useSizes';
 

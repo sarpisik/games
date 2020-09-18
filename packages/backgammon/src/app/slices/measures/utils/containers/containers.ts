@@ -1,4 +1,4 @@
-import { OFFSETS } from '../../../../../config';
+import { OFFSETS } from '../../../../../configs';
 import { calculateSizes } from '../sizes';
 
 const {

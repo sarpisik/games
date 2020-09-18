@@ -1,4 +1,4 @@
-import { OFFSETS } from '../../../../../../../../../../../../../../config';
+import { OFFSETS } from '../../../../../../../../../../../../../../configs';
 import { useUnit } from '../../../../../../../../../../hooks/useUnit';
 import { CircleProps } from '../../Circle';
 

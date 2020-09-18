@@ -1,5 +1,5 @@
 import { GameClient, PLAYERS, Round } from 'types/lib/backgammon';
-import { OFFSETS } from '../../../../../../../../../../../../config';
+import { OFFSETS } from '../../../../../../../../../../../../configs';
 import { BrokenPointProps } from '../../../../shared/types';
 import { COORDINATES } from './constants';
 import { xOffsetCalculator } from './utils';

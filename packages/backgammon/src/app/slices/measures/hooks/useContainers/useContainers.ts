@@ -1,6 +1,6 @@
 import { useMeasures } from '../useMeasures';
 import { useRound } from '../../../game';
-import { COLORS } from '../../../../../config';
+import { COLORS } from '../../../../../configs';
 
 export default function useContainers() {
     const measures = useMeasures();
