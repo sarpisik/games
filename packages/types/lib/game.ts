@@ -24,10 +24,12 @@ export enum GAME_EVENTS {
 
     // NOTIFICATIONS
     NOTIFICATION = "NOTIFICATION",
+    MESSAGE = "MESSAGE",
 
     // ERRORS
     ERROR = "ERROR",
     BAD_REQUEST = "BAD_REQUEST",
+    USER_NOT_FOUND_CHAT = "USER_NOT_FOUND_CHAT",
 
     // TIMERS
     SHORT_TIMER = "SHORT_TIMER",
@@ -39,4 +41,15 @@ export type EmitGame = Game;
 export interface EmitSurrender {
     type: "REQUEST" | "ACCEPT" | "REJECT";
     payload: Pick<User, "id">;
+}
+
+export interface EmitMessage extends Pick<User, "id">, Message {}
+
+export interface ChatMessageServer extends Message {
+    name: string;
+    time: number;
+}
+
+interface Message {
+    message: string;
 }

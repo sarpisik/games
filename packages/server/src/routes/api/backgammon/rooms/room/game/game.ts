@@ -13,6 +13,7 @@ import {
     handleDisconnect,
     handleGameOver,
     handleGameStart,
+    handleMessage,
     handleNextRound,
     handlePlayerDisconnect,
     handlePlayerReconnect,
@@ -62,6 +63,7 @@ export default class BackgammonGame extends SocketConnection
     _handleDisconnect: typeof handleDisconnect;
     _handleGameOver: typeof handleGameOver;
     _handleGameStart: typeof handleGameStart;
+    _handleMessage: typeof handleMessage;
     _handleNextRound: typeof handleNextRound;
     _handlePlayerDisconnect: typeof handlePlayerDisconnect;
     _handlePlayerReconnect: typeof handlePlayerReconnect;
@@ -100,6 +102,7 @@ export default class BackgammonGame extends SocketConnection
         this._handleDisconnect = handleDisconnect.bind(this);
         this._handleGameOver = handleGameOver.bind(this);
         this._handleGameStart = handleGameStart.bind(this);
+        this._handleMessage = handleMessage.bind(this);
         this._handleNextRound = handleNextRound.bind(this);
         this._handlePlayerDisconnect = handlePlayerDisconnect.bind(this);
         this._handlePlayerReconnect = handlePlayerReconnect.bind(this);
@@ -164,6 +167,10 @@ export default class BackgammonGame extends SocketConnection
             );
             socket.on(GAME_EVENTS.UNDO_ROUND, self._handleUndoRound.bind(self));
             socket.on(GAME_EVENTS.RESTART_GAME, self._restartGame.bind(self));
+            socket.on(
+                GAME_EVENTS.MESSAGE,
+                self._handleMessage.call(self, socket)
+            );
 
             // Disconnect event
             socket.on(

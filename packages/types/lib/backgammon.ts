@@ -40,6 +40,18 @@ export interface EmitBase {
 export interface GameClient extends Omit<Game, "rounds"> {
     isRoundPlayer: boolean;
     rounds: GameClientRound[];
+    chat: GameClientChat;
+}
+
+interface GameClientChat {
+    status: "ERROR" | "SUCCESS" | "SENDING";
+    messages: GameClientMessage[];
+}
+
+export interface GameClientMessage {
+    name: string;
+    message: string;
+    time: string;
 }
 
 interface GameClientRound extends Round {

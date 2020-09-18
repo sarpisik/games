@@ -1,23 +1,18 @@
 import React from 'react';
+import { GameClientMessage } from 'types/lib/backgammon';
 import styles from './Message.module.css';
-import { dateToHours } from './utils';
 
-interface Props {
-    name: string;
-    message: string;
-    time: number;
-}
+export default function Message(props: GameClientMessage): React.ReactElement {
+    const { name, message, time } = props,
+        key = name + message + time;
 
-export default function Message(props: Props): React.ReactElement {
     return (
-        <div className={styles.message}>
+        <div key={key} className={styles.message}>
             <p className="mb-1 font-weight-bold">
-                {props.name}&nbsp;-&nbsp;
-                <span className="text-muted font-italic">
-                    {dateToHours(props.time)}
-                </span>
+                {name}&nbsp;-&nbsp;
+                <span className="text-muted font-italic">{time}</span>
             </p>
-            <p>{props.message}</p>
+            <p>{message}</p>
         </div>
     );
 }

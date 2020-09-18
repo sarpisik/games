@@ -6,12 +6,14 @@ export {
 export { feedbacks, setFeedback, useFeedbacks } from './feedbacks';
 export {
     addRound,
+    addMessage,
     deleteRounds,
     game,
     replaceRound,
     resetCurrentRoundLayout,
     setGame,
     editGame,
+    editChat,
     setRoundPlayer,
     setTimer,
     undoRound,

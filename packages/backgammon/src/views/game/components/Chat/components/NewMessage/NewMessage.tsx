@@ -1,46 +1,21 @@
 import React from 'react';
-import Form from 'react-bootstrap/Form';
-import { FiSend } from 'react-icons/fi';
-import styles from './NewMessage.module.css';
+import { useDispatch } from 'react-redux';
+import { EmitMessage, GAME_EVENTS } from 'types/lib/game';
+import { useGame } from '../../../../../../app/slices';
+import { Form } from './components';
 
-export default function NewMessage(
-    props: Omit<React.ComponentProps<typeof Form>, 'onSubmit'>
-): React.ReactElement {
-    const [message, setMessage] = React.useState('');
+export default function NewMessage(): React.ReactElement {
+    const { game } = useGame();
+    const dispatch = useDispatch();
 
-    const disabled = !message;
+    const disabled = game.chat.status === 'SENDING';
 
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setMessage(e.target.value);
+    const send = (message: EmitMessage['message']) => {
+        // ID will be set by socket middleware.
+        const payload: Omit<EmitMessage, 'id'> = { message };
+
+        dispatch({ type: GAME_EVENTS.MESSAGE, payload });
     };
 
-    const send = (e: React.FormEvent<HTMLElement>) => {
-        e.preventDefault();
-        console.log(message);
-    };
-
-    return (
-        <Form onSubmit={send} {...props}>
-            <div className={styles.type_msg}>
-                <div
-                    className={`${styles.input_msg_write} d-flex align-items-center justify-content-between`}
-                >
-                    <input
-                        onChange={onChange}
-                        type="text"
-                        className="write_msg"
-                        placeholder="Type a message"
-                        value={message}
-                    />
-                    <button
-                        disabled={disabled}
-                        className={`${styles.msg_send_btn} d-flex align-items-center justify-content-center`}
-                        type="submit"
-                    >
-                        <FiSend />
-                    </button>
-                </div>
-            </div>
-        </Form>
-    );
+    return <Form disabled={disabled} onSubmit={send} />;
 }

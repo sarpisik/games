@@ -7,17 +7,24 @@ import {
     EVENTS,
     GameClient,
 } from 'types/lib/backgammon';
-import { EmitSurrender, GAME_EVENTS } from 'types/lib/game';
+import {
+    ChatMessageServer,
+    EmitMessage,
+    EmitSurrender,
+    GAME_EVENTS,
+} from 'types/lib/game';
 import { EmitJoinRooms, OnEditGame, ROOM_EVENTS } from 'types/lib/room';
 import { ROOMS_EVENTS } from 'types/lib/rooms';
 import { ROUTES } from '../../../config';
 import { history } from '../../../lib';
 import { User } from '../../../types/user';
 import {
+    addMessage,
     addRoomUser,
     addRound,
     deleteNotification,
     deleteRoomUser,
+    editChat,
     editGame,
     replaceRound,
     setConnectionStatus,
@@ -212,6 +219,22 @@ const socket: () => Middleware = () => {
         s.dispatch(editGame(Object.assign(_game, { _status: 'OVER' })));
     };
 
+    const onUserNotFoundChat = (s: typeof store) => (time: number) => {
+        const { user } = s.getState();
+        const message = `Error, could not send your message. Reason: user not found by id ${user.id}.`;
+
+        s.dispatch(
+            addMessage({
+                status: 'ERROR',
+                message: { name: user.name, message, time },
+            })
+        );
+    };
+
+    const onChatMessage = (s: typeof store) => (message: ChatMessageServer) => {
+        s.dispatch(addMessage({ status: 'SUCCESS', message }));
+    };
+
     return (store) => (next) => (action) => {
         if (typeof action === 'function') {
             action(store.dispatch, store.getState);
@@ -302,6 +325,16 @@ const socket: () => Middleware = () => {
                     // @ts-ignore
                     connection.on(GAME_EVENTS.GAME_OVER, onGameOver(store));
                     connection.on(
+                        GAME_EVENTS.USER_NOT_FOUND_CHAT,
+                        // @ts-ignore
+                        onUserNotFoundChat(store)
+                    );
+                    connection.on(
+                        GAME_EVENTS.MESSAGE,
+                        // @ts-ignore
+                        onChatMessage(store)
+                    );
+                    connection.on(
                         GAME_EVENTS.NOTIFICATION,
                         // @ts-ignore
                         onGameNotification(store)
@@ -366,6 +399,23 @@ const socket: () => Middleware = () => {
                     connection?.emit(
                         GAME_EVENTS.SURRENDER,
                         action.payload as EmitSurrender
+                    );
+                    break;
+                }
+
+                case GAME_EVENTS.MESSAGE: {
+                    const { payload } = action;
+
+                    const user = store.getState().user;
+                    payload.id = user.id;
+
+                    // Inform the subscribed UI elements.
+                    store.dispatch(editChat({ status: 'SENDING' }));
+
+                    // Dispatch message
+                    connection?.emit(
+                        GAME_EVENTS.MESSAGE,
+                        payload as EmitMessage
                     );
                     break;
                 }

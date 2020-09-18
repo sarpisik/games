@@ -6,6 +6,7 @@ export { handleCollectPoint } from './handleCollectPoint';
 export { handleDisconnect } from './handleDisconnect';
 export { handleGameOver } from './handleGameOver';
 export { handleGameStart } from './handleGameStart';
+export { handleMessage } from './handleMessage';
 export { handleNextRound } from './handleNextRound';
 export { handlePlayerDisconnect } from './handlePlayerDisconnect';
 export { handlePlayerReconnect } from './handlePlayerReconnect';

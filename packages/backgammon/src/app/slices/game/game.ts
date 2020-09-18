@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { GameClient } from 'types/lib/backgammon';
+import { ChatMessageServer } from 'types/lib/game';
 import { generatePlayers } from 'types/lib/helpers';
+import { dateToHours } from './utils';
 
 export const initialState: GameClient = {
     id: -1,
@@ -11,6 +13,7 @@ export const initialState: GameClient = {
     rounds: [],
     duration: 0,
     timer: generatePlayers(0, 0),
+    chat: { status: 'SUCCESS', messages: [] },
     _status: 'UNINITIALIZED',
 };
 
@@ -20,6 +23,9 @@ export const gameSlice = createSlice({
     reducers: {
         editGame(state, action: PayloadAction<Partial<GameClient>>) {
             Object.assign(state, action.payload);
+        },
+        editChat(state, action: PayloadAction<Partial<GameClient['chat']>>) {
+            Object.assign(state.chat, action.payload);
         },
         resetCurrentRoundLayout(state) {
             const currentRound = state.rounds[state.rounds.length - 1];
@@ -51,6 +57,22 @@ export const gameSlice = createSlice({
             state.rounds.push(round);
             state._status = 'INITIALIZED';
         },
+        addMessage(
+            state,
+            action: PayloadAction<
+                Pick<GameClient['chat'], 'status'> & {
+                    message: ChatMessageServer;
+                }
+            >
+        ) {
+            const { status, message } = action.payload;
+            const time = dateToHours(message.time);
+            // @ts-ignore
+            message.time = time;
+            state.chat.status = status;
+            // @ts-ignore
+            state.chat.messages.push(message);
+        },
         editRound(state, action: PayloadAction<GameClient['rounds'][number]>) {
             const round = action.payload;
             const rounds = state.rounds;
@@ -80,12 +102,14 @@ export const gameSlice = createSlice({
 
 export const {
     addRound,
+    addMessage,
     editRound,
     deleteRounds,
     replaceRound,
     resetCurrentRoundLayout,
     setAvailableTriangles,
     editGame,
+    editChat,
     setRoundPlayer,
     setTimer,
     undoRound,
