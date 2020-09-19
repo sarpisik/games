@@ -14,7 +14,6 @@ export default function Circle(props: CircleProps): React.ReactElement {
 
     return (
         <SquareImage
-            draggable
             onDragMove={onDragMove}
             image={fillPatternImage}
             width={width}
