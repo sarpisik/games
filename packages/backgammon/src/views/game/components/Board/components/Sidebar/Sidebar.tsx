@@ -1,10 +1,9 @@
 import React from 'react';
 import { PLAYERS } from 'types/lib/backgammon';
-import { OFFSETS } from '../../../../../../configs';
 import { Buttons, Dices, Player } from './components';
 
 type PlayerProps = React.ComponentProps<typeof Player>;
-type ImageElement = Exclude<PlayerProps['point']['image'], undefined>;
+type ImageElement = PlayerProps['pointImage'];
 
 interface Props {
     images: {
@@ -20,61 +19,9 @@ export default function Sidebar(props: Props): React.ReactElement {
 
     return (
         <React.Fragment>
-            <Player
-                point={Object.assign(
-                    {},
-                    OFFSETS.PLAYER_LABELS[PLAYERS.BLACK].POINT,
-                    { image: images[PLAYERS.BLACK] }
-                )}
-                score={Object.assign(
-                    {},
-                    OFFSETS.PLAYER_LABELS[PLAYERS.BLACK].SCORE,
-                    { player: PLAYERS.BLACK as const }
-                )}
-                shortTimer={Object.assign(
-                    {},
-                    OFFSETS.PLAYER_LABELS[PLAYERS.BLACK].SHORT_TIMER,
-                    { player: PLAYERS.BLACK as const }
-                )}
-                timer={Object.assign(
-                    {},
-                    OFFSETS.PLAYER_LABELS[PLAYERS.BLACK].TIMER,
-                    { player: PLAYERS.BLACK as const }
-                )}
-                name={Object.assign(
-                    {},
-                    OFFSETS.PLAYER_LABELS[PLAYERS.BLACK].NAME,
-                    { player: PLAYERS.BLACK as const }
-                )}
-            />
+            <Player player={PLAYERS.BLACK} pointImage={images[PLAYERS.BLACK]} />
             <Dices images={images.dices} />
-            <Player
-                point={Object.assign(
-                    {},
-                    OFFSETS.PLAYER_LABELS[PLAYERS.WHITE].POINT,
-                    { image: images[PLAYERS.WHITE] }
-                )}
-                score={Object.assign(
-                    {},
-                    OFFSETS.PLAYER_LABELS[PLAYERS.WHITE].SCORE,
-                    { player: PLAYERS.WHITE as const }
-                )}
-                shortTimer={Object.assign(
-                    {},
-                    OFFSETS.PLAYER_LABELS[PLAYERS.WHITE].SHORT_TIMER,
-                    { player: PLAYERS.WHITE as const }
-                )}
-                timer={Object.assign(
-                    {},
-                    OFFSETS.PLAYER_LABELS[PLAYERS.WHITE].TIMER,
-                    { player: PLAYERS.WHITE as const }
-                )}
-                name={Object.assign(
-                    {},
-                    OFFSETS.PLAYER_LABELS[PLAYERS.WHITE].NAME,
-                    { player: PLAYERS.WHITE as const }
-                )}
-            />
+            <Player player={PLAYERS.WHITE} pointImage={images[PLAYERS.WHITE]} />
             <Buttons backgrounds={images.btnBackgrounds} />
         </React.Fragment>
     );

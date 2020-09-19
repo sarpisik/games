@@ -1,31 +1,32 @@
 import React from 'react';
+import { Round } from 'types/lib/backgammon';
+import { OFFSETS } from '../../../../../../../../configs';
 import { Circle } from '../../../Points/components/shared/components/Point/components';
 import { Name, Score, ShortTimer, Timer } from './components';
 
 type PointProps = React.ComponentProps<typeof Circle>;
-type ScoreProps = React.ComponentProps<typeof Score>;
-type NameProps = React.ComponentProps<typeof Name>;
-type ShortTimerProps = React.ComponentProps<typeof ShortTimer>;
-type TimerProps = React.ComponentProps<typeof Timer>;
 
 interface Props {
-    point: PointProps;
-    score: ScoreProps;
-    name: NameProps;
-    shortTimer: ShortTimerProps;
-    timer: TimerProps;
+    player: Round['player'];
+    pointImage: Exclude<PointProps['image'], undefined>;
 }
 
 export default function Player(props: Props): React.ReactElement {
-    const { point, score, name, shortTimer, timer } = props;
+    const { player, pointImage } = props;
 
     return (
         <React.Fragment>
-            <Circle {...point} />
-            <Score {...score} />
-            <Name {...name} />
-            <ShortTimer {...shortTimer} />
-            <Timer {...timer} />
+            <Circle
+                image={pointImage}
+                {...OFFSETS.PLAYER_LABELS[player].POINT}
+            />
+            <Score player={player} {...OFFSETS.PLAYER_LABELS[player].SCORE} />
+            <Name player={player} {...OFFSETS.PLAYER_LABELS[player].NAME} />
+            <ShortTimer
+                player={player}
+                {...OFFSETS.PLAYER_LABELS[player].SHORT_TIMER}
+            />
+            <Timer player={player} {...OFFSETS.PLAYER_LABELS[player].TIMER} />
         </React.Fragment>
     );
 }
