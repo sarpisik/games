@@ -11,18 +11,19 @@ interface Props
     y: number;
     width: number;
     height: number;
+    fill?: string;
 }
 
 export default withUnitMeasure(Button);
 
 function Button(_props: Props): React.ReactElement {
-    const { image, text, ...props } = _props;
+    const { image, fill = '#ffffff', text, ...props } = _props;
 
     return (
         <React.Fragment>
             <Image image={image} onTap={props.onClick} {...props} />
             <Label
-                fill="#ffffff"
+                fill={fill}
                 align="center"
                 verticalAlign="middle"
                 text={text}

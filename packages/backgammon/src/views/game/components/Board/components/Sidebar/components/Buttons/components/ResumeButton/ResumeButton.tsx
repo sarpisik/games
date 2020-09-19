@@ -29,6 +29,7 @@ export default function ResumeButton(
         <Button
             text={disabled ? 'Please wait...' : 'Resume'}
             onClick={resumeGame}
+            fill="#000000"
             {...props}
         />
     );
