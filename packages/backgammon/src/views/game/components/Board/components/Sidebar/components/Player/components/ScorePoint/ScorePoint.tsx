@@ -15,7 +15,7 @@ interface Props {
 }
 
 // @ts-ignore
-const EnchancedLabel = withUnitMeasure<React.ComponentProps<typeof Label>>(
+const EnhancedLabel = withUnitMeasure<React.ComponentProps<typeof Label>>(
     (props) => (
         <Label
             fill="#FFFFFF"
@@ -33,7 +33,7 @@ export default function Highscore(_props: Props): React.ReactElement {
     const scorePoint = game.players[player]?.backgammon[scoreKey] ?? '';
 
     return (
-        <EnchancedLabel
+        <EnhancedLabel
             text={scorePoint.toString()}
             fontSize={SIDEBAR_HIGHSCORE_FONT_SIZE}
             {...OFFSETS.PLAYER_LABELS[player].SCORE_POINTS[scoreKey]}
