@@ -32,8 +32,24 @@ export default function GameDemo(_props: RouteComponentProps) {
                 isRoundPlayer: true,
                 // @ts-ignore
                 players: generatePlayers(
-                    { name: 'black player' },
-                    { name: 'white player white player' }
+                    {
+                        name: 'black player',
+                        backgammon: {
+                            score: 10300,
+                            winds: 10,
+                            loses: 5,
+                            escapes: 4,
+                        },
+                    },
+                    {
+                        name: 'white player white player',
+                        backgammon: {
+                            score: 11700,
+                            winds: 10,
+                            loses: 5,
+                            escapes: 4,
+                        },
+                    }
                 ),
             })
         );

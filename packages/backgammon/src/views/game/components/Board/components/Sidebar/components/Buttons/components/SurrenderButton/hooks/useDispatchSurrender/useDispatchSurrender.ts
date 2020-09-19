@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
-import { User } from 'types/lib/backgammon';
 import { EmitSurrender, GAME_EVENTS } from 'types/lib/game';
+import { User } from 'types/lib/user';
 
 export default function useDispatchSurrender(id: User['id']) {
     const dispatch = useDispatch();

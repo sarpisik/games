@@ -1,3 +1,5 @@
+import { User } from './user';
+
 export type CreateGame = Pick<Game, "players" | "stages" | "duration">;
 
 export interface EmitError {
@@ -100,12 +102,6 @@ export enum PLAYERS {
     WHITE = -1,
     NONE = 0,
     BLACK = 1,
-}
-
-export interface User {
-    id: string;
-    name: string;
-    email: string;
 }
 
 export const OPPONENT = {

@@ -1,4 +1,5 @@
-import { Game, User } from 'types/lib/backgammon';
+import { Game } from 'types/lib/backgammon';
+import { User } from 'types/lib/user';
 
 export default function calculateIsRoundPlayer(
     userId: User['id'],

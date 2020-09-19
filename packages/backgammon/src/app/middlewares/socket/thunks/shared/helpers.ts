@@ -1,5 +1,6 @@
-import { GameClient, PLAYERS, User } from 'types/lib/backgammon';
+import { GameClient, PLAYERS } from 'types/lib/backgammon';
 import { GAME_EVENTS } from 'types/lib/game';
+import { User } from 'types/lib/user';
 import { setNotification } from '../../../../slices/notification';
 
 export function checkIsPlayer(

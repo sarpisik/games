@@ -3,8 +3,8 @@ import {
     EmitStageOver,
     Game,
     PLAYERS,
-    User,
 } from 'types/lib/backgammon';
+import { User } from 'types/lib/user';
 
 export default function createWinnerMessage(
     game: Game,
