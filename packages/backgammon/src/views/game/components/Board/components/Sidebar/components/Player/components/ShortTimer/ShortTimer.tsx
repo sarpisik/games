@@ -36,6 +36,7 @@ function ShortTimer(_props: Props): React.ReactElement {
             fill="#000000"
             align="center"
             verticalAlign="middle"
+            fontStyle="bold"
             text={shortTimerSecond.toString()}
             fontSize={SIDEBAR_FONT_SIZE}
             {...props}

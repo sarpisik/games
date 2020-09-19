@@ -10,7 +10,7 @@ export enum ROUTES {
 
 export const MAX_WIDTH = 0.75;
 
-export const SIDEBAR_FONT_SIZE = 0.04;
+export const SIDEBAR_FONT_SIZE = 0.038;
 
 export const COLORS = {
     // frame

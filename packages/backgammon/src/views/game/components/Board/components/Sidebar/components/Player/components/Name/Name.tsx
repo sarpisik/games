@@ -27,6 +27,7 @@ function Name(_props: Props): React.ReactElement {
             fill="#ffffff"
             align="left"
             verticalAlign="top"
+            fontStyle="bold"
             text={name}
             fontSize={SIDEBAR_FONT_SIZE}
             {...props}
