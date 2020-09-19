@@ -11,6 +11,7 @@ export enum ROUTES {
 export const MAX_WIDTH = 0.75;
 
 export const SIDEBAR_FONT_SIZE = 0.038;
+export const SIDEBAR_HIGHSCORE_FONT_SIZE = 0.03;
 
 export const COLORS = {
     // frame
@@ -47,8 +48,18 @@ const POINT_SIZE = TRIANGLE_WIDTH;
 const SIDEBAR_START_X = RIGHT_BLOCK_TRIANGLE_END_X + TRIANGLE_WIDTH * 2 - 0.5;
 const SIDEBAR_WIDTH = 49 - SIDEBAR_START_X;
 const SIDEBAR_SCORE_START_X = RIGHT_BLOCK_TRIANGLE_END_X + TRIANGLE_WIDTH + 2;
+// name
 const SIDEBAR_NAME_START_X = SIDEBAR_SCORE_START_X + 3.5;
 const SIDEBAR_NAME_WIDTH = POINT_SIZE * 2.7;
+const SIDEBAR_NAME_BLACK_START_Y = TOP_BLOCK_START_Y * 2.5;
+const SIDEBAR_NAME_WHITE_START_Y = 33;
+// highscore
+const SIDEBAR_HIGHSCORE_WIDTH = POINT_SIZE * 2;
+const SIDEBAR_HIGHSCORE_HEIGHT = TOP_BLOCK_START_Y + 0.7;
+// score point
+const SIDEBAR_SCORE_POINT_WIDTH = POINT_SIZE / 2.5;
+const SIDEBAR_SCORE_POINT_BLACK_START_Y = SIDEBAR_NAME_BLACK_START_Y + 8.5;
+const SIDEBAR_SCORE_POINT_WHITE_START_Y = SIDEBAR_NAME_WHITE_START_Y + 8.25;
 // buttons
 const SIDEBAR_BTN_WIDTH = 12.5;
 // dice
@@ -198,65 +209,117 @@ export const OFFSETS = {
     // player label
     PLAYER_LABELS: {
         [PLAYERS.BLACK]: {
-            POINT: {
-                x: SIDEBAR_START_X,
-                y: POINT_TOP_START_Y * 2,
-                width: POINT_SIZE,
+            HIGHSCORE: {
+                height: SIDEBAR_HIGHSCORE_HEIGHT,
+                width: SIDEBAR_HIGHSCORE_WIDTH,
+                x: SIDEBAR_NAME_START_X,
+                y: SIDEBAR_NAME_BLACK_START_Y + 2.7,
             },
-            SCORE: {
-                x: SIDEBAR_SCORE_START_X,
-                y: TOP_BLOCK_START_Y * 7,
-                width: POINT_SIZE,
-                height: TOP_BLOCK_START_Y * 2,
-            },
-            SHORT_TIMER: {
-                x: SIDEBAR_TIMER_BLACK_START_X + 4,
-                y: TOP_BLOCK_START_Y * 10.7,
-                width: POINT_SIZE,
-                height: TOP_BLOCK_START_Y * 2,
-            },
-            TIMER: {
-                x: SIDEBAR_SCORE_START_X + 0.75,
-                y: TOP_BLOCK_START_Y * 10.7,
-                width: SIDEBAR_TIMER_WIDTH,
-                height: TOP_BLOCK_START_Y * 2,
+            SCORE_POINTS: {
+                wins: {
+                    height: SIDEBAR_HIGHSCORE_HEIGHT,
+                    width: SIDEBAR_SCORE_POINT_WIDTH,
+                    x: SIDEBAR_NAME_START_X,
+                    y: SIDEBAR_SCORE_POINT_BLACK_START_Y,
+                },
+                loses: {
+                    height: SIDEBAR_HIGHSCORE_HEIGHT,
+                    width: SIDEBAR_SCORE_POINT_WIDTH,
+                    x: SIDEBAR_NAME_START_X + SIDEBAR_SCORE_POINT_WIDTH * 2,
+                    y: SIDEBAR_SCORE_POINT_BLACK_START_Y,
+                },
+                escapes: {
+                    height: SIDEBAR_HIGHSCORE_HEIGHT,
+                    width: SIDEBAR_SCORE_POINT_WIDTH,
+                    x: SIDEBAR_NAME_START_X + SIDEBAR_SCORE_POINT_WIDTH * 4,
+                    y: SIDEBAR_SCORE_POINT_BLACK_START_Y,
+                },
             },
             NAME: {
-                x: SIDEBAR_NAME_START_X,
-                y: TOP_BLOCK_START_Y * 2.5,
-                width: SIDEBAR_NAME_WIDTH,
                 height: TOP_BLOCK_START_Y * 2,
+                width: SIDEBAR_NAME_WIDTH,
+                x: SIDEBAR_NAME_START_X,
+                y: SIDEBAR_NAME_BLACK_START_Y,
+            },
+            POINT: {
+                width: POINT_SIZE,
+                x: SIDEBAR_START_X,
+                y: POINT_TOP_START_Y * 2,
+            },
+            SCORE: {
+                height: TOP_BLOCK_START_Y * 2,
+                width: POINT_SIZE,
+                x: SIDEBAR_SCORE_START_X,
+                y: TOP_BLOCK_START_Y * 7,
+            },
+            SHORT_TIMER: {
+                height: TOP_BLOCK_START_Y * 2,
+                width: POINT_SIZE,
+                x: SIDEBAR_TIMER_BLACK_START_X + 4,
+                y: TOP_BLOCK_START_Y * 10.7,
+            },
+            TIMER: {
+                height: TOP_BLOCK_START_Y * 2,
+                width: SIDEBAR_TIMER_WIDTH,
+                x: SIDEBAR_SCORE_START_X + 0.75,
+                y: TOP_BLOCK_START_Y * 10.7,
             },
         },
         [PLAYERS.WHITE]: {
-            POINT: {
-                x: SIDEBAR_START_X,
-                y: POINT_BOTTOM_START_Y - POINT_SIZE * 3 + 0.75,
-                width: POINT_SIZE,
+            HIGHSCORE: {
+                height: SIDEBAR_HIGHSCORE_HEIGHT,
+                width: SIDEBAR_HIGHSCORE_WIDTH,
+                x: SIDEBAR_NAME_START_X,
+                y: SIDEBAR_NAME_WHITE_START_Y + 2.5,
             },
-            SCORE: {
-                x: SIDEBAR_SCORE_START_X,
-                y: 39.4,
-                width: POINT_SIZE,
-                height: TOP_BLOCK_START_Y * 2,
-            },
-            SHORT_TIMER: {
-                x: SIDEBAR_TIMER_WHITE_START_X - 3,
-                y: 26.5,
-                width: POINT_SIZE,
-                height: TOP_BLOCK_START_Y * 2,
-            },
-            TIMER: {
-                x: SIDEBAR_TIMER_WHITE_START_X,
-                y: 26.5,
-                width: SIDEBAR_TIMER_WIDTH,
-                height: TOP_BLOCK_START_Y * 2,
+            SCORE_POINTS: {
+                wins: {
+                    height: SIDEBAR_HIGHSCORE_HEIGHT,
+                    width: SIDEBAR_SCORE_POINT_WIDTH,
+                    x: SIDEBAR_NAME_START_X,
+                    y: SIDEBAR_SCORE_POINT_WHITE_START_Y,
+                },
+                loses: {
+                    height: SIDEBAR_HIGHSCORE_HEIGHT,
+                    width: SIDEBAR_SCORE_POINT_WIDTH,
+                    x: SIDEBAR_NAME_START_X + SIDEBAR_SCORE_POINT_WIDTH * 2,
+                    y: SIDEBAR_SCORE_POINT_WHITE_START_Y,
+                },
+                escapes: {
+                    height: SIDEBAR_HIGHSCORE_HEIGHT,
+                    width: SIDEBAR_SCORE_POINT_WIDTH,
+                    x: SIDEBAR_NAME_START_X + SIDEBAR_SCORE_POINT_WIDTH * 4,
+                    y: SIDEBAR_SCORE_POINT_WHITE_START_Y,
+                },
             },
             NAME: {
-                x: SIDEBAR_NAME_START_X,
-                y: 33,
-                width: SIDEBAR_NAME_WIDTH,
                 height: TOP_BLOCK_START_Y * 2,
+                width: SIDEBAR_NAME_WIDTH,
+                x: SIDEBAR_NAME_START_X,
+                y: SIDEBAR_NAME_WHITE_START_Y,
+            },
+            POINT: {
+                width: POINT_SIZE,
+                x: SIDEBAR_START_X,
+                y: POINT_BOTTOM_START_Y - POINT_SIZE * 3 + 0.75,
+            },
+            SCORE: {
+                height: TOP_BLOCK_START_Y * 2,
+                width: POINT_SIZE,
+                x: SIDEBAR_SCORE_START_X,
+                y: 39.4,
+            },
+            SHORT_TIMER: {
+                height: TOP_BLOCK_START_Y * 2,
+                width: POINT_SIZE,
+                x: SIDEBAR_TIMER_WHITE_START_X - 3,
+                y: 26.5,
+            },
+            TIMER: {
+                height: TOP_BLOCK_START_Y * 2,
+                width: SIDEBAR_TIMER_WIDTH,
+                x: SIDEBAR_TIMER_WHITE_START_X,
+                y: 26.5,
             },
         },
     },

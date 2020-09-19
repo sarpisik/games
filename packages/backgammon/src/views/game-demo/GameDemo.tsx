@@ -36,7 +36,7 @@ export default function GameDemo(_props: RouteComponentProps) {
                         name: 'black player',
                         backgammon: {
                             score: 10300,
-                            winds: 10,
+                            wins: 10,
                             loses: 5,
                             escapes: 4,
                         },
@@ -45,7 +45,7 @@ export default function GameDemo(_props: RouteComponentProps) {
                         name: 'white player white player',
                         backgammon: {
                             score: 11700,
-                            winds: 10,
+                            wins: 10,
                             loses: 5,
                             escapes: 4,
                         },
