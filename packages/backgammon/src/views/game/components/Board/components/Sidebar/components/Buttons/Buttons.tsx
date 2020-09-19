@@ -1,18 +1,27 @@
 import React from 'react';
-import { OFFSETS } from '../../../../../../../../configs';
-import { usePlayer } from '../../../../../withGamePlayer/hooks';
-import { ResumeButton, StartButton, SurrenderButton } from './components';
+import { GameButtons, ResumeButton, StartButton } from './components';
 import { Button } from './components/shared';
+import { usePlayer } from './hooks';
+
+type Image = React.ComponentProps<typeof Button>['bg'];
 
 interface Props {
-    backgrounds: Array<React.ComponentProps<typeof Button>['image']>;
+    buttons: {
+        resume: ButtonImages;
+        start: ButtonImages;
+        surrender: ButtonImages;
+        undo: ButtonImages;
+    };
 }
 
-const { BTN } = OFFSETS;
+interface ButtonImages {
+    bg: Image;
+    icon: Image;
+}
 
 export default function Buttons(props: Props): React.ReactElement {
-    const { backgrounds } = props;
-    const [startBg, surrenderBg, resumeBg] = backgrounds;
+    const { buttons } = props;
+    const { resume, start, ..._buttons } = buttons;
     const { gamePlayer, game, playersFull } = usePlayer();
 
     if (gamePlayer && playersFull)
@@ -20,11 +29,11 @@ export default function Buttons(props: Props): React.ReactElement {
             case 'UNINITIALIZED':
             case 'START':
             case 'OVER':
-                return <StartButton image={startBg} {...BTN} />;
+                return <StartButton {...start} />;
 
             case 'INITIALIZED':
             case 'SURRENDER':
-                return <SurrenderButton image={surrenderBg} {...BTN} />;
+                return <GameButtons {..._buttons} />;
 
             default:
                 console.error(
@@ -34,7 +43,7 @@ export default function Buttons(props: Props): React.ReactElement {
                 return null;
         }
     else if (game._status === 'INITIALIZED' && !playersFull && !gamePlayer)
-        return <ResumeButton image={resumeBg} {...BTN} />;
+        return <ResumeButton {...resume} />;
     // @ts-ignore
     else return null;
 }

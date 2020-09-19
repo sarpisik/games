@@ -14,8 +14,13 @@ import dice6 from '../../../../../assets/dice_6.png';
 
 // Buttons
 import startBg from '../../../../../assets/start_bg.png';
+import startBtn from '../../../../../assets/start_btn.png';
 import surrenderBg from '../../../../../assets/surrender_bg.png';
+import surrenderBtn from '../../../../../assets/surrender_btn.png';
 import resumeBg from '../../../../../assets/resume_bg.png';
+import resumeBtn from '../../../../../assets/resume_btn.png';
+import undoBg from '../../../../../assets/undo_bg.png';
+import undoBtn from '../../../../../assets/undo_btn.png';
 
 type Statuses = ReturnType<typeof useImage>[1];
 type El = ReturnType<typeof useImage>[0];
@@ -30,29 +35,40 @@ export function useLoadAssets() {
     const [sDice5, eDice5] = useImage(dice5);
     const [sDice6, eDice6] = useImage(dice6);
     const [sStartBg, eStartBg] = useImage(startBg);
+    const [sStartBtn, eStartBtn] = useImage(startBtn);
     const [sSurrenderBg, eSurrenderBg] = useImage(surrenderBg);
+    const [sSurrenderBtn, eSurrenderBtn] = useImage(surrenderBtn);
     const [sResumeBg, eResumeBg] = useImage(resumeBg);
+    const [sResumeBtn, eResumeBtn] = useImage(resumeBtn);
+    const [sUndoBg, eUndoBg] = useImage(undoBg);
+    const [sUndoBtn, eUndoBtn] = useImage(undoBtn);
 
     const assets = [
-        pLight,
-        pDark,
-        sStartBg,
-        sSurrenderBg,
-        sResumeBg,
-        sDice1,
-        sDice2,
-        sDice3,
-        sDice4,
-        sDice5,
-        sDice6,
+        [pLight, pDark],
+        [sDice1, sDice2, sDice3, sDice4, sDice5, sDice6],
+        [
+            sResumeBg,
+            sResumeBtn,
+            sStartBg,
+            sStartBtn,
+            sSurrenderBg,
+            sSurrenderBtn,
+            sUndoBg,
+            sUndoBtn,
+        ],
     ];
 
     const statuses = [
         sLight,
         sDark,
         eStartBg,
+        eStartBtn,
         eSurrenderBg,
+        eSurrenderBtn,
         eResumeBg,
+        eResumeBtn,
+        eUndoBg,
+        eUndoBtn,
         eDice1,
         eDice2,
         eDice3,
@@ -68,9 +84,11 @@ export function useLoadAssets() {
 }
 
 export function allElements(
-    elements: El[]
-): elements is Array<Exclude<El, undefined>> {
-    return elements.every(Boolean);
+    elements: El[][] | El[]
+): elements is Array<Array<Exclude<El, undefined>>> {
+    return Array.isArray(elements[0])
+        ? allElements(elements[0] as El[])
+        : (elements as El[]).every(Boolean);
 }
 
 function loaded(status: Statuses) {

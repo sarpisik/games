@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { GameClient } from 'types/lib/backgammon';
 import { GAME_EVENTS } from 'types/lib/game';
-import { getOpponent } from '../../../../../../../../../../../../app/middlewares/socket/thunks/shared/helpers';
-import { useNotification } from '../../../../../../../../../../../../app/slices';
+import { getOpponent } from '../../../../../../../../../../../../../../app/middlewares/socket/thunks/shared/helpers';
+import { useNotification } from '../../../../../../../../../../../../../../app/slices';
 import { useDispatchSurrender } from '../useDispatchSurrender';
 
 export default function usePrompt(

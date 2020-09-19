@@ -1,10 +1,13 @@
 import React from 'react';
-import { useGame, useUser } from '../../../../../../../../../../app/slices';
-import { Button } from '../shared';
+import {
+    useGame,
+    useUser,
+} from '../../../../../../../../../../../../app/slices';
+import { Button } from '../../../shared';
 import { useDispatchSurrender, usePrompt } from './hooks';
 
 export default function SurrenderButton(
-    props: Omit<React.ComponentProps<typeof Button>, 'text'>
+    props: Omit<React.ComponentProps<typeof Button>, 'onClick' | 'offsetIndex'>
 ): React.ReactElement {
     const { user } = useUser();
     const userId = user.id;
@@ -17,8 +20,9 @@ export default function SurrenderButton(
 
     return (
         <Button
-            text={statusSurrender ? 'Please wait...' : 'Surrender'}
+            disabled={statusSurrender}
             onClick={dispatchSurrender('REQUEST')}
+            offsetIndex={1}
             {...props}
         />
     );

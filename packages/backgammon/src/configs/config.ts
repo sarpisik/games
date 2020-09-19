@@ -68,6 +68,8 @@ const SIDEBAR_DICE_START_Y = POINT_TOP_START_Y * 14.5;
 const SIDEBAR_TIMER_BLACK_START_X = SIDEBAR_SCORE_START_X + 0.75;
 const SIDEBAR_TIMER_WHITE_START_X = SIDEBAR_SCORE_START_X + 6.15;
 const SIDEBAR_TIMER_WIDTH = POINT_SIZE + 1;
+// button
+const SIDEBAR_BTN_START_X = RIGHT_BLOCK_TRIANGLE_END_X + TRIANGLE_WIDTH + 1;
 
 const LEFT_BLOCK_START_X = 1;
 const RIGHT_BLOCK_START_X = 17;
@@ -139,10 +141,45 @@ export const OFFSETS = {
     SIDEBAR_WIDTH,
 
     BTN: {
-        x: RIGHT_BLOCK_TRIANGLE_END_X + TRIANGLE_WIDTH + 1,
-        y: 44,
-        width: SIDEBAR_BTN_WIDTH,
-        height: TOP_BLOCK_START_Y * 3,
+        1: {
+            bg: {
+                x: SIDEBAR_BTN_START_X,
+                y: 44,
+                width: SIDEBAR_BTN_WIDTH,
+                height: TOP_BLOCK_START_Y * 3,
+            },
+            icon: {
+                x: SIDEBAR_BTN_START_X + SIDEBAR_BTN_WIDTH / 2 - 0.5,
+                y: 25.25,
+                width: 1.5,
+            },
+        },
+        2: {
+            bg: {
+                x: SIDEBAR_BTN_START_X,
+                y: 44,
+                width: SIDEBAR_BTN_WIDTH / 2,
+                height: TOP_BLOCK_START_Y * 3,
+            },
+            icon: {
+                x: SIDEBAR_BTN_START_X + SIDEBAR_BTN_WIDTH / 4 - 0.5,
+                y: 25.25,
+                width: 1.5,
+            },
+        },
+        3: {
+            bg: {
+                x: SIDEBAR_BTN_START_X + SIDEBAR_BTN_WIDTH / 2,
+                y: 44,
+                width: SIDEBAR_BTN_WIDTH / 2,
+                height: TOP_BLOCK_START_Y * 3,
+            },
+            icon: {
+                x: SIDEBAR_BTN_START_X + (SIDEBAR_BTN_WIDTH / 4) * 3 - 0.5,
+                y: 25.25,
+                width: 1.5,
+            },
+        },
     },
 
     // dices

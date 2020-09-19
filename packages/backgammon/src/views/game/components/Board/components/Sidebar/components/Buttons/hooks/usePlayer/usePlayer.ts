@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { PLAYERS } from 'types/lib/backgammon';
-import { useGame, useUser } from '../../../../../../app/slices';
+import { useGame, useUser } from '../../../../../../../../../../app/slices';
 
 export default function usePlayer() {
     const dispatch = useDispatch();

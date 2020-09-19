@@ -1,7 +1,7 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { withAuthorization } from '../../components';
-import { Board, Chat, Sidebar, Undo, withGameConnection } from './components';
+import { Board, Chat, Sidebar, withGameConnection } from './components';
 import { useDynamicLayout, useResetGame } from './hooks';
 
 export default withAuthorization(withGameConnection(Game));

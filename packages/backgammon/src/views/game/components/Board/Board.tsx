@@ -18,14 +18,8 @@ export default function Board() {
     const [assets, allSuccess, someFailed] = useLoadAssets();
 
     if (allSuccess && allElements(assets)) {
-        const [
-            pLight,
-            pDark,
-            startBg,
-            surrenderBg,
-            resumeBg,
-            ...dices
-        ] = assets;
+        const [points, dices, buttons] = assets;
+        const [pLight, pDark] = points;
         // Will be accessible by drag start event handler
         pLight.dataset.color = 'WHITE';
         pDark.dataset.color = 'BLACK';
@@ -43,7 +37,18 @@ export default function Board() {
                             [PLAYERS.BLACK]: pDark,
                             [PLAYERS.WHITE]: pLight,
                             dices,
-                            btnBackgrounds: [startBg, surrenderBg, resumeBg],
+                            buttons: {
+                                resume: generateBtnProps(
+                                    buttons[0],
+                                    buttons[1]
+                                ),
+                                start: generateBtnProps(buttons[2], buttons[3]),
+                                surrender: generateBtnProps(
+                                    buttons[4],
+                                    buttons[5]
+                                ),
+                                undo: generateBtnProps(buttons[6], buttons[7]),
+                            },
                         }}
                     />
 
@@ -61,4 +66,8 @@ export default function Board() {
     }
 
     return <p>Loading assets. Please wait...</p>;
+}
+
+function generateBtnProps<I>(bg: I, icon: I) {
+    return { bg, icon };
 }

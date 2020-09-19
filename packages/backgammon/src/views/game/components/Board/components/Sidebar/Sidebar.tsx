@@ -10,7 +10,7 @@ interface Props {
         [PLAYERS.BLACK]: ImageElement;
         [PLAYERS.WHITE]: ImageElement;
         dices: ImageElement[];
-        btnBackgrounds: ImageElement[];
+        buttons: React.ComponentProps<typeof Buttons>['buttons'];
     };
 }
 
@@ -22,7 +22,7 @@ export default function Sidebar(props: Props): React.ReactElement {
             <Player player={PLAYERS.BLACK} pointImage={images[PLAYERS.BLACK]} />
             <Dices images={images.dices} />
             <Player player={PLAYERS.WHITE} pointImage={images[PLAYERS.WHITE]} />
-            <Buttons backgrounds={images.btnBackgrounds} />
+            <Buttons buttons={images.buttons} />
         </React.Fragment>
     );
 }

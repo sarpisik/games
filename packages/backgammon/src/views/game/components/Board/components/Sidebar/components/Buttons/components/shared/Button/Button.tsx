@@ -1,35 +1,43 @@
 import React from 'react';
 import { Image } from 'react-konva';
-import { SIDEBAR_FONT_SIZE } from '../../../../../../../../../../../configs';
-import { Label } from '../../../../../../Label';
+import { OFFSETS } from '../../../../../../../../../../../configs';
+import { SquareImage } from '../../../../../../shared';
 import { withUnitMeasure } from '../../../../withUnitMeasure';
 
-interface Props
-    extends Pick<React.ComponentProps<typeof Label>, 'text' | 'onClick'> {
-    image: Exclude<React.ComponentProps<typeof Image>['image'], undefined>;
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    fill?: string;
+type ImageProps = React.ComponentProps<typeof Image>;
+
+type ImageType = Exclude<ImageProps['image'], undefined>;
+
+interface Props {
+    bg: ImageType;
+    icon: ImageType;
+    onClick: () => void;
+    disabled?: boolean;
+    offsetIndex: keyof typeof OFFSETS.BTN;
 }
 
-export default withUnitMeasure(Button);
+// @ts-ignore
+const EnhancedImage = withUnitMeasure<ImageProps>(Image);
 
-function Button(_props: Props): React.ReactElement {
-    const { image, fill = '#ffffff', text, ...props } = _props;
+export default function Button(_props: Props): React.ReactElement {
+    const { bg, icon, disabled, onClick, offsetIndex } = _props;
+    const _onClick: ImageProps['onClick'] = () => {
+        disabled || onClick();
+    };
 
     return (
         <React.Fragment>
-            <Image image={image} onTap={props.onClick} {...props} />
-            <Label
-                fill={fill}
-                align="center"
-                verticalAlign="middle"
-                text={text}
-                fontSize={SIDEBAR_FONT_SIZE}
-                onTap={props.onClick}
-                {...props}
+            <EnhancedImage
+                image={bg}
+                onTap={_onClick}
+                onClick={_onClick}
+                {...OFFSETS.BTN[offsetIndex].bg}
+            />
+            <SquareImage
+                image={icon}
+                onTap={_onClick}
+                onClick={_onClick}
+                {...OFFSETS.BTN[offsetIndex].icon}
             />
         </React.Fragment>
     );

@@ -4,7 +4,7 @@ import { GAME_EVENTS } from 'types/lib/game';
 import { Button } from '../shared';
 
 export default function StartButton(
-    props: Omit<React.ComponentProps<typeof Button>, 'text'>
+    props: Omit<React.ComponentProps<typeof Button>, 'onClick' | 'offsetIndex'>
 ): React.ReactElement {
     const [disabled, setDisabled] = React.useState(false);
     const dispatch = useDispatch();
@@ -18,8 +18,9 @@ export default function StartButton(
 
     return (
         <Button
-            text={disabled ? 'Waiting for the opponent' : 'Start'}
+            disabled={disabled}
             onClick={startGame}
+            offsetIndex={1}
             {...props}
         />
     );

@@ -6,7 +6,7 @@ import { useGame, useUser } from '../../../../../../../../../../app/slices';
 import { Button } from '../shared';
 
 export default function ResumeButton(
-    props: Omit<React.ComponentProps<typeof Button>, 'text'>
+    props: Omit<React.ComponentProps<typeof Button>, 'onClick' | 'offsetIndex'>
 ): React.ReactElement {
     const [disabled, setDisabled] = React.useState(false);
     const { user } = useUser();
@@ -27,9 +27,9 @@ export default function ResumeButton(
 
     return (
         <Button
-            text={disabled ? 'Please wait...' : 'Resume'}
+            disabled={disabled}
             onClick={resumeGame}
-            fill="#000000"
+            offsetIndex={1}
             {...props}
         />
     );

@@ -21,7 +21,7 @@ export default function useUndoHistory() {
         dispatch({ type: EVENTS.UNDO_ROUND, payload });
     };
 
-    return [isUndo, game._status, undoRound] as const;
+    return [isUndo, undoRound] as const;
 }
 
 function selector(state: RootState) {
