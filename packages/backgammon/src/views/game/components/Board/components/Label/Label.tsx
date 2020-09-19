@@ -2,12 +2,10 @@ import React from 'react';
 import { Text } from 'react-konva';
 import { useSizes } from '../../../../../../app/slices/measures';
 
-interface LabelProps extends React.ComponentProps<typeof Text> {
-    text: string;
-}
-
-export default function Label(props: LabelProps): React.ReactElement {
-    const { text, fontSize, ..._props } = props;
+export default function Label(
+    props: React.ComponentProps<typeof Text>
+): React.ReactElement {
+    const { fontSize, ..._props } = props;
 
     const sizes = useSizes();
     const { BOARD_HEIGHT } = sizes;
@@ -15,7 +13,6 @@ export default function Label(props: LabelProps): React.ReactElement {
     return (
         <Text
             fontSize={setDyanmicFontSize(BOARD_HEIGHT, fontSize)}
-            text={text}
             {..._props}
         />
     );

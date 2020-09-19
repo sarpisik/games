@@ -2,7 +2,7 @@ import React from 'react';
 import { Round } from 'types/lib/backgammon';
 import { useGame } from '../../../../../../../../../../app/slices';
 import { OFFSETS } from '../../../../../../../../../../configs';
-import { Label } from '../../../../../Label';
+import { BoldLabel } from '../../../../../shared';
 import { withUnitMeasure } from '../../../withUnitMeasure';
 
 interface Props {
@@ -10,9 +10,9 @@ interface Props {
 }
 
 // @ts-ignore
-const EnhancedLabel = withUnitMeasure<React.ComponentProps<typeof Label>>(
+const EnhancedLabel = withUnitMeasure<React.ComponentProps<typeof BoldLabel>>(
     (props) => (
-        <Label
+        <BoldLabel
             fill="#000000"
             align="center"
             verticalAlign="middle"

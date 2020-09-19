@@ -252,26 +252,6 @@ export const OFFSETS = {
                 x: SIDEBAR_NAME_START_X,
                 y: SIDEBAR_NAME_BLACK_START_Y + 2.7,
             },
-            SCORE_POINTS: {
-                wins: {
-                    height: SIDEBAR_HIGHSCORE_HEIGHT,
-                    width: SIDEBAR_SCORE_POINT_WIDTH,
-                    x: SIDEBAR_NAME_START_X,
-                    y: SIDEBAR_SCORE_POINT_BLACK_START_Y,
-                },
-                loses: {
-                    height: SIDEBAR_HIGHSCORE_HEIGHT,
-                    width: SIDEBAR_SCORE_POINT_WIDTH,
-                    x: SIDEBAR_NAME_START_X + SIDEBAR_SCORE_POINT_WIDTH * 2,
-                    y: SIDEBAR_SCORE_POINT_BLACK_START_Y,
-                },
-                escapes: {
-                    height: SIDEBAR_HIGHSCORE_HEIGHT,
-                    width: SIDEBAR_SCORE_POINT_WIDTH,
-                    x: SIDEBAR_NAME_START_X + SIDEBAR_SCORE_POINT_WIDTH * 4,
-                    y: SIDEBAR_SCORE_POINT_BLACK_START_Y,
-                },
-            },
             NAME: {
                 height: TOP_BLOCK_START_Y * 2,
                 width: SIDEBAR_NAME_WIDTH,
@@ -288,6 +268,26 @@ export const OFFSETS = {
                 width: POINT_SIZE,
                 x: SIDEBAR_SCORE_START_X,
                 y: TOP_BLOCK_START_Y * 7,
+            },
+            SCORE_POINTS: {
+                escapes: {
+                    height: SIDEBAR_HIGHSCORE_HEIGHT,
+                    width: SIDEBAR_SCORE_POINT_WIDTH,
+                    x: SIDEBAR_NAME_START_X + SIDEBAR_SCORE_POINT_WIDTH * 4,
+                    y: SIDEBAR_SCORE_POINT_BLACK_START_Y,
+                },
+                loses: {
+                    height: SIDEBAR_HIGHSCORE_HEIGHT,
+                    width: SIDEBAR_SCORE_POINT_WIDTH,
+                    x: SIDEBAR_NAME_START_X + SIDEBAR_SCORE_POINT_WIDTH * 2,
+                    y: SIDEBAR_SCORE_POINT_BLACK_START_Y,
+                },
+                wins: {
+                    height: SIDEBAR_HIGHSCORE_HEIGHT,
+                    width: SIDEBAR_SCORE_POINT_WIDTH,
+                    x: SIDEBAR_NAME_START_X,
+                    y: SIDEBAR_SCORE_POINT_BLACK_START_Y,
+                },
             },
             SHORT_TIMER: {
                 height: TOP_BLOCK_START_Y * 2,
@@ -309,26 +309,6 @@ export const OFFSETS = {
                 x: SIDEBAR_NAME_START_X,
                 y: SIDEBAR_NAME_WHITE_START_Y + 2.5,
             },
-            SCORE_POINTS: {
-                wins: {
-                    height: SIDEBAR_HIGHSCORE_HEIGHT,
-                    width: SIDEBAR_SCORE_POINT_WIDTH,
-                    x: SIDEBAR_NAME_START_X,
-                    y: SIDEBAR_SCORE_POINT_WHITE_START_Y,
-                },
-                loses: {
-                    height: SIDEBAR_HIGHSCORE_HEIGHT,
-                    width: SIDEBAR_SCORE_POINT_WIDTH,
-                    x: SIDEBAR_NAME_START_X + SIDEBAR_SCORE_POINT_WIDTH * 2,
-                    y: SIDEBAR_SCORE_POINT_WHITE_START_Y,
-                },
-                escapes: {
-                    height: SIDEBAR_HIGHSCORE_HEIGHT,
-                    width: SIDEBAR_SCORE_POINT_WIDTH,
-                    x: SIDEBAR_NAME_START_X + SIDEBAR_SCORE_POINT_WIDTH * 4,
-                    y: SIDEBAR_SCORE_POINT_WHITE_START_Y,
-                },
-            },
             NAME: {
                 height: TOP_BLOCK_START_Y * 2,
                 width: SIDEBAR_NAME_WIDTH,
@@ -345,6 +325,26 @@ export const OFFSETS = {
                 width: POINT_SIZE,
                 x: SIDEBAR_SCORE_START_X,
                 y: 39.4,
+            },
+            SCORE_POINTS: {
+                escapes: {
+                    height: SIDEBAR_HIGHSCORE_HEIGHT,
+                    width: SIDEBAR_SCORE_POINT_WIDTH,
+                    x: SIDEBAR_NAME_START_X + SIDEBAR_SCORE_POINT_WIDTH * 4,
+                    y: SIDEBAR_SCORE_POINT_WHITE_START_Y,
+                },
+                loses: {
+                    height: SIDEBAR_HIGHSCORE_HEIGHT,
+                    width: SIDEBAR_SCORE_POINT_WIDTH,
+                    x: SIDEBAR_NAME_START_X + SIDEBAR_SCORE_POINT_WIDTH * 2,
+                    y: SIDEBAR_SCORE_POINT_WHITE_START_Y,
+                },
+                wins: {
+                    height: SIDEBAR_HIGHSCORE_HEIGHT,
+                    width: SIDEBAR_SCORE_POINT_WIDTH,
+                    x: SIDEBAR_NAME_START_X,
+                    y: SIDEBAR_SCORE_POINT_WHITE_START_Y,
+                },
             },
             SHORT_TIMER: {
                 height: TOP_BLOCK_START_Y * 2,

@@ -5,7 +5,7 @@ import {
     OFFSETS,
     SIDEBAR_HIGHSCORE_FONT_SIZE,
 } from '../../../../../../../../../../configs';
-import { Label } from '../../../../../Label';
+import { BoldLabel } from '../../../../../shared';
 import { withUnitMeasure } from '../../../withUnitMeasure';
 
 interface Props {
@@ -13,13 +13,12 @@ interface Props {
 }
 
 // @ts-ignore
-const EnhancedLabel = withUnitMeasure<React.ComponentProps<typeof Label>>(
+const EnhancedLabel = withUnitMeasure<React.ComponentProps<typeof BoldLabel>>(
     (props) => (
-        <Label
+        <BoldLabel
             fill="#000000"
             align="center"
             verticalAlign="middle"
-            fontStyle="bold"
             letterSpacing={5}
             {...props}
         />
