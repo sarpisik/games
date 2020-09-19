@@ -7,7 +7,7 @@ import { Button } from '../../../shared';
 import { useDispatchSurrender, usePrompt } from './hooks';
 
 export default function SurrenderButton(
-    props: Omit<React.ComponentProps<typeof Button>, 'onClick' | 'offsetIndex'>
+    props: Omit<React.ComponentProps<typeof Button>, 'onClick'>
 ): React.ReactElement {
     const { user } = useUser();
     const userId = user.id;
@@ -22,7 +22,6 @@ export default function SurrenderButton(
         <Button
             disabled={statusSurrender}
             onClick={dispatchSurrender('REQUEST')}
-            offsetIndex={1}
             {...props}
         />
     );

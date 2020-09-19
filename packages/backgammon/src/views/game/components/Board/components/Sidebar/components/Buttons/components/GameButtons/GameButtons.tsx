@@ -4,7 +4,10 @@ import { SurrenderButton, UndoButton } from './components';
 
 interface Props {
     undo: React.ComponentProps<typeof UndoButton>;
-    surrender: React.ComponentProps<typeof SurrenderButton>;
+    surrender: Omit<
+        React.ComponentProps<typeof SurrenderButton>,
+        'offsetIndex'
+    >;
 }
 
 export default function GameButtons(props: Props): React.ReactElement {
@@ -15,9 +18,9 @@ export default function GameButtons(props: Props): React.ReactElement {
         return (
             <React.Fragment>
                 <UndoButton {...undo} />
-                <SurrenderButton {...surrender} />
+                <SurrenderButton offsetIndex={3} {...surrender} />
             </React.Fragment>
         );
 
-    return <SurrenderButton {...surrender} />;
+    return <SurrenderButton offsetIndex={1} {...surrender} />;
 }
