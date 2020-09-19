@@ -27,20 +27,14 @@ export default function Player(props: Props): React.ReactElement {
                 image={pointImage}
                 {...OFFSETS.PLAYER_LABELS[player].POINT}
             />
-            <Score player={player} {...OFFSETS.PLAYER_LABELS[player].SCORE} />
-            <Name player={player} {...OFFSETS.PLAYER_LABELS[player].NAME} />
-            <Highscore
-                player={player}
-                {...OFFSETS.PLAYER_LABELS[player].HIGHSCORE}
-            />
+            <Score player={player} />
+            <Name player={player} />
+            <Highscore player={player} />
             <ScorePoint player={player} scoreKey="wins" />
             <ScorePoint player={player} scoreKey="loses" />
             <ScorePoint player={player} scoreKey="escapes" />
-            <ShortTimer
-                player={player}
-                {...OFFSETS.PLAYER_LABELS[player].SHORT_TIMER}
-            />
-            <Timer player={player} {...OFFSETS.PLAYER_LABELS[player].TIMER} />
+            <ShortTimer player={player} />
+            <Timer player={player} />
         </React.Fragment>
     );
 }
