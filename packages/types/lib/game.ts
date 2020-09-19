@@ -1,4 +1,5 @@
-import { Game, User } from "./backgammon";
+import { Game } from "./backgammon";
+import { User } from './user';
 
 export enum GAME_EVENTS {
     // ROOM

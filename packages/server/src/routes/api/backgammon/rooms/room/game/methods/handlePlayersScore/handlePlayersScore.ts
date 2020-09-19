@@ -1,4 +1,5 @@
-import { EmitGameOver, OPPONENT, User } from '@shared-types/backgammon';
+import { EmitGameOver, OPPONENT } from '@shared-types/backgammon';
+import { User } from '@shared-types/user';
 import { SCORES } from '../../constants';
 import BackgammonGame from '../../game';
 
