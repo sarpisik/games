@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { User } from '@shared-backgammon/src/types/user';
 import { EmitGameOver, PLAYERS } from '@shared-types/backgammon';
-import { ONE_SECOND } from '@shared-types/constants';
 import { GAME_EVENTS } from '@shared-types/game';
 import BackgammonGame from '../../../game';
 import { generatePlayersObj } from '../../../helpers';
@@ -9,9 +8,9 @@ import handlePlayerDisconnect, {
     createMessage,
 } from '../handlePlayerDisconnect';
 
-type Player = Exclude<
-    BackgammonGame['players'][keyof BackgammonGame['players']],
-    null
+type Player = Pick<
+    Exclude<BackgammonGame['players'][keyof BackgammonGame['players']], null>,
+    'id' | 'name'
 >;
 
 describe('handlePlayerDisconnect', () => {
@@ -30,20 +29,10 @@ describe('handlePlayerDisconnect', () => {
         _tRef?: BackgammonGame['_tRef'];
     };
 
-    const createUpdateParams = (
-        action: string,
-        playerId: string,
-        _score: number
-    ) => ({
-        action,
-        playerId,
-        _score,
-    });
-
     beforeEach(() => {
         const players = generatePlayersObj(
-            { id: '54321', name: 'black-player', email: 'test@example.com' },
-            { id: '12345', name: 'white-player', email: 'test@example.com' }
+            { id: '54321', name: 'black-player' },
+            { id: '12345', name: 'white-player' }
         );
         backgammonGame = {
             _emitNamespace: jasmine.createSpy('_emitNamespace'),

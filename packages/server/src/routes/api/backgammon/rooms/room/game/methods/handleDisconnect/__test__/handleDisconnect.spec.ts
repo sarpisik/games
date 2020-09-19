@@ -6,13 +6,17 @@ import { GAME_EVENTS } from '@shared-types/game';
 import { PLAYERS } from '@shared-types/backgammon';
 
 describe('handleDisconnect', () => {
-    let backgammonGame: Pick<
-            BackgammonGame,
-            'id' | 'players' | '_users' | '_status'
-        > & {
+    let backgammonGame: Pick<BackgammonGame, 'id' | '_users' | '_status'> & {
             _resetGame: jasmine.Spy<jasmine.Func>;
             _handlePlayerDisconnect: jasmine.Spy<jasmine.Func>;
             _setStatus: jasmine.Spy<jasmine.Func>;
+            players: {
+                [key in keyof BackgammonGame['players']]: {
+                    id: string;
+                    name: string;
+                    email: string;
+                } | null;
+            };
         },
         clientId: string,
         socket: { broadcast: { emit: jasmine.Spy<jasmine.Func> } },
