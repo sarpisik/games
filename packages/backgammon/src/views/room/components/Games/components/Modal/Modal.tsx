@@ -3,6 +3,7 @@ import ModalB from 'react-bootstrap/Modal';
 import { useGame } from '../../../../../../app/slices/room';
 import { ModalContext } from '../../contexts/Modal';
 import { Form } from './components';
+import { Trans } from 'react-i18next';
 
 export default function Modal(): React.ReactElement {
     const context = React.useContext(ModalContext);
@@ -28,7 +29,9 @@ export default function Modal(): React.ReactElement {
             centered
         >
             <ModalB.Header closeButton>
-                <ModalB.Title>Set Game</ModalB.Title>
+                <ModalB.Title className="text-capitalize">
+                    <Trans i18nKey="gameSettings.title" />
+                </ModalB.Title>
             </ModalB.Header>
             <ModalB.Body>{body}</ModalB.Body>
         </ModalB>

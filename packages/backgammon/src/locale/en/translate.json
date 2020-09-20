@@ -1,8 +1,33 @@
 {
     "translations": {
-        "profile": "profile",
-        "room": "room",
-        "rooms": "rooms",
-        "game": "game"
+        "game": "game",
+        "gameSettings": {
+            "black": "black",
+            "color": "color",
+            "create": "create game",
+            "duration": "duration",
+            "sit": "sit",
+            "stages": "stages",
+            "title": "set game",
+            "white": "white"
+        },
+        "links": {
+            "en": "en",
+            "home": "home",
+            "profile": "profile",
+            "room": "room",
+            "rooms": "rooms",
+            "signIn": "sign in",
+            "signOut": "sign out",
+            "tr": "tr"
+        },
+        "profile": {
+            "delete": "delete account",
+            "description": "description",
+            "name": "name",
+            "pleaseWait": "please wait",
+            "save": "save"
+        },
+        "room": "room"
     }
 }

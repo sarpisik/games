@@ -15,7 +15,9 @@ export default function Header(props: Props): React.ReactElement {
 
     return (
         <React.Fragment>
-            <Link to={settingsDisabled ? '#' : url}>{title}</Link>
+            <Link className="text-capitalize" to={settingsDisabled ? '#' : url}>
+                {title}
+            </Link>
             {settingsDisabled ? null : <Settings gameId={gameId} />}
         </React.Fragment>
     );

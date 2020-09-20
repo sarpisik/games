@@ -28,5 +28,5 @@ export default function withBreadcrumb<Props extends RouteComponentProps>(
 }
 
 function renderItem(props: ReturnType<typeof useItems>[number]) {
-    return <Breadcrumb.Item {...props} />;
+    return <Breadcrumb.Item className="text-capitalize" {...props} />;
 }

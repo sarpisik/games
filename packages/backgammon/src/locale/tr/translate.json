@@ -1,8 +1,33 @@
 {
     "translations": {
-        "profile": "profil",
-        "room": "salon",
-        "rooms": "salonlar",
-        "game": "oyun"
+        "game": "oyun",
+        "gameSettings": {
+            "black": "siyah",
+            "color": "renk",
+            "create": "kur",
+            "duration": "zaman",
+            "sit": "otur",
+            "stages": "el",
+            "title": "oyun kur",
+            "white": "beyaz"
+        },
+        "links": {
+            "en": "en",
+            "home": "anasayfa",
+            "profile": "profil",
+            "room": "salon",
+            "rooms": "salonlar",
+            "signIn": "oturum aç",
+            "signOut": "oturum kapat",
+            "tr": "tr"
+        },
+        "profile": {
+            "delete": "hesabı sil",
+            "description": "hakkında",
+            "name": "isim",
+            "pleaseWait": "lütfen bekleyiniz",
+            "save": "kaydet"
+        },
+        "room": "oda"
     }
 }

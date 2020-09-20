@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function useItems(url: string) {
+    const { t } = useTranslation();
     const paths = url.split('/');
+    paths.pop();
 
     const items = paths.map((p, i) => {
         const shouldHome = i === 0;
@@ -11,7 +14,7 @@ export default function useItems(url: string) {
             active: to === url,
             linkProps: { to },
             linkAs: Link,
-            children: shouldHome ? 'home' : p,
+            children: t(`links.${shouldHome ? 'home' : p}`),
         };
     });
 

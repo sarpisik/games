@@ -111,7 +111,7 @@ const socket: () => Middleware = () => {
                     editRoomGame: { status: FEEDBACK_STATUS.SUCCESS },
                 })
             );
-            const path = `${ROUTES.ROOMS}/${roomId}/${_payload.id}`;
+            const path = `${roomId}/${_payload.id}`;
             history.push(path);
         }
         s.dispatch(setRoomGame(_payload));

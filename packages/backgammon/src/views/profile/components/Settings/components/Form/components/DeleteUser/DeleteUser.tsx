@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
 import { useUser } from '../../../../../../../../app/slices';
+import { Trans } from 'react-i18next';
 
 export default function DeleteUser(
     props: React.ComponentProps<typeof Button>
@@ -13,8 +14,13 @@ export default function DeleteUser(
         shouldDelete && deleteUser();
     };
     return (
-        <Button onClick={onDeleteUser} variant="danger" {...props}>
-            Delete
+        <Button
+            className="text-capitalize"
+            onClick={onDeleteUser}
+            variant="danger"
+            {...props}
+        >
+            <Trans i18nKey="profile.delete" />
         </Button>
     );
 }

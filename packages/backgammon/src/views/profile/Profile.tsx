@@ -8,10 +8,14 @@ import { FaUserAlt } from 'react-icons/fa';
 import { MdSettings } from 'react-icons/md';
 import { RouteComponentProps } from 'react-router-dom';
 import { useUser } from '../../app/slices';
-import { withAuthorization, withBreadcrumb } from '../../components';
+import {
+    withAuthorization,
+    withBreadcrumb,
+    withLocaleGuard,
+} from '../../components';
 import { Settings, User } from './components';
 
-export default withAuthorization(withBreadcrumb(Profile));
+export default withLocaleGuard(withAuthorization(withBreadcrumb(Profile)));
 
 function Profile(_props: RouteComponentProps): React.ReactElement {
     const { user } = useUser();

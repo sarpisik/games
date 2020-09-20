@@ -1,10 +1,16 @@
 import React from 'react';
 import Container from 'react-bootstrap/Container';
 import { RouteComponentProps } from 'react-router-dom';
-import { withAuthorization, withBreadcrumb } from '../../components';
+import {
+    withAuthorization,
+    withBreadcrumb,
+    withLocaleGuard,
+} from '../../components';
 import { Games, withRoomConnection } from './components';
 
-export default withAuthorization(withBreadcrumb(withRoomConnection(Room)));
+export default withLocaleGuard(
+    withAuthorization(withBreadcrumb(withRoomConnection(Room)))
+);
 
 function Room(props: RouteComponentProps): React.ReactElement {
     const {

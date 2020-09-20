@@ -3,15 +3,21 @@ import { OPPONENT, PLAYERS } from 'types/lib/backgammon';
 import { useRoom, useUser } from '../../../../../../app/slices';
 import { Game as GameComponent } from '../../components';
 import { BodyProps } from '../../components/Game/components/Body';
+import { useTranslation } from 'react-i18next';
 
 type GameProps = ComponentProps<typeof GameComponent>;
 
 const PLAYERS_MAP = [PLAYERS.BLACK, PLAYERS.WHITE] as const;
 
 export default function useGames(urlPrefix: string): GameProps[] {
+    const { t } = useTranslation();
+    const localizedGame = t('game');
+
     const { user } = useUser();
+
     const room = useRoom();
     const { games } = room;
+
     const gamesProps: GameProps[] = games.map((game) => {
         let userTable = false,
             // @ts-ignore
@@ -35,7 +41,7 @@ export default function useGames(urlPrefix: string): GameProps[] {
             headerProps: {
                 gameId: game.id,
                 url: `${urlPrefix}/${game.id.toString()}`,
-                title: `Game ${game.id}`,
+                title: `${localizedGame} ${game.id}`,
                 settingsDisabled: userTable,
             },
             bodyProps: {
