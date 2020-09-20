@@ -10,8 +10,8 @@ i18n.use(XHR)
     .use(initReactI18next)
     .init({
         resources: {
-            en: { translations: languageEN },
-            tr: { translations: languageTR },
+            en: languageEN,
+            tr: languageTR,
         },
         lng: 'en',
         fallbackLng: 'en',
