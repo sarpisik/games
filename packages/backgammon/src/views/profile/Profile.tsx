@@ -11,11 +11,11 @@ import { useUser } from '../../app/slices';
 import {
     withAuthorization,
     withBreadcrumb,
-    withLocaleGuard,
+    withLocaleSwitch,
 } from '../../components';
 import { Settings, User } from './components';
 
-export default withLocaleGuard(withAuthorization(withBreadcrumb(Profile)));
+export default withLocaleSwitch(withAuthorization(withBreadcrumb(Profile)));
 
 function Profile(_props: RouteComponentProps): React.ReactElement {
     const { user } = useUser();

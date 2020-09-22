@@ -4,11 +4,11 @@ import { RouteComponentProps } from 'react-router-dom';
 import {
     withAuthorization,
     withBreadcrumb,
-    withLocaleGuard,
+    withLocaleSwitch,
 } from '../../components';
 import { Games, withRoomConnection } from './components';
 
-export default withLocaleGuard(
+export default withLocaleSwitch(
     withAuthorization(withBreadcrumb(withRoomConnection(Room)))
 );
 

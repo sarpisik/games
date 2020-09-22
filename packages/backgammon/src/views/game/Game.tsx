@@ -1,10 +1,10 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { withAuthorization, withLocaleGuard } from '../../components';
+import { withAuthorization, withLocaleSwitch } from '../../components';
 import { Board, Chat, Sidebar, withGameConnection } from './components';
 import { useDynamicLayout, useResetGame } from './hooks';
 
-export default withLocaleGuard(withAuthorization(withGameConnection(Game)));
+export default withLocaleSwitch(withAuthorization(withGameConnection(Game)));
 
 export function Game(_props: RouteComponentProps) {
     useResetGame();

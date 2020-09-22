@@ -4,12 +4,12 @@ import { useRooms } from '../../app/slices';
 import {
     withAuthorization,
     withBreadcrumb,
-    withLocaleGuard,
+    withLocaleSwitch,
 } from '../../components';
 import { withRoomsConnection } from './components';
 import { useTranslation } from 'react-i18next';
 
-export default withLocaleGuard(
+export default withLocaleSwitch(
     withAuthorization(withBreadcrumb(withRoomsConnection(Rooms)))
 );
 

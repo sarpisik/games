@@ -8,9 +8,9 @@ import { PLAYERS } from '../game/components/Board/constants';
 import { Game } from '../game/Game';
 import { useDynamicLayout, useResetGame } from '../game/hooks';
 import { layout } from './constants/layout';
-import { withLocaleGuard } from '../../components';
+import { withLocaleSwitch } from '../../components';
 
-export default withLocaleGuard(GameDemo);
+export default withLocaleSwitch(GameDemo);
 
 function GameDemo(_props: RouteComponentProps) {
     const dispatch = useDispatch();

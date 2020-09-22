@@ -1,11 +1,11 @@
 import React from 'react';
 import { Trans } from 'react-i18next';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { withLocaleGuard } from '../../components';
+import { withLocaleSwitch } from '../../components';
 import { ROUTES } from '../../configs';
 import { User } from './components';
 
-export default withLocaleGuard(Home);
+export default withLocaleSwitch(Home);
 
 function Home(props: RouteComponentProps): React.ReactElement {
     const {
