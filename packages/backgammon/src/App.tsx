@@ -15,7 +15,7 @@ import {
 
 /*
  * TODO:
- * - [] render country flag. Navigate on click.
+ * - [x] render country flag. Navigate on click.
  * - [] localize game feedbacks.
  * - [] display only round player related errors.
  */
