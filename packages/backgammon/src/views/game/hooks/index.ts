@@ -1,2 +1,2 @@
-export { useDynamicLayout } from './useDynamicLayout';
+export { useDynamicClassName } from './useDynamicClassName';
 export { useResetGame } from './useResetGame';

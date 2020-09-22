@@ -1,24 +1,31 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { withAuthorization, withLocaleSwitch } from '../../components';
+import {
+    LayoutWrapperProps,
+    withAuthorization,
+    withLayout,
+    withLocaleSwitch,
+} from '../../components';
 import { Board, Chat, Sidebar, withGameConnection } from './components';
-import { useDynamicLayout, useResetGame } from './hooks';
+import { useDynamicClassName, useResetGame } from './hooks';
+
+export const Game = withLayout({
+    className:
+        'align-items-center d-flex justify-content-center bg-dark overflow-auto',
+    fluid: true,
+})(_Game);
 
 export default withLocaleSwitch(withAuthorization(withGameConnection(Game)));
 
-export function Game(_props: RouteComponentProps) {
+function _Game(props: LayoutWrapperProps) {
     useResetGame();
-    const orientation = useDynamicLayout();
-    const className = 'align-items-center d-flex h-100 justify-content-center bg-dark overflow-auto'.concat(
-        orientation === 'portrait' ? ' flex-wrap' : ''
-    );
+    useDynamicClassName(props.setClassName);
 
     return (
-        <div className={className}>
+        <React.Fragment>
             <Board />
             <Sidebar>
                 <Chat />
             </Sidebar>
-        </div>
+        </React.Fragment>
     );
 }

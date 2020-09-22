@@ -4,18 +4,15 @@ import { RouteComponentProps } from 'react-router-dom';
 import { GameClient } from 'types/lib/backgammon';
 import { generatePlayers } from 'types/lib/helpers';
 import { addRound, editGame } from '../../app/slices';
+import { withLocaleSwitch } from '../../components';
 import { PLAYERS } from '../game/components/Board/constants';
 import { Game } from '../game/Game';
-import { useDynamicLayout, useResetGame } from '../game/hooks';
 import { layout } from './constants/layout';
-import { withLocaleSwitch } from '../../components';
 
 export default withLocaleSwitch(GameDemo);
 
 function GameDemo(_props: RouteComponentProps) {
     const dispatch = useDispatch();
-    useResetGame();
-    useDynamicLayout();
     React.useEffect(() => {
         const round: GameClient['rounds'][number] = {
             id: Date.now(),

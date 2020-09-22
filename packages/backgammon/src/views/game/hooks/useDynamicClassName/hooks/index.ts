@@ -1,0 +1,1 @@
+export { useDynamicOrientation } from './useDynamicOrientation';

@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useSizes } from '../../../../app/slices';
-import { setSizesDynamic } from '../../../../app/slices/measures/thunks';
+import { useSizes } from '../../../../../../app/slices';
+import { setSizesDynamic } from '../../../../../../app/slices/measures/thunks';
 
-export default function useDynamicLayout() {
+export default function useDynamicOrientation() {
     const dispatch = useDispatch();
     const { ORIENTATION } = useSizes();
 

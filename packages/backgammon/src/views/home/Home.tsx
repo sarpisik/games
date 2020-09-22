@@ -1,11 +1,14 @@
 import React from 'react';
+import Col from 'react-bootstrap/Col';
+import ListGroup from 'react-bootstrap/ListGroup';
+import Row from 'react-bootstrap/Row';
 import { Trans } from 'react-i18next';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { withLocaleSwitch } from '../../components';
+import { withLayout, withLocaleSwitch } from '../../components';
 import { ROUTES } from '../../configs';
 import { User } from './components';
 
-export default withLocaleSwitch(Home);
+export default withLocaleSwitch(withLayout()(Home));
 
 function Home(props: RouteComponentProps): React.ReactElement {
     const {
@@ -13,18 +16,25 @@ function Home(props: RouteComponentProps): React.ReactElement {
     } = props;
 
     return (
-        <ul className="p-0 m-0 text-capitalize">
-            <li>
-                <Link className="mr-3" to={`${url}${ROUTES.ROOMS}`}>
-                    <Trans i18nKey="links.rooms" />
-                </Link>
-            </li>
-            <li>
-                <Link className="mr-3" to={`${url}${ROUTES.PROFILE}`}>
-                    <Trans i18nKey="links.profile" />
-                </Link>
-            </li>
-            <User />
-        </ul>
+        <Row className="h-100 justify-content-sm-center">
+            <Col className="d-flex flex-column justify-content-center" sm={6}>
+                <ListGroup className="text-capitalize text-center">
+                    <ListGroup.Item>
+                        <Link className="d-block" to={`${url}${ROUTES.ROOMS}`}>
+                            <Trans i18nKey="links.rooms" />
+                        </Link>
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                        <Link
+                            className="d-block"
+                            to={`${url}${ROUTES.PROFILE}`}
+                        >
+                            <Trans i18nKey="links.profile" />
+                        </Link>
+                    </ListGroup.Item>
+                    <User />
+                </ListGroup>
+            </Col>
+        </Row>
     );
 }
