@@ -1,4 +1,5 @@
 import { GameClient, PLAYERS } from 'types/lib/backgammon';
+import i18n from '../../../../../i18n';
 import { editGame, setConnectionStatus } from '../../../../slices';
 import { CONNECTION_STATUS } from '../../../../slices/connection/connection';
 import { AppThunk } from '../../../../store';
@@ -20,22 +21,21 @@ const onJoinGame: AppThunk<(payload: GameClient) => void> = (
     // Handle notification
     if (isPlayer) {
         let message: string;
+        const localeKey = playersFull ? 'full' : 'empty';
 
         switch (_status) {
             case 'UNINITIALIZED':
-                message = playersFull
-                    ? 'You can click start button.'
-                    : 'The opponent is expected to sit down.';
-
+                message = i18n.t(
+                    `notifications.game.uninitialized.${localeKey}`
+                );
                 break;
+
             case 'START':
-                message = playersFull
-                    ? 'Waiting both players to click start button.'
-                    : 'Missing opposing player. Can not start game.';
-
+                message = i18n.t(`notifications.game.start.${localeKey}`);
                 break;
+
             case 'INITIALIZED':
-                message = 'Opposing player disconnected. Can not move.';
+                message = i18n.t('notifications.game.initialized.disconnected');
                 break;
 
             default:

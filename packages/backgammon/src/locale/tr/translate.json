@@ -21,6 +21,31 @@
             "signOut": "oturum kapat",
             "tr": "tr"
         },
+        "notifications": {
+            "error": {
+                "disconnected": "Hata! Sunucu ile bağlantınız kesildi."
+            },
+            "game": {
+                "initialized": {
+                    "disconnected": "Rakibin bağlantısı kesildi. Hareket edilemiyor."
+                },
+                "nextStage": "Bir sonraki oyun hazırlanıyor.",
+                "skipRound": "Hamle kalmadı. Bir sonraki tura geçiliyor.",
+                "start": {
+                    "empty": "Eksik rakip. Oyuna devam edilemiyor.",
+                    "full": "Her iki oyuncunun da başlat düğmesine tıklamaları bekleniyor."
+                },
+                "uninitialized": {
+                    "empty": "Rakibin oturması bekleniyor.",
+                    "full": "Başlat düğmesine tıklayabilirsiniz."
+                },
+                "winner": {
+                    "guest": "Kazanan {{winner}} oyuncu.",
+                    "opponent": "Kaybettin!",
+                    "self": "Tebrikler! Sen kazandın!"
+                }
+            }
+        },
         "profile": {
             "delete": "hesabı sil",
             "description": "hakkında",
@@ -28,18 +53,6 @@
             "pleaseWait": "lütfen bekleyiniz",
             "save": "kaydet"
         },
-        "room": "oda",
-        "notifications": {
-            "game": {
-                "skipRound": "Hamle kalmadı. Bir sonraki tura geçiliyor.",
-                "winner": {
-                    "self": "Tebrikler! Sen kazandın!",
-                    "opponent": "Kaybettin!",
-                    "guest": "Kazanan {{winner}} oyuncu."
-                },
-                "nextStage": "Bir sonraki oyun hazırlanıyor."
-            },
-            "error": { "disconnected": "Hata! Sunucu ile bağlantınız kesildi." }
-        }
+        "room": "oda"
     }
 }

@@ -21,6 +21,31 @@
             "signOut": "sign out",
             "tr": "tr"
         },
+        "notifications": {
+            "error": {
+                "disconnected": "Error! disconnected."
+            },
+            "game": {
+                "initialized": {
+                    "disconnected": "Opponent disconnected. Can not move."
+                },
+                "nextStage": "Preparing the next stage.",
+                "skipRound": "You can not move. Skipping to the next round.",
+                "start": {
+                    "empty": "Missing opponent. Can not start the game.",
+                    "full": "Waiting for both players to click the start button."
+                },
+                "uninitialized": {
+                    "empty": "The opponent is expected to sit down.",
+                    "full": "You can click the start button."
+                },
+                "winner": {
+                    "guest": "The winner is {{winner}} player.",
+                    "opponent": "You lose!",
+                    "self": "Congratulations! You win!"
+                }
+            }
+        },
         "profile": {
             "delete": "delete account",
             "description": "description",
@@ -28,18 +53,6 @@
             "pleaseWait": "please wait",
             "save": "save"
         },
-        "room": "room",
-        "notifications": {
-            "game": {
-                "skipRound": "You can not move. Skipping to the next round.",
-                "winner": {
-                    "self": "Congratulations! You win!",
-                    "opponent": "You lose!",
-                    "guest": "The winner is {{winner}} player."
-                },
-                "nextStage": "Preparing the next stage."
-            },
-            "error": { "disconnected": "Error! disconnected." }
-        }
+        "room": "room"
     }
 }

@@ -1,8 +1,8 @@
 import { EmitError, EmitScore } from 'types/lib/backgammon';
 import { GAME_EVENTS } from 'types/lib/game';
 import i18n from '../../../../../i18n';
-import { setNotification } from '../../../../slices';
 import { store } from '../../../../store';
+import { actionNotification } from '../../thunks/shared/helpers';
 import { createWinnerMessage } from './utils';
 
 const withNotification = <S extends typeof store, P>(
@@ -12,29 +12,30 @@ const withNotification = <S extends typeof store, P>(
     switch (type) {
         case GAME_EVENTS.SKIP_ROUND:
             s.dispatch(
-                setNotification({
-                    type,
-                    message: i18n.t('notifications.game.skipRound'),
-                })
+                actionNotification(i18n.t('notifications.game.skipRound'), type)
             );
             break;
 
         case GAME_EVENTS.DISCONNECT_FROM_SERVER:
             s.dispatch(
-                setNotification({
-                    type,
-                    message: i18n.t('notifications.error.disconnected'),
-                })
+                actionNotification(
+                    i18n.t('notifications.error.disconnected'),
+                    type
+                )
             );
             break;
 
         case GAME_EVENTS.NOTIFICATION:
-            s.dispatch(setNotification({ type, message: '' }));
+            s.dispatch(actionNotification('', type));
             break;
 
-        case GAME_EVENTS.ERROR:
-            s.dispatch(setNotification((payload as unknown) as EmitError));
+        case GAME_EVENTS.ERROR: {
+            const { message, type } = (payload as unknown) as EmitError;
+            s.dispatch(
+                actionNotification(message, (type as unknown) as GAME_EVENTS)
+            );
             break;
+        }
 
         case GAME_EVENTS.STAGE_OVER: {
             const { game, user } = s.getState();
@@ -45,9 +46,7 @@ const withNotification = <S extends typeof store, P>(
                 ` ${localizedNextStage}`
             );
 
-            s.dispatch(
-                setNotification({ type: GAME_EVENTS.STAGE_OVER, message })
-            );
+            s.dispatch(actionNotification(message, type));
             break;
         }
 
@@ -57,9 +56,7 @@ const withNotification = <S extends typeof store, P>(
 
             const message = createWinnerMessage(game, user, winner);
 
-            s.dispatch(
-                setNotification({ type: GAME_EVENTS.GAME_OVER, message })
-            );
+            s.dispatch(actionNotification(message, type));
             break;
         }
 
