@@ -1,7 +1,6 @@
 import { Middleware } from '@reduxjs/toolkit';
 import socketIOClient from 'socket.io-client';
 import {
-    EmitError,
     EmitGameStart,
     EmitScore,
     EVENTS,
@@ -27,7 +26,6 @@ import {
     replaceRound,
     setConnectionStatus,
     setGame,
-    setNotification,
     setRoom,
     setRooms,
     setRoundPlayer,
@@ -43,8 +41,8 @@ import { SOCKET_ACTIONS } from './actions';
 import { onJoinGame, onSurrender } from './thunks';
 import {
     calculateIsRoundPlayer,
-    createWinnerMessage,
     withDeleteNotification,
+    withNotification,
 } from './utils';
 
 type SocketContextType = ReturnType<typeof socketIOClient> | null;
@@ -156,56 +154,19 @@ const socket: () => Middleware = () => {
         dispatch(addRound(round));
     };
 
-    const onSkipRound = (s: typeof store) => ({
-        round,
-        message,
-    }: {
-        round: AddRound;
-        message: Parameters<typeof setNotification>[0]['message'];
-    }) => {
+    const onSkipRound = (s: typeof store) => (round: AddRound) => {
         onSetRoundPlayer(s, round);
-        s.dispatch(setNotification({ type: EVENTS.SKIP_ROUND, message }));
         s.dispatch(addRound(round));
     };
 
-    const onDisconnectByServer = (s: typeof store) => () => {
-        s.dispatch(
-            setNotification({
-                type: GAME_EVENTS.DISCONNECT_FROM_SERVER,
-                message: 'Error disconnected.',
-            })
-        );
-    };
-
-    const onError = (s: typeof store) => (data: EmitError) => {
-        s.dispatch(setNotification(data));
-    };
-
-    const onGameNotification = (s: typeof store) => (message: string) => {
-        s.dispatch(
-            setNotification({ type: GAME_EVENTS.NOTIFICATION, message })
-        );
-    };
-
     const onStageOver = (s: typeof store) => (data: EmitScore) => {
-        const { game, user } = s.getState();
         const { winner, ..._game } = data;
-        const message = createWinnerMessage(game, user, winner).concat(
-            ' Preparing the next stage.'
-        );
-
-        s.dispatch(setNotification({ type: EVENTS.STAGE_OVER, message }));
         // @ts-ignore
         s.dispatch(editGame(_game));
     };
 
     const onGameOver = (s: typeof store) => (data: EmitScore) => {
-        const { game, user } = s.getState();
         const { winner, ..._game } = data;
-        const message = createWinnerMessage(game, user, winner);
-
-        // Notification
-        s.dispatch(setNotification({ type: EVENTS.GAME_OVER, message }));
         // Reset game
         // @ts-ignore
         s.dispatch(editGame(Object.assign(_game, { _status: 'OVER' })));
@@ -271,8 +232,13 @@ const socket: () => Middleware = () => {
                     connection = socketIOClient(action.payload, {
                         query: { userId: store.getState().user?.id },
                     });
-                    // @ts-ignore
-                    connection.on('disconnect', onDisconnectByServer(store));
+                    connection.on(
+                        'disconnect',
+                        withNotification(GAME_EVENTS.DISCONNECT_FROM_SERVER)(
+                            // @ts-ignore
+                            store
+                        )
+                    );
 
                     connection.on(
                         GAME_EVENTS.JOIN_GAME,
@@ -288,8 +254,12 @@ const socket: () => Middleware = () => {
                         // @ts-ignore
                         onUserDisconnect(store)
                     );
-                    // @ts-ignore
-                    connection.on(GAME_EVENTS.ERROR, onError(store));
+
+                    connection.on(
+                        GAME_EVENTS.ERROR,
+                        // @ts-ignore
+                        withNotification(GAME_EVENTS.ERROR)(store)
+                    );
                     // @ts-ignore
                     connection.on(GAME_EVENTS.TIMER, withTimer(onTimer)(store));
                     connection.on(
@@ -302,10 +272,22 @@ const socket: () => Middleware = () => {
                         // @ts-ignore
                         withDeleteNotification(onRound)(store)
                     );
-                    // @ts-ignore
-                    connection.on(GAME_EVENTS.STAGE_OVER, onStageOver(store));
-                    // @ts-ignore
-                    connection.on(GAME_EVENTS.SKIP_ROUND, onSkipRound(store));
+                    connection.on(
+                        GAME_EVENTS.STAGE_OVER,
+                        withNotification(
+                            GAME_EVENTS.STAGE_OVER,
+                            onStageOver
+                            // @ts-ignore
+                        )(store)
+                    );
+                    connection.on(
+                        GAME_EVENTS.SKIP_ROUND,
+                        withNotification(
+                            GAME_EVENTS.SKIP_ROUND,
+                            onSkipRound
+                            // @ts-ignore
+                        )(store)
+                    );
                     connection.on(
                         GAME_EVENTS.COLLECT_POINT_ROUND,
                         // @ts-ignore
@@ -317,8 +299,14 @@ const socket: () => Middleware = () => {
                         GAME_EVENTS.SURRENDER,
                         onSurrender(store.dispatch, store.getState, null)
                     );
-                    // @ts-ignore
-                    connection.on(GAME_EVENTS.GAME_OVER, onGameOver(store));
+                    connection.on(
+                        GAME_EVENTS.GAME_OVER,
+                        withNotification(
+                            GAME_EVENTS.GAME_OVER,
+                            onGameOver
+                            // @ts-ignore
+                        )(store)
+                    );
                     connection.on(
                         GAME_EVENTS.USER_NOT_FOUND_CHAT,
                         // @ts-ignore
@@ -331,8 +319,10 @@ const socket: () => Middleware = () => {
                     );
                     connection.on(
                         GAME_EVENTS.NOTIFICATION,
-                        // @ts-ignore
-                        onGameNotification(store)
+                        withNotification(GAME_EVENTS.NOTIFICATION)(
+                            // @ts-ignore
+                            store
+                        )
                     );
                     break;
 

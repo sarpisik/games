@@ -28,6 +28,18 @@
             "pleaseWait": "lütfen bekleyiniz",
             "save": "kaydet"
         },
-        "room": "oda"
+        "room": "oda",
+        "notifications": {
+            "game": {
+                "skipRound": "Hamle kalmadı. Bir sonraki tura geçiliyor.",
+                "winner": {
+                    "self": "Tebrikler! Sen kazandın!",
+                    "opponent": "Kaybettin!",
+                    "guest": "Kazanan {{winner}} oyuncu."
+                },
+                "nextStage": "Bir sonraki oyun hazırlanıyor."
+            },
+            "error": { "disconnected": "Hata! Sunucu ile bağlantınız kesildi." }
+        }
     }
 }

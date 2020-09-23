@@ -5,6 +5,7 @@ import {
     PLAYERS,
 } from 'types/lib/backgammon';
 import { User } from 'types/lib/user';
+import i18n from '../../../../../../../i18n';
 
 export default function createWinnerMessage(
     game: Game,
@@ -20,9 +21,13 @@ export default function createWinnerMessage(
     const shouldWinner = userIsPlayer && players[winner]?.id === id;
 
     // User is a player
-    if (userIsPlayer)
-        return shouldWinner ? 'Congratulations! You won!' : 'You lose!';
+    if (userIsPlayer) {
+        const winner = shouldWinner ? 'self' : 'opponent';
+        return i18n.t(`notifications.game.winner.${winner}`);
+    }
 
     // User is a guest.
-    return `Game Over.\nThe winner is ${PLAYERS[winner]} player.`;
+    return i18n.t('notifications.game.winner.guest', {
+        winner: PLAYERS[winner],
+    });
 }

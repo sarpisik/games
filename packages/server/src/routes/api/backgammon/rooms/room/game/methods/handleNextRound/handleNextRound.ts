@@ -43,10 +43,7 @@ export default async function handleNextRound(
             }, NOTIFY_DURATION);
         }
     } else if (shouldSkipRound) {
-        this._emitNamespace(GAME_EVENTS.SKIP_ROUND, {
-            round,
-            message: 'You can not move. Skipping to next round.',
-        });
+        this._emitNamespace(GAME_EVENTS.SKIP_ROUND, round);
 
         setTimeout(() => {
             this._handleNextRound(

@@ -28,6 +28,18 @@
             "pleaseWait": "please wait",
             "save": "save"
         },
-        "room": "room"
+        "room": "room",
+        "notifications": {
+            "game": {
+                "skipRound": "You can not move. Skipping to the next round.",
+                "winner": {
+                    "self": "Congratulations! You win!",
+                    "opponent": "You lose!",
+                    "guest": "The winner is {{winner}} player."
+                },
+                "nextStage": "Preparing the next stage."
+            },
+            "error": { "disconnected": "Error! disconnected." }
+        }
     }
 }
