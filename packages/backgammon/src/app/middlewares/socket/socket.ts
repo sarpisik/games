@@ -15,14 +15,12 @@ import {
 } from 'types/lib/game';
 import { EmitJoinRooms, OnEditGame, ROOM_EVENTS } from 'types/lib/room';
 import { ROOMS_EVENTS } from 'types/lib/rooms';
-import { ROUTES } from '../../../configs';
 import { history } from '../../../lib';
 import { User } from '../../../types/user';
 import {
     addMessage,
     addRoomUser,
     addRound,
-    deleteNotification,
     deleteRoomUser,
     editChat,
     editGame,
@@ -43,7 +41,11 @@ import { Room, setRoomGame } from '../../slices/room/room';
 import { store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
 import { onJoinGame, onSurrender } from './thunks';
-import { calculateIsRoundPlayer, createWinnerMessage } from './utils';
+import {
+    calculateIsRoundPlayer,
+    createWinnerMessage,
+    withDeleteNotification,
+} from './utils';
 
 type SocketContextType = ReturnType<typeof socketIOClient> | null;
 type Game = Parameters<typeof setGame>[0];
@@ -124,17 +126,13 @@ const socket: () => Middleware = () => {
     const onShortTimer = (s: typeof store) => (seconds: number) => {
         s.dispatch(setShortTimer({ seconds }));
     };
+
     const withTimer = (
         wrappedFunction: typeof onTimer | typeof onShortTimer
     ) => (s: typeof store) => (payload: any) => {
         s.dispatch(editGame({ _status: 'INITIALIZED' }));
-
-        const { notification } = s.getState();
-        const { type, message } = notification;
-        const shouldClearNotification = type && message;
-        shouldClearNotification && s.dispatch(deleteNotification());
-
-        wrappedFunction(s)(payload);
+        // @ts-ignore
+        withDeleteNotification(wrappedFunction)(s)(payload);
     };
 
     const onUndoRound = (s: typeof store) => (rounds: UndoRound) => {
@@ -153,12 +151,6 @@ const socket: () => Middleware = () => {
 
     const onRound = (s: typeof store) => (round: AddRound) => {
         const dispatch = s.dispatch;
-        const state = s.getState();
-        const { notification } = state;
-        const { type, message } = notification;
-
-        const shouldDeleteNotification = type && message;
-        shouldDeleteNotification && s.dispatch(deleteNotification());
 
         onSetRoundPlayer(s, round);
         dispatch(addRound(round));
@@ -305,8 +297,11 @@ const socket: () => Middleware = () => {
                         // @ts-ignore
                         withTimer(onShortTimer)(store)
                     );
-                    // @ts-ignore
-                    connection.on(GAME_EVENTS.ROUND, onRound(store));
+                    connection.on(
+                        GAME_EVENTS.ROUND,
+                        // @ts-ignore
+                        withDeleteNotification(onRound)(store)
+                    );
                     // @ts-ignore
                     connection.on(GAME_EVENTS.STAGE_OVER, onStageOver(store));
                     // @ts-ignore
