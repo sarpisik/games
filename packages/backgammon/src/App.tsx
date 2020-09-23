@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { withAuthentication } from './components';
+import { withAuthentication, withLocaleGuard } from './components';
 import { ROUTES } from './configs';
 import {
     Game,
@@ -20,7 +20,7 @@ import {
  * - [] display only round player related errors.
  */
 
-export default withAuthentication(App);
+export default withAuthentication(withLocaleGuard<{}>(App));
 
 function App() {
     return (

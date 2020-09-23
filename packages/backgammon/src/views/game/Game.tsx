@@ -3,7 +3,6 @@ import {
     LayoutWrapperProps,
     withAuthorization,
     withLayout,
-    withLocaleGuard,
 } from '../../components';
 import { Board, Chat, Sidebar, withGameConnection } from './components';
 import { useDynamicClassName, useResetGame } from './hooks';
@@ -14,7 +13,7 @@ export const Game = withLayout({
     fluid: true,
 })(_Game);
 
-export default withLocaleGuard(withAuthorization(withGameConnection(Game)));
+export default withAuthorization(withGameConnection(Game));
 
 function _Game(props: LayoutWrapperProps) {
     useResetGame();

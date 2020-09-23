@@ -1,31 +1,30 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { ROUTES } from '../../configs';
 import { useTranslation } from 'react-i18next';
+import { useHistory, useLocation } from 'react-router-dom';
+import { ROUTES } from '../../configs';
+import { getLocale } from './utils';
 
-const LOCALES = ['en', 'tr'] as const;
-
-export default function withLocaleGuard<Props extends RouteComponentProps>(
+export default function withLocaleGuard<Props>(
     WrappedComponent: React.ComponentType<Props>
 ) {
     return function WithLocaleGuard(props: Props): React.ReactElement {
-        const {
-            match: { params },
-            history,
-        } = props;
+        const history = useHistory();
+        const location = useLocation();
         const { i18n } = useTranslation();
 
-        // @ts-ignore
-        const localeValid = LOCALES.includes(params.lang);
+        const locale = getLocale(location.pathname);
+        const homePage = location.pathname === ROUTES.HOME;
+        const shouldRenderComponent = locale || homePage;
 
         React.useEffect(() => {
-            // @ts-ignore
-            if (localeValid) i18n.changeLanguage(params.lang);
-            else history.replace(ROUTES.HOME);
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [localeValid]);
+            if (locale) i18n.changeLanguage(locale);
+            else if (!homePage) history.replace(ROUTES.HOME);
 
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [homePage, locale]);
+
+        // Ignore return type null
         // @ts-ignore
-        return localeValid ? <WrappedComponent {...props} /> : null;
+        return shouldRenderComponent ? <WrappedComponent {...props} /> : null;
     };
 }
