@@ -1,9 +1,6 @@
 import { MAX_WIDTH, OFFSETS } from '../../../../../configs';
 import { calculateWindowDimension } from '../../../../../utils';
 
-export const TRIANGLE_WIDTH = 3;
-export const TRIANGLE_HEIGHT = 20;
-
 export default function calculateSizes() {
     const { isLandscape, windowWidth } = calculateWindowDimension();
 

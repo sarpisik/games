@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { LayoutWrapperProps } from '../../../../components';
 import { useDynamicOrientation } from './hooks';
 
-const CLASSNAME = 'flex-wrap';
+const CLASSNAME = 'flex-wrap p-0';
 
 export default function useDynamicClassName(
     setClassName: LayoutWrapperProps['setClassName']
