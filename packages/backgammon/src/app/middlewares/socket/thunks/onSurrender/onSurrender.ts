@@ -7,6 +7,7 @@ import {
     checkIsPlayer,
     getOpponent,
 } from '../shared/helpers';
+import i18n from '../../../../../i18n';
 
 const onSurrender: AppThunk<(payload: EmitSurrender) => void> = (
     dispatch,
@@ -33,32 +34,40 @@ const onSurrender: AppThunk<(payload: EmitSurrender) => void> = (
             // inform the UI element to prompt.
             if (!shouldAsker && shouldAnswerer) action = GAME_EVENTS.SURRENDER;
 
+            const key = 'notifications.game.surrender.request.'.concat(
+                shouldAsker ? 'asker' : 'answerer'
+            );
             message = shouldAsker
-                ? 'Waiting opponent to confirm your request to surrender.'
-                : `${opponentPlayer?.name} requests to surrender.`;
+                ? i18n.t(key)
+                : i18n.t(key, {
+                      name: opponentPlayer?.name,
+                  });
             break;
         }
-        case 'ACCEPT':
-            message = `${opponentPlayer?.name} has `.concat(
-                shouldAsker
-                    ? 'surrended. You win.'
-                    : shouldAnswerer
-                    ? 'accepted your surrender.'
-                    : 'accepted the surrender.'
-            );
-            break;
-
-        case 'REJECT':
-            message = (shouldAsker
-                ? `You have rejected the ${opponentPlayer?.name}'s surrender.`
+        case 'ACCEPT': {
+            const key = shouldAsker
+                ? 'answerer'
                 : shouldAnswerer
-                ? `${opponentPlayer?.name} has rejected your surrender.`
-                : `${opponentPlayer?.name} has rejected the surrender.`
-            ).concat(' Game will continue.');
+                ? 'asker'
+                : 'guest';
+            message = i18n.t(`notifications.game.surrender.accept.${key}`, {
+                name: opponentPlayer?.name,
+            });
+            break;
+        }
+
+        case 'REJECT': {
+            const key = 'notifications.game.surrender.reject.'.concat(
+                shouldAsker ? 'answerer' : shouldAnswerer ? 'asker' : 'guest'
+            );
+            message = shouldAsker
+                ? i18n.t(key)
+                : i18n.t(key, { name: opponentPlayer?.name });
 
             // Continue game
             _status = 'INITIALIZED';
             break;
+        }
 
         default:
             console.error(`invalid type of surrender. Received ${type}`);

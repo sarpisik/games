@@ -35,6 +35,22 @@
                     "empty": "Eksik rakip. Oyuna devam edilemiyor.",
                     "full": "Her iki oyuncunun da başlat düğmesine tıklamaları bekleniyor."
                 },
+                "surrender": {
+                    "accept": {
+                        "asker": "{{name}} el verme isteğinizi kabul etti.",
+                        "answerer": "{{name}} el verdi. Sen kazandın!",
+                        "guest": "{{name}} el verdi."
+                    },
+                    "reject": {
+                        "asker": "{{name}} el verme isteğinizi reddetti. Oyuna devam edilecek.",
+                        "answerer": "El verme talebini reddettiniz. Oyuna devam edilecek.",
+                        "guest": "{{name}} el verme talebini reddetti. Oyuna devam edilecek."
+                    },
+                    "request": {
+                        "answerer": "{{name}} eli vermek istiyor.",
+                        "asker": "Rakibinizin el verme talebinizi onaylaması bekleniyor."
+                    }
+                },
                 "uninitialized": {
                     "empty": "Rakibin oturması bekleniyor.",
                     "full": "Başlat düğmesine tıklayabilirsiniz."

@@ -51,8 +51,6 @@ type AddRound = Parameters<typeof addRound>[0];
 type ReplaceRound = Parameters<typeof replaceRound>[0];
 type UndoRound = Parameters<typeof undoRound>[0];
 
-const REACT_APP_SOCKET_URL = process.env.REACT_APP_SOCKET_URL as string;
-
 const socket: () => Middleware = () => {
     let connection: SocketContextType = null;
 
@@ -65,10 +63,6 @@ const socket: () => Middleware = () => {
                 calculateIsRoundPlayer(user.id, game.players, round.player)
             )
         );
-    };
-
-    const onUpdateGame = (s: typeof store) => (game: Game) => {
-        s.dispatch(setGame(game));
     };
 
     const onJoinRooms = (s: typeof store) => (roomIds: EmitJoinRooms) => {
@@ -324,14 +318,6 @@ const socket: () => Middleware = () => {
                             store
                         )
                     );
-                    break;
-
-                case EVENTS.JOIN_ROOM:
-                    if (connection !== null) connection.disconnect();
-                    connection = socketIOClient(REACT_APP_SOCKET_URL);
-                    connection.emit(EVENTS.JOIN_ROOM, action.payload);
-                    // @ts-ignore
-                    connection.on(EVENTS.GAME_UPDATE, onUpdateGame(store));
                     break;
 
                 case SOCKET_ACTIONS.DISCONNECT:
