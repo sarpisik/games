@@ -107,10 +107,18 @@ export const OFFSETS = {
 
     // NOTIFICATION
     NOTIFICATION: {
-        x: 0,
-        y: 0,
-        width: 49 - SIDEBAR_BTN_WIDTH,
-        height: 50,
+        small: {
+            x: 0,
+            y: 0,
+            width: 49 - SIDEBAR_BTN_WIDTH,
+            height: 50,
+        },
+        large: {
+            x: 0,
+            y: 0,
+            width: 50,
+            height: 50,
+        },
     },
 
     // container

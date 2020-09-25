@@ -12,7 +12,7 @@ type SmallNotificationProps = LabelProps & Props;
 
 const { NOTIFICATION } = OFFSETS;
 
-function SmallNotification(
+function LargeNotification(
     _props: SmallNotificationProps
 ): React.ReactElement | null {
     const { text, ...props } = _props;
@@ -31,7 +31,7 @@ function SmallNotification(
     );
 }
 
-const EnhancedSmallNotification = withUnitMeasure(SmallNotification);
+const EnhancedSmallNotification = withUnitMeasure(LargeNotification);
 
 export default (props: LabelProps) => (
     <EnhancedSmallNotification {...props} {...NOTIFICATION.small} />
