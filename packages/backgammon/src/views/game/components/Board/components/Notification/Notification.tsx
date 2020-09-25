@@ -11,7 +11,7 @@ export default function Notification(
     const shouldOverlay = type && message;
 
     if (shouldOverlay)
-        return type === 'LARGE_NOTIFICATION' ? (
+        return type === 'LARGE_OVERLAY' ? (
             <LargeNotification {...props} />
         ) : (
             <SmallNotification text={message} />

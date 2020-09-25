@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { EVENTS, EmitUndoRound } from 'types/lib/backgammon';
+import { EmitUndoRound } from 'types/lib/backgammon';
+import { GAME_EVENTS } from 'types/lib/game';
 import { RootState } from '../../../../store';
 import { editRound } from '../../game';
 
@@ -15,10 +16,11 @@ export default function useUndoHistory() {
         length > 0 &&
         latestRound?.player === rounds[length - 2]?.player &&
         !latestRound?.loading;
+
     const undoRound = () => {
         const payload: EmitUndoRound = { gameId: id };
         editRound(Object.assign({}, latestRound, { loading: true }));
-        dispatch({ type: EVENTS.UNDO_ROUND, payload });
+        dispatch({ type: GAME_EVENTS.UNDO_ROUND, payload });
     };
 
     return [isUndo, undoRound] as const;

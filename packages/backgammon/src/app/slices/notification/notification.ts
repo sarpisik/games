@@ -10,7 +10,7 @@ export enum NOTIFICATION {
 type NotificationType = NOTIFICATION | EVENTS | GAME_EVENTS;
 
 interface Notification {
-    type: string | NotificationType;
+    type: string | 'LARGE_OVERLAY' | NotificationType;
     message: string;
 }
 

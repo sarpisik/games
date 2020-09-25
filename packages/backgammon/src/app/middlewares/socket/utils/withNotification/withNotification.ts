@@ -54,11 +54,19 @@ const withNotification = <S extends typeof store, P>(
             const { game, user } = s.getState();
             const { winner } = (payload as unknown) as EmitScore;
 
-            const message = createWinnerMessage(game, user, winner);
-
-            s.dispatch(actionNotification(message, type));
+            s.dispatch(
+                actionNotification(
+                    createWinnerMessage(game, user, winner),
+                    type
+                )
+            );
             break;
         }
+
+        case GAME_EVENTS.UNDO_ROUND:
+        case GAME_EVENTS.SURRENDER:
+            s.dispatch(actionNotification(type, 'LARGE_OVERLAY'));
+            break;
 
         default:
             console.warn(`Invalid notification type. Received ${type}`);

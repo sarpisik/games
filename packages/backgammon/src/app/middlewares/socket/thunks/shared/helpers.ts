@@ -27,7 +27,9 @@ export function getOpponent(
 
 export function actionNotification(
     message: string,
-    type = GAME_EVENTS.NOTIFICATION
+    type: Parameters<
+        typeof setNotification
+    >[0]['type'] = GAME_EVENTS.NOTIFICATION
 ) {
     return setNotification({ message, type });
 }

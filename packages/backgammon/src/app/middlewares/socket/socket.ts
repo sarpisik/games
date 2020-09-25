@@ -287,11 +287,22 @@ const socket: () => Middleware = () => {
                         // @ts-ignore
                         onReplaceRound(store)
                     );
-                    // @ts-ignore
-                    connection.on(GAME_EVENTS.UNDO_ROUND, onUndoRound(store));
+                    connection.on(
+                        GAME_EVENTS.UNDO_ROUND,
+                        // @ts-ignore
+                        withDeleteNotification(onUndoRound)(store)
+                    );
                     connection.on(
                         GAME_EVENTS.SURRENDER,
-                        onSurrender(store.dispatch, store.getState, null)
+                        withDeleteNotification(
+                            () =>
+                                onSurrender(
+                                    store.dispatch,
+                                    store.getState,
+                                    null
+                                )
+                            // @ts-ignore
+                        )(store)
                     );
                     connection.on(
                         GAME_EVENTS.GAME_OVER,
@@ -351,8 +362,10 @@ const socket: () => Middleware = () => {
                     );
                     break;
 
-                case EVENTS.UNDO_ROUND:
-                    connection?.emit(EVENTS.UNDO_ROUND, action.payload);
+                case GAME_EVENTS.UNDO_ROUND:
+                    // @ts-ignore
+                    withNotification(action.type)(store)();
+                    connection?.emit(action.type, action.payload);
                     break;
 
                 case GAME_EVENTS.START_GAME:
@@ -366,9 +379,11 @@ const socket: () => Middleware = () => {
 
                 case GAME_EVENTS.SURRENDER: {
                     // Inform the subscribed UI elements.
+                    // @ts-ignore
+                    withNotification(action.type)(store)();
                     store.dispatch(editGame({ _status: 'SURRENDER' }));
                     connection?.emit(
-                        GAME_EVENTS.SURRENDER,
+                        action.type,
                         action.payload as EmitSurrender
                     );
                     break;
