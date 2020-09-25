@@ -10,18 +10,18 @@ import {
 type LabelProps = Pick<React.ComponentProps<typeof Label>, 'text'>;
 type SmallNotificationProps = LabelProps & Props;
 
-const { NOTIFICATION } = OFFSETS;
+const { small } = OFFSETS.NOTIFICATION.overlays;
 
 const EnhancedLabel = withUnitMeasure<SmallNotificationProps>(Label);
 
 export default function SmallNotification(
     _props: LabelProps
-): React.ReactElement | null {
+): React.ReactElement {
     const { text, ...props } = _props;
 
     return (
         <React.Fragment>
-            <Overlay {...props} {...NOTIFICATION.small} />
+            <Overlay {...props} {...small} />
             <EnhancedLabel
                 // @ts-ignore
                 fill="#ffffff"
@@ -29,7 +29,7 @@ export default function SmallNotification(
                 verticalAlign="middle"
                 text={text}
                 {...props}
-                {...NOTIFICATION.small}
+                {...small}
             />
         </React.Fragment>
     );

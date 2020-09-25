@@ -24,6 +24,8 @@ export default function Board() {
         pLight.dataset.color = 'WHITE';
         pDark.dataset.color = 'BLACK';
 
+        const cycleIcon = buttons[7];
+
         return (
             <Frame>
                 <Layer>
@@ -47,12 +49,12 @@ export default function Board() {
                                     buttons[4],
                                     buttons[5]
                                 ),
-                                undo: generateBtnProps(buttons[6], buttons[7]),
+                                undo: generateBtnProps(buttons[6], cycleIcon),
                             },
                         }}
                     />
 
-                    <Notification />
+                    <Notification image={cycleIcon} />
                 </Layer>
             </Frame>
         );

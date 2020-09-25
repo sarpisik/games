@@ -1,38 +1,22 @@
 import React from 'react';
 import { OFFSETS } from '../../../../../../../../configs';
-import { Label } from '../../../Label';
-import { Overlay } from '../../../shared';
-import {
-    Props,
-    withUnitMeasure,
-} from '../../../Sidebar/components/withUnitMeasure';
+import { Overlay, SquareImage } from '../../../shared';
+import { Spinner } from './components';
 
-type LabelProps = Pick<React.ComponentProps<typeof Label>, 'text'>;
-type SmallNotificationProps = LabelProps & Props;
+type LargeNotificationProps = Pick<
+    React.ComponentProps<typeof SquareImage>,
+    'image'
+>;
 
-const { NOTIFICATION } = OFFSETS;
+const { overlays } = OFFSETS.NOTIFICATION;
 
-function LargeNotification(
-    _props: SmallNotificationProps
-): React.ReactElement | null {
-    const { text, ...props } = _props;
-
+export default function LargeNotification(
+    props: LargeNotificationProps
+): React.ReactElement {
     return (
         <React.Fragment>
-            <Overlay {...props} />
-            <Label
-                fill="#ffffff"
-                align="center"
-                verticalAlign="middle"
-                text={text}
-                {...props}
-            />
+            <Overlay {...overlays.large} />
+            <Spinner {...props} />
         </React.Fragment>
     );
 }
-
-const EnhancedSmallNotification = withUnitMeasure(LargeNotification);
-
-export default (props: LabelProps) => (
-    <EnhancedSmallNotification {...props} {...NOTIFICATION.small} />
-);

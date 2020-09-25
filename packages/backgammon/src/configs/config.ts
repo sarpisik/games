@@ -107,17 +107,26 @@ export const OFFSETS = {
 
     // NOTIFICATION
     NOTIFICATION: {
-        small: {
-            x: 0,
-            y: 0,
-            width: 49 - SIDEBAR_BTN_WIDTH,
-            height: 50,
+        overlays: {
+            small: {
+                x: 0,
+                y: 0,
+                width: 49 - SIDEBAR_BTN_WIDTH,
+                height: 50,
+            },
+            large: {
+                x: 0,
+                y: 0,
+                width: 50,
+                height: 50,
+            },
         },
-        large: {
-            x: 0,
-            y: 0,
-            width: 50,
-            height: 50,
+        icons: {
+            spinner: {
+                x: 24.25,
+                y: 14,
+                width: 1.5,
+            },
         },
     },
 
