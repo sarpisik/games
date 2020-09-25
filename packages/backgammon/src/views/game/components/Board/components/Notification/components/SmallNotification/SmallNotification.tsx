@@ -12,27 +12,25 @@ type SmallNotificationProps = LabelProps & Props;
 
 const { NOTIFICATION } = OFFSETS;
 
-function SmallNotification(
-    _props: SmallNotificationProps
+const EnhancedLabel = withUnitMeasure<SmallNotificationProps>(Label);
+
+export default function SmallNotification(
+    _props: LabelProps
 ): React.ReactElement | null {
     const { text, ...props } = _props;
 
     return (
         <React.Fragment>
-            <Overlay {...props} />
-            <Label
+            <Overlay {...props} {...NOTIFICATION.small} />
+            <EnhancedLabel
+                // @ts-ignore
                 fill="#ffffff"
                 align="center"
                 verticalAlign="middle"
                 text={text}
                 {...props}
+                {...NOTIFICATION.small}
             />
         </React.Fragment>
     );
 }
-
-const EnhancedSmallNotification = withUnitMeasure(SmallNotification);
-
-export default (props: LabelProps) => (
-    <EnhancedSmallNotification {...props} {...NOTIFICATION.small} />
-);
