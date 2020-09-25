@@ -8,8 +8,8 @@ export default function Messages(): React.ReactElement {
     const { messages } = game.chat;
 
     React.useEffect(
-        function scrollToBottomOnNewMessage() {
-            animateScroll.scrollToBottom({
+        function scrollToTopOnNewMessage() {
+            animateScroll.scrollToTop({
                 containerId: 'messages-container',
             });
         },

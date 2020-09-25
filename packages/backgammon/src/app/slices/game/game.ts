@@ -71,7 +71,7 @@ export const gameSlice = createSlice({
             message.time = time;
             state.chat.status = status;
             // @ts-ignore
-            state.chat.messages.push(message);
+            state.chat.messages.unshift(message);
         },
         editRound(state, action: PayloadAction<GameClient['rounds'][number]>) {
             const round = action.payload;
