@@ -1,9 +1,6 @@
 import React from 'react';
 import { useNotification } from '../../../../../../app/slices';
-import { OFFSETS } from '../../../../../../configs';
-import { Message } from './components';
-
-const { NOTIFICATION } = OFFSETS;
+import { SmallNotification } from './components';
 
 export default function Notification(): React.ReactElement | null {
     const notification = useNotification();
@@ -11,5 +8,5 @@ export default function Notification(): React.ReactElement | null {
 
     const shouldOverlay = type && message;
 
-    return shouldOverlay ? <Message text={message} {...NOTIFICATION} /> : null;
+    return shouldOverlay ? <SmallNotification text={message} /> : null;
 }

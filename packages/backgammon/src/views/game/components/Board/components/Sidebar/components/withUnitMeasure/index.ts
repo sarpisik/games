@@ -1,1 +1,1 @@
-export { default as withUnitMeasure } from './withUnitMeasure';
+export * from './withUnitMeasure';

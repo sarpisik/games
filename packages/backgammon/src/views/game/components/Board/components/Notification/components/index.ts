@@ -1,1 +1,1 @@
-export { Message } from './Message';
+export { SmallNotification } from './SmallNotification';

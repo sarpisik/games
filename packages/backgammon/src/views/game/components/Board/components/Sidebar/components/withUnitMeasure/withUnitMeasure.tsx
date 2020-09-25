@@ -1,14 +1,14 @@
 import React from 'react';
 import { useUnitMeasure } from '../../../../hooks';
 
-interface Props {
+export interface Props {
     x: number;
     y: number;
     width: number;
     height: number;
 }
 
-export default function withUnitMeasure<P extends Props>(
+export function withUnitMeasure<P extends Props>(
     WrappedComponent: React.ComponentType<P>
 ): (props: P) => React.ReactElement {
     return function WithUnitMeasures(
