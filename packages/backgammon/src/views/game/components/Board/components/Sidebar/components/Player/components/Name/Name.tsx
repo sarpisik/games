@@ -8,6 +8,7 @@ import {
 import { shortenString } from '../../../../../../../../../../utils';
 import { BoldLabel } from '../../../../../shared';
 import { withUnitMeasure } from '../../../withUnitMeasure';
+import * as Helpers from './helpers';
 
 interface Props {
     player: Round['player'];
@@ -15,9 +16,7 @@ interface Props {
 
 // @ts-ignore
 const EnhancedLabel = withUnitMeasure<React.ComponentProps<typeof BoldLabel>>(
-    (props) => (
-        <BoldLabel fill="#ffffff" align="left" verticalAlign="top" {...props} />
-    )
+    (props) => <BoldLabel align="left" verticalAlign="top" {...props} />
 );
 
 export default function Name(props: Props): React.ReactElement {
@@ -30,6 +29,12 @@ export default function Name(props: Props): React.ReactElement {
         <EnhancedLabel
             text={name}
             fontSize={SIDEBAR_FONT_SIZE}
+            fill={Helpers.setFontColor(
+                Helpers.checkIsRoundPlayer(
+                    player,
+                    Helpers.getCurrentRound(game.rounds)
+                )
+            )}
             {...OFFSETS.PLAYER_LABELS[player].NAME}
         />
     );
