@@ -1,4 +1,5 @@
 import React from 'react';
+import { getOpponent } from '../../../../../../../../../../../../app/middlewares/socket/thunks/shared/helpers';
 import {
     useGame,
     useUser,
@@ -16,7 +17,11 @@ export default function SurrenderButton(
     const { game } = useGame();
     const statusSurrender = game._status === 'SURRENDER';
 
-    usePrompt(dispatchSurrender, statusSurrender, game.players, userId);
+    usePrompt(
+        dispatchSurrender,
+        statusSurrender,
+        getOpponent(game.players, userId)
+    );
 
     return (
         <Button
