@@ -1,6 +1,6 @@
-import { store } from '../../../../store';
-import { setRooms } from '../../../../slices';
 import { EmitRooms } from 'types/lib/rooms';
+import { store } from '../../../../../../store';
+import { setRooms } from '../../../../../../slices';
 
 type Store = typeof store;
 

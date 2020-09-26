@@ -3,7 +3,7 @@ import socketIOClient from 'socket.io-client';
 import { EmitGameStart, EmitScore, GameClient } from 'types/lib/backgammon';
 import { ChatMessageServer, EmitMessage, GAME_EVENTS } from 'types/lib/game';
 import { OnEditGame, ROOM_EVENTS } from 'types/lib/room';
-import { EmitRooms, ROOMS_EVENTS } from 'types/lib/rooms';
+import { ROOMS_EVENTS } from 'types/lib/rooms';
 import { history } from '../../../lib';
 import { User } from '../../../types/user';
 import {
@@ -17,7 +17,6 @@ import {
     setConnectionStatus,
     setGame,
     setRoom,
-    setRooms,
     setRoundPlayer,
     setShortTimer,
     setTimer,
@@ -31,11 +30,11 @@ import { SOCKET_ACTIONS } from './actions';
 import { onJoinGame, onSurrender } from './thunks';
 import {
     calculateIsRoundPlayer,
-    onUpdateRooms,
     withDeleteNotification,
     withNotification,
     withSpinner,
 } from './utils';
+import { joinRooms } from './listeners';
 
 type SocketContextType = ReturnType<typeof socketIOClient> | null;
 type Game = Parameters<typeof setGame>[0];
@@ -58,11 +57,6 @@ const socket: () => Middleware = () => {
         );
 
         return round;
-    };
-
-    const onJoinRooms = (s: typeof store) => (rooms: EmitRooms) => {
-        s.dispatch(setRooms(rooms));
-        s.dispatch(setConnectionStatus(CONNECTION_STATUS.CONNECTED));
     };
 
     const onJoinRoom = (s: typeof store) => (payload: Room) => {
@@ -179,18 +173,7 @@ const socket: () => Middleware = () => {
         else {
             switch (action.type) {
                 case ROOMS_EVENTS.JOIN_ROOMS:
-                    if (connection !== null) connection.disconnect();
-                    store.dispatch(
-                        setConnectionStatus(CONNECTION_STATUS.CONNECTING)
-                    );
-                    connection = socketIOClient(action.payload);
-
-                    connection.on(ROOMS_EVENTS.JOIN_ROOMS, onJoinRooms(store));
-
-                    connection.on(
-                        ROOMS_EVENTS.ROOM_UPDATE,
-                        onUpdateRooms(store)
-                    );
+                    connection = joinRooms(connection, action.payload, store);
                     break;
 
                 case ROOM_EVENTS.JOIN_ROOM:
