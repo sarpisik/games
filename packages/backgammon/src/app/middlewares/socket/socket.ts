@@ -1,12 +1,7 @@
 import { Middleware } from '@reduxjs/toolkit';
 import socketIOClient from 'socket.io-client';
 import { EmitGameStart, EmitScore, GameClient } from 'types/lib/backgammon';
-import {
-    ChatMessageServer,
-    EmitMessage,
-    EmitSurrender,
-    GAME_EVENTS,
-} from 'types/lib/game';
+import { ChatMessageServer, EmitMessage, GAME_EVENTS } from 'types/lib/game';
 import { EmitJoinRooms, OnEditGame, ROOM_EVENTS } from 'types/lib/room';
 import { ROOMS_EVENTS } from 'types/lib/rooms';
 import { history } from '../../../lib';
@@ -377,10 +372,7 @@ const socket: () => Middleware = () => {
                 case GAME_EVENTS.SURRENDER: {
                     // Inform the subscribed UI elements.
                     store.dispatch(editGame({ _status: 'SURRENDER' }));
-                    connection?.emit(
-                        action.type,
-                        withSpinner(action.payload as EmitSurrender, store)
-                    );
+                    connection?.emit(action.type, withSpinner(action, store));
                     break;
                 }
 

@@ -1,0 +1,1 @@
+export { useDices } from './useDices';
