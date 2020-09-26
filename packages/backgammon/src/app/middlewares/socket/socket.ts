@@ -1,11 +1,6 @@
 import { Middleware } from '@reduxjs/toolkit';
 import socketIOClient from 'socket.io-client';
-import {
-    EmitGameStart,
-    EmitScore,
-    EVENTS,
-    GameClient,
-} from 'types/lib/backgammon';
+import { EmitGameStart, EmitScore, GameClient } from 'types/lib/backgammon';
 import {
     ChatMessageServer,
     EmitMessage,
