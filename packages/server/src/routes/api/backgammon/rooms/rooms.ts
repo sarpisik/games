@@ -27,7 +27,9 @@ export default class Rooms {
                 new BackgammonRoom(
                     i,
                     // Create custom room channel for each room.
-                    _io
+                    _io,
+                    // Notify sockets on update
+                    this._onClientJoinRoom.bind(this)
                 )
             );
         }
@@ -38,6 +40,10 @@ export default class Rooms {
             ROOMS_EVENTS.JOIN_ROOMS,
             parseRooms(mapToArray(this._rooms))
         );
+    }
+
+    protected _onClientJoinRoom(room: EmitRooms[number]) {
+        this._namespace.emit(ROOMS_EVENTS.ROOM_UPDATE, room);
     }
 }
 

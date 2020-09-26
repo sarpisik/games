@@ -3,7 +3,7 @@ import socketIOClient from 'socket.io-client';
 import { EmitGameStart, EmitScore, GameClient } from 'types/lib/backgammon';
 import { ChatMessageServer, EmitMessage, GAME_EVENTS } from 'types/lib/game';
 import { OnEditGame, ROOM_EVENTS } from 'types/lib/room';
-import { ROOMS_EVENTS, EmitRooms } from 'types/lib/rooms';
+import { EmitRooms, ROOMS_EVENTS } from 'types/lib/rooms';
 import { history } from '../../../lib';
 import { User } from '../../../types/user';
 import {
@@ -26,11 +26,12 @@ import {
 import { CONNECTION_STATUS } from '../../slices/connection/connection';
 import { FEEDBACK_STATUS, setFeedback } from '../../slices/feedbacks/feedbacks';
 import { Room, setRoomGame } from '../../slices/room/room';
-import { store } from '../../store';
+import { store, store as _store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
 import { onJoinGame, onSurrender } from './thunks';
 import {
     calculateIsRoundPlayer,
+    onUpdateRooms,
     withDeleteNotification,
     withNotification,
     withSpinner,
@@ -42,6 +43,7 @@ type AddRound = Parameters<typeof addRound>[0];
 type ReplaceRound = Parameters<typeof replaceRound>[0];
 type UndoRound = Parameters<typeof undoRound>[0];
 
+// @ts-ignore
 const socket: () => Middleware = () => {
     let connection: SocketContextType = null;
 
@@ -116,6 +118,7 @@ const socket: () => Middleware = () => {
         wrappedFunction: typeof onTimer | typeof onShortTimer
     ) => (s: typeof store) => (payload: any) => {
         s.dispatch(editGame({ _status: 'INITIALIZED' }));
+
         // @ts-ignore
         withDeleteNotification(wrappedFunction)(s)(payload);
     };
@@ -170,7 +173,7 @@ const socket: () => Middleware = () => {
         s.dispatch(addMessage({ status: 'SUCCESS', message }));
     };
 
-    return (store) => (next) => (action) => {
+    return (store: typeof _store) => (next) => (action) => {
         if (typeof action === 'function')
             action(store.dispatch, store.getState);
         else {
@@ -181,8 +184,13 @@ const socket: () => Middleware = () => {
                         setConnectionStatus(CONNECTION_STATUS.CONNECTING)
                     );
                     connection = socketIOClient(action.payload);
-                    // @ts-ignore
+
                     connection.on(ROOMS_EVENTS.JOIN_ROOMS, onJoinRooms(store));
+
+                    connection.on(
+                        ROOMS_EVENTS.ROOM_UPDATE,
+                        onUpdateRooms(store)
+                    );
                     break;
 
                 case ROOM_EVENTS.JOIN_ROOM:
@@ -193,16 +201,16 @@ const socket: () => Middleware = () => {
                     connection = socketIOClient(action.payload, {
                         query: { userId: store.getState().user?.id },
                     });
-                    // @ts-ignore
+
                     connection.on(ROOM_EVENTS.JOIN_ROOM, onJoinRoom(store));
-                    // @ts-ignore
+
                     connection.on(ROOM_EVENTS.NEW_USER, onNewUser(store));
                     connection.on(
                         ROOM_EVENTS.DISCONNECT_USER,
-                        // @ts-ignore
+
                         onDeleteUser(store)
                     );
-                    // @ts-ignore
+
                     connection.on(ROOM_EVENTS.EDIT_GAME, onEditGame(store));
                     break;
 
@@ -217,7 +225,6 @@ const socket: () => Middleware = () => {
                     connection.on(
                         'disconnect',
                         withNotification(GAME_EVENTS.DISCONNECT_FROM_SERVER)(
-                            // @ts-ignore
                             store
                         )
                     );
@@ -228,30 +235,30 @@ const socket: () => Middleware = () => {
                     );
                     connection.on(
                         GAME_EVENTS.DISCONNECT_PLAYER,
-                        // @ts-ignore
+
                         onPlayerDisconnect(store)
                     );
                     connection.on(
                         GAME_EVENTS.DISCONNECT_USER,
-                        // @ts-ignore
+
                         onUserDisconnect(store)
                     );
 
                     connection.on(
                         GAME_EVENTS.ERROR,
-                        // @ts-ignore
+
                         withNotification(GAME_EVENTS.ERROR)(store)
                     );
-                    // @ts-ignore
+
                     connection.on(GAME_EVENTS.TIMER, withTimer(onTimer)(store));
                     connection.on(
                         GAME_EVENTS.SHORT_TIMER,
-                        // @ts-ignore
+
                         withTimer(onShortTimer)(store)
                     );
                     connection.on(
                         GAME_EVENTS.ROUND,
-                        // @ts-ignore
+
                         withDeleteNotification(onRound)(store)
                     );
                     connection.on(
@@ -259,7 +266,6 @@ const socket: () => Middleware = () => {
                         withNotification(
                             GAME_EVENTS.STAGE_OVER,
                             onStageOver
-                            // @ts-ignore
                         )(store)
                     );
                     connection.on(
@@ -267,29 +273,22 @@ const socket: () => Middleware = () => {
                         withNotification(
                             GAME_EVENTS.SKIP_ROUND,
                             onSkipRound
-                            // @ts-ignore
                         )(store)
                     );
                     connection.on(
                         GAME_EVENTS.REPLACE_ROUND,
-                        // @ts-ignore
+
                         withDeleteNotification(onReplaceRound)(store)
                     );
                     connection.on(
                         GAME_EVENTS.UNDO_ROUND,
-                        // @ts-ignore
+
                         withDeleteNotification(onUndoRound)(store)
                     );
                     connection.on(
                         GAME_EVENTS.SURRENDER,
-                        withDeleteNotification(
-                            () =>
-                                onSurrender(
-                                    store.dispatch,
-                                    store.getState,
-                                    null
-                                )
-                            // @ts-ignore
+                        withDeleteNotification(() =>
+                            onSurrender(store.dispatch, store.getState, null)
                         )(store)
                     );
                     connection.on(
@@ -297,25 +296,21 @@ const socket: () => Middleware = () => {
                         withNotification(
                             GAME_EVENTS.GAME_OVER,
                             onGameOver
-                            // @ts-ignore
                         )(store)
                     );
                     connection.on(
                         GAME_EVENTS.USER_NOT_FOUND_CHAT,
-                        // @ts-ignore
+
                         onUserNotFoundChat(store)
                     );
                     connection.on(
                         GAME_EVENTS.MESSAGE,
-                        // @ts-ignore
+
                         onChatMessage(store)
                     );
                     connection.on(
                         GAME_EVENTS.NOTIFICATION,
-                        withNotification(GAME_EVENTS.NOTIFICATION)(
-                            // @ts-ignore
-                            store
-                        )
+                        withNotification(GAME_EVENTS.NOTIFICATION)(store)
                     );
                     break;
 

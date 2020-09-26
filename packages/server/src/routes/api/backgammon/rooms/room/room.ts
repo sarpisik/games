@@ -5,15 +5,23 @@ import { SocketConnection } from '../shared/socketConnection';
 import { BackgammonGame } from './game';
 import { RoomType } from './types';
 import { parseGame, parseUser } from './utils';
+import { EmitRooms } from '@shared-types/rooms';
 
 export default class BackgammonRoom extends SocketConnection
     implements RoomType {
     _games: Map<BackgammonGame['id'], BackgammonGame>;
 
-    constructor(public id: number, _io: SocketIO.Server) {
+    constructor(
+        public id: number,
+        _io: SocketIO.Server,
+        clientJoinRoomCb: (room: EmitRooms[number]) => unknown
+    ) {
         super(_io, generateBackgammonRoomPath(id));
 
-        this._namespace.on('connection', this._onClientConnection.bind(this));
+        this._namespace.on(
+            'connection',
+            this._handleClientConnection.call(this, clientJoinRoomCb)
+        );
 
         this._games = new Map();
         for (let i = 1; i <= 10; i++) {
@@ -29,40 +37,53 @@ export default class BackgammonRoom extends SocketConnection
         }
     }
 
-    private _onClientConnection(socket: SocketIO.Socket) {
-        const id = this.id;
-        const clientId = socket.client.id;
-        const _users = this._users;
-        const users = [..._users.values()].map(parseUser);
-        const _games = this._games;
-        const games = [..._games.values()].map(parseGame);
-        // Send room details to connected client.
-        socket.emit(ROOM_EVENTS.JOIN_ROOM, { id, games, users });
+    private _handleClientConnection(
+        clientJoinRoomCb: ConstructorParameters<typeof BackgammonRoom>[2]
+    ) {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        const self = this;
 
-        // Send details of the joined client
-        socket.broadcast.emit(
-            ROOM_EVENTS.NEW_USER,
-            this._users.get(clientId)?.user
-        );
+        return function _onClientConnection(socket: SocketIO.Socket) {
+            const id = self.id;
+            const clientId = socket.client.id;
+            const _users = self._users;
+            const users = [..._users.values()].map(parseUser);
+            const _games = self._games;
+            const games = [..._games.values()].map(parseGame);
+            // Send updates users to rooms
+            clientJoinRoomCb(setParams(self));
 
-        socket.on(
-            ROOM_EVENTS.EDIT_GAME,
-            this._handleEditGame.call(this, socket)
-        );
+            // Send room details to connected client.
+            socket.emit(ROOM_EVENTS.JOIN_ROOM, { id, games, users });
 
-        // Disconnect events
-        socket.on('disconnect', () => {
-            if (_users.has(clientId)) {
-                // Broadcast disconnected client.
-                socket.broadcast.emit(
-                    ROOM_EVENTS.DISCONNECT_USER,
-                    _users.get(clientId)?.user.id
-                );
+            // Send details of the joined client
+            socket.broadcast.emit(
+                ROOM_EVENTS.NEW_USER,
+                self._users.get(clientId)?.user
+            );
 
-                // Delete client from the users list.
-                _users.delete(clientId);
-            }
-        });
+            socket.on(
+                ROOM_EVENTS.EDIT_GAME,
+                self._handleEditGame.call(self, socket)
+            );
+
+            // Disconnect events
+            socket.on('disconnect', () => {
+                if (_users.has(clientId)) {
+                    // Broadcast disconnected client.
+                    socket.broadcast.emit(
+                        ROOM_EVENTS.DISCONNECT_USER,
+                        _users.get(clientId)?.user.id
+                    );
+
+                    // Delete client from the users list.
+                    _users.delete(clientId);
+
+                    // Send updates users to rooms
+                    clientJoinRoomCb(setParams(self));
+                }
+            });
+        };
     }
 
     private _handleEditGame(socket: SocketIO.Socket) {
@@ -94,4 +115,10 @@ export default class BackgammonRoom extends SocketConnection
     private _emitEditGame<P>(payload: P) {
         this._namespace.emit(ROOM_EVENTS.EDIT_GAME, payload);
     }
+}
+
+function setParams(
+    room: BackgammonRoom
+): Parameters<ConstructorParameters<typeof BackgammonRoom>[2]>[0] {
+    return { id: room.id, users: room._users.size };
 }
