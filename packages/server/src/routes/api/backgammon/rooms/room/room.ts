@@ -1,11 +1,11 @@
 import { generateBackgammonRoomPath } from '@shared-types/helpers';
 import { EmitEditGame, OnEditGame, ROOM_EVENTS } from '@shared-types/room';
+import { EmitRooms } from '@shared-types/rooms';
 import { customPromise } from '@shared/customPromise';
 import { SocketConnection } from '../shared/socketConnection';
 import { BackgammonGame } from './game';
 import { RoomType } from './types';
-import { parseGame, parseUser } from './utils';
-import { EmitRooms } from '@shared-types/rooms';
+import { mergeUsers, parseGame, parseUser, setJoinRoomCbParams } from './utils';
 
 export default class BackgammonRoom extends SocketConnection
     implements RoomType {
@@ -31,7 +31,8 @@ export default class BackgammonRoom extends SocketConnection
                     i,
                     id,
                     _io,
-                    this._handleGameUpdate.bind(this)
+                    this._handleGameUpdate.call(this, clientJoinRoomCb),
+                    this._handleGameConnected.call(this, clientJoinRoomCb)
                 )
             );
         }
@@ -51,7 +52,7 @@ export default class BackgammonRoom extends SocketConnection
             const _games = self._games;
             const games = [..._games.values()].map(parseGame);
             // Send updates users to rooms
-            clientJoinRoomCb(setParams(self));
+            clientJoinRoomCb(setJoinRoomCbParams(self));
 
             // Send room details to connected client.
             socket.emit(ROOM_EVENTS.JOIN_ROOM, { id, games, users });
@@ -80,7 +81,7 @@ export default class BackgammonRoom extends SocketConnection
                     _users.delete(clientId);
 
                     // Send updates users to rooms
-                    clientJoinRoomCb(setParams(self));
+                    clientJoinRoomCb(setJoinRoomCbParams(self));
                 }
             });
         };
@@ -106,19 +107,38 @@ export default class BackgammonRoom extends SocketConnection
         };
     }
 
-    private _handleGameUpdate(gameId: number) {
-        const _game = this._games.get(gameId) as BackgammonGame;
-        const game = parseGame(_game);
-        this._emitEditGame(game);
+    private _handleGameUpdate(
+        clientJoinRoomCb: ConstructorParameters<typeof BackgammonRoom>[2]
+    ) {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        const self = this;
+
+        return function onGameUpdate(
+            gameId: number,
+            gameUsers: BackgammonGame['_users']
+        ) {
+            const _game = self._games.get(gameId) as BackgammonGame;
+            const game = parseGame(_game);
+            self._emitEditGame(game);
+
+            // Send updates users to rooms
+            clientJoinRoomCb(setJoinRoomCbParams(mergeUsers(self, gameUsers)));
+        };
+    }
+
+    private _handleGameConnected(
+        clientJoinRoomCb: ConstructorParameters<typeof BackgammonRoom>[2]
+    ) {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        const self = this;
+
+        return function onGameUpdate(gameUsers: BackgammonGame['_users']) {
+            // Send updates users to rooms
+            clientJoinRoomCb(setJoinRoomCbParams(mergeUsers(self, gameUsers)));
+        };
     }
 
     private _emitEditGame<P>(payload: P) {
         this._namespace.emit(ROOM_EVENTS.EDIT_GAME, payload);
     }
-}
-
-function setParams(
-    room: BackgammonRoom
-): Parameters<ConstructorParameters<typeof BackgammonRoom>[2]>[0] {
-    return { id: room.id, users: room._users.size };
 }

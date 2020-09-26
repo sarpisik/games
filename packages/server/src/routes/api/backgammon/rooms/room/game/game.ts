@@ -89,7 +89,8 @@ export default class BackgammonGame extends SocketConnection
         public id: number,
         _roomId: number,
         _io: SocketIO.Server,
-        disconnectCb: (id: number) => void
+        disconnectCb: (id: number, users: BackgammonGame['_users']) => void,
+        connectCb: (users: BackgammonGame['_users']) => unknown
     ) {
         super(_io, generateBackgammonGamePath(_roomId, id));
 
@@ -130,15 +131,21 @@ export default class BackgammonGame extends SocketConnection
 
         this._namespace.on(
             'connection',
-            this._handleClientConnection.call(this, disconnectCb)
+            this._handleClientConnection.call(this, disconnectCb, connectCb)
         );
     }
 
-    private _handleClientConnection(disconnectCb: (id: number) => void) {
+    private _handleClientConnection(
+        disconnectCb: ConstructorParameters<typeof BackgammonGame>[3],
+        connectCb: ConstructorParameters<typeof BackgammonGame>[4]
+    ) {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const self = this;
 
         return function _onClientConnection(socket: SocketIO.Socket) {
+            // Update parent room
+            connectCb(self._users);
+
             const clientId = socket.client.id;
 
             self._emitGameUpdate(GAME_EVENTS.JOIN_GAME);

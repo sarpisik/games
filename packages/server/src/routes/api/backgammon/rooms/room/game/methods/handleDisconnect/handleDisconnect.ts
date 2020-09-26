@@ -8,7 +8,7 @@ export default function handleDisconnect(
     this: BackgammonGame,
     clientId: string,
     socket: SocketIO.Socket,
-    disconnectCb: (arg0: number) => void
+    disconnectCb: (...arg0: any[]) => void
 ) {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
@@ -30,6 +30,9 @@ export default function handleDisconnect(
             // Broadcast disconnected client.
             socket.broadcast.emit(GAME_EVENTS.DISCONNECT_USER, name);
 
+            // Notify the room users.
+            disconnectCb(self.id, connectedUsers);
+
             // If disconnected user was one of the players...
             if (wasPlayer) {
                 // Delete the disconnected player.
@@ -46,9 +49,6 @@ export default function handleDisconnect(
                     // Start timer.
                     self._handlePlayerDisconnect({ id, name });
                 } else self._setStatus('UNINITIALIZED', self);
-
-                // Notify the room users.
-                disconnectCb(self.id);
             }
         } else
             logger.error(

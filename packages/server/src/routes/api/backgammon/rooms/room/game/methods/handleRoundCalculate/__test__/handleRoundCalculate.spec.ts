@@ -63,7 +63,7 @@ describe('handleRoundCalculate', () => {
             setTimeout(() => {
                 expect(backgammonGame._emitNamespace).toHaveBeenCalledTimes(2);
                 expect(backgammonGame._emitNamespace).toHaveBeenCalledWith(
-                    GAME_EVENTS.ROUND,
+                    GAME_EVENTS.REPLACE_ROUND,
                     round
                 );
                 done();

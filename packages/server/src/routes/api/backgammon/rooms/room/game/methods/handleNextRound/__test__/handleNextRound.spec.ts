@@ -67,10 +67,7 @@ describe('handleNextRound', () => {
             expect(backgammonGame._emitNamespace).toHaveBeenCalledTimes(1);
             expect(backgammonGame._emitNamespace).toHaveBeenCalledWith(
                 GAME_EVENTS.SKIP_ROUND,
-                {
-                    round,
-                    message: 'You can not move. Skipping to next round.',
-                }
+                round
             );
             expect(_round.player).toBe(PLAYERS.BLACK);
             expect(_round.brokens).toEqual(round.brokens);

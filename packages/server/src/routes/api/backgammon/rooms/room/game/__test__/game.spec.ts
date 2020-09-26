@@ -11,8 +11,15 @@ describe('BackgammonGame', () => {
         const ofSpy = jasmine.createSpyObj('of', ['use', 'on', 'emit']);
         (io.of as jasmine.Spy).and.callFake(() => ofSpy);
 
-        const disconnectCb = jasmine.createSpy();
-        const game = new BackgammonGame(gameId, roomId, io, disconnectCb);
+        const disconnectCb = jasmine.createSpy('disconnectCb');
+        const connectCb = jasmine.createSpy('connectCb');
+        const game = new BackgammonGame(
+            gameId,
+            roomId,
+            io,
+            disconnectCb,
+            connectCb
+        );
 
         expect(ofSpy.use).toHaveBeenCalled();
         expect(ofSpy.on).toHaveBeenCalled();

@@ -61,7 +61,7 @@ describe('handleDisconnect', () => {
             GAME_EVENTS.DISCONNECT_USER,
             mockUser.name
         );
-        expect(disconnectCb).toHaveBeenCalledTimes(0);
+        expect(disconnectCb).toHaveBeenCalledTimes(1);
     });
 
     it('should delete player from connected users list and players list when game status is "UNINITIALIZED".', () => {
@@ -92,7 +92,7 @@ describe('handleDisconnect', () => {
             'UNINITIALIZED',
             backgammonGame
         );
-        expect(disconnectCb).toHaveBeenCalledWith(backgammonGame.id);
+        expect(disconnectCb).toHaveBeenCalledWith(backgammonGame.id, new Map());
 
         expect(backgammonGame._setStatus).toHaveBeenCalledTimes(1);
         expect(socket.broadcast.emit).toHaveBeenCalledTimes(1);
@@ -143,7 +143,10 @@ describe('handleDisconnect', () => {
             id: whitePlayer.id,
             name: whitePlayer.name,
         });
-        expect(disconnectCb).toHaveBeenCalledWith(backgammonGame.id);
+        expect(disconnectCb).toHaveBeenCalledWith(
+            backgammonGame.id,
+            backgammonGame._users
+        );
 
         expect(socket.broadcast.emit).toHaveBeenCalledTimes(2);
         expect(backgammonGame._handlePlayerDisconnect).toHaveBeenCalledTimes(1);

@@ -7,6 +7,7 @@ import { generatePlayersObj } from '../../../helpers';
 import handlePlayerDisconnect, {
     createMessage,
 } from '../handlePlayerDisconnect';
+import { DISCONNECT_PLAYER_TIMEOUT } from '@shared-types/constants';
 
 type Player = Pick<
     Exclude<BackgammonGame['players'][keyof BackgammonGame['players']], null>,
@@ -125,13 +126,16 @@ describe('handlePlayerDisconnect', () => {
             // Notify client
             expect(backgammonGame._emitNamespace).toHaveBeenCalledWith(
                 GAME_EVENTS.NOTIFICATION,
-                createMessage(disconnedtedPlayer.name, 10)
+                createMessage(
+                    disconnedtedPlayer.name,
+                    DISCONNECT_PLAYER_TIMEOUT
+                )
             );
             expect(backgammonGame._emitNamespace).toHaveBeenCalledTimes(1);
 
             // Recursion
             expect(_disconnedtedPlayer).toEqual(disconnedtedPlayer);
-            expect(secondsLeft).toBe(9);
+            expect(secondsLeft).toBe(DISCONNECT_PLAYER_TIMEOUT - 1);
             done();
         };
 

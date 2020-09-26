@@ -8,8 +8,9 @@ describe('BackgammonRoom', () => {
         const io = jasmine.createSpyObj('io', ['of']);
         const ofSpy = jasmine.createSpyObj('of', ['use', 'on', 'emit']);
         (io.of as jasmine.Spy).and.callFake(() => ofSpy);
+        const clientJoinRoomCb = jasmine.createSpy('clientJoinRoomCb');
 
-        const room = new BackgammonRoom(roomId, io);
+        const room = new BackgammonRoom(roomId, io, clientJoinRoomCb);
 
         expect(room.id).toBe(roomId);
         expect(room._games.size).toBe(10);
