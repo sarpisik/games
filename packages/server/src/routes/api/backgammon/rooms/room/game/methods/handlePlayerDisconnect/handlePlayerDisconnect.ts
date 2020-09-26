@@ -1,6 +1,6 @@
 import { User } from '@shared-backgammon/src/types/user';
 import { EmitGameOver, PLAYERS } from '@shared-types/backgammon';
-import { ONE_SECOND } from '@shared-types/constants';
+import { ONE_SECOND, DISCONNECT_PLAYER_TIMEOUT } from '@shared-types/constants';
 import { GAME_EVENTS } from '@shared-types/game';
 import logger from '@shared/Logger';
 import BackgammonGame from '../../game';
@@ -8,7 +8,7 @@ import BackgammonGame from '../../game';
 export default function handlePlayerDisconnect(
     this: BackgammonGame,
     user: Pick<User, 'id' | 'name'>,
-    secondsLeft = 10
+    secondsLeft = DISCONNECT_PLAYER_TIMEOUT
 ) {
     const { id, name } = user;
     const players = Object.values(
