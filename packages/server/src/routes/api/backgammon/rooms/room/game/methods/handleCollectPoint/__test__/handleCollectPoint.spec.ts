@@ -40,7 +40,7 @@ describe('handleCollectPoint', () => {
         handleCollectPoint.call(backgammonGame, data).then(() => {
             expect(backgammonGame._emitNamespace).toHaveBeenCalledTimes(1);
             expect(backgammonGame._emitNamespace).toHaveBeenCalledWith(
-                GAME_EVENTS.COLLECT_POINT_ROUND,
+                GAME_EVENTS.REPLACE_ROUND,
                 round
             );
             done();

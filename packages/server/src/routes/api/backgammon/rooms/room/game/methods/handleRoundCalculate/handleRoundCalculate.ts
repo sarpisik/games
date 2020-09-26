@@ -22,7 +22,7 @@ export default async function handleRoundCalculate(
             this._emitNamespace(GAME_EVENTS.ERROR, error.payload);
             setTimeout(() => {
                 this._emitNamespace(
-                    GAME_EVENTS.ROUND,
+                    GAME_EVENTS.REPLACE_ROUND,
                     this.rounds[this.rounds.length - 1]
                 );
             }, NOTIFY_DURATION);

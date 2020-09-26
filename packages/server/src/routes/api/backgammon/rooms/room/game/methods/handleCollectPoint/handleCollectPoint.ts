@@ -13,9 +13,6 @@ export default async function handleCollectPoint(
 
     // If any point(s) collected, follow the next step.
     // Else, re-send round.
-    if (result) {
-        this._handleRoundResult(result, latestRound);
-    } else {
-        this._emitNamespace(GAME_EVENTS.COLLECT_POINT_ROUND, latestRound);
-    }
+    if (result) this._handleRoundResult(result, latestRound);
+    else this._emitNamespace(GAME_EVENTS.REPLACE_ROUND, latestRound);
 }

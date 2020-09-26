@@ -59,6 +59,8 @@ const socket: () => Middleware = () => {
                 calculateIsRoundPlayer(user.id, game.players, round.player)
             )
         );
+
+        return round;
     };
 
     const onJoinRooms = (s: typeof store) => (roomIds: EmitJoinRooms) => {
@@ -129,8 +131,7 @@ const socket: () => Middleware = () => {
     };
 
     const onReplaceRound = (s: typeof store) => (round: ReplaceRound) => {
-        onSetRoundPlayer(s, round);
-        s.dispatch(replaceRound(round));
+        s.dispatch(replaceRound(onSetRoundPlayer(s, round)));
     };
 
     const onUserDisconnect = (s: typeof store) => (payload: string) => {
@@ -138,15 +139,11 @@ const socket: () => Middleware = () => {
     };
 
     const onRound = (s: typeof store) => (round: AddRound) => {
-        const dispatch = s.dispatch;
-
-        onSetRoundPlayer(s, round);
-        dispatch(addRound(round));
+        s.dispatch(addRound(onSetRoundPlayer(s, round)));
     };
 
     const onSkipRound = (s: typeof store) => (round: AddRound) => {
-        onSetRoundPlayer(s, round);
-        s.dispatch(addRound(round));
+        s.dispatch(addRound(onSetRoundPlayer(s, round)));
     };
 
     const onStageOver = (s: typeof store) => (data: EmitScore) => {
@@ -179,9 +176,9 @@ const socket: () => Middleware = () => {
     };
 
     return (store) => (next) => (action) => {
-        if (typeof action === 'function') {
+        if (typeof action === 'function')
             action(store.dispatch, store.getState);
-        } else {
+        else {
             switch (action.type) {
                 case ROOMS_EVENTS.JOIN_ROOMS:
                     if (connection !== null) connection.disconnect();
@@ -279,7 +276,7 @@ const socket: () => Middleware = () => {
                         )(store)
                     );
                     connection.on(
-                        GAME_EVENTS.COLLECT_POINT_ROUND,
+                        GAME_EVENTS.REPLACE_ROUND,
                         // @ts-ignore
                         withDeleteNotification(onReplaceRound)(store)
                     );
