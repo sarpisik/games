@@ -2,21 +2,16 @@ import { Middleware } from '@reduxjs/toolkit';
 import socketIOClient from 'socket.io-client';
 import { EmitGameStart, EmitScore, GameClient } from 'types/lib/backgammon';
 import { ChatMessageServer, EmitMessage, GAME_EVENTS } from 'types/lib/game';
-import { OnEditGame, ROOM_EVENTS } from 'types/lib/room';
+import { ROOM_EVENTS } from 'types/lib/room';
 import { ROOMS_EVENTS } from 'types/lib/rooms';
-import { history } from '../../../lib';
-import { User } from '../../../types/user';
 import {
     addMessage,
-    addRoomUser,
     addRound,
-    deleteRoomUser,
     editChat,
     editGame,
     replaceRound,
     setConnectionStatus,
     setGame,
-    setRoom,
     setRoundPlayer,
     setShortTimer,
     setTimer,
@@ -24,9 +19,9 @@ import {
 } from '../../slices';
 import { CONNECTION_STATUS } from '../../slices/connection/connection';
 import { FEEDBACK_STATUS, setFeedback } from '../../slices/feedbacks/feedbacks';
-import { Room, setRoomGame } from '../../slices/room/room';
 import { store, store as _store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
+import { joinRoom, joinRooms } from './listeners';
 import { onJoinGame, onSurrender } from './thunks';
 import {
     calculateIsRoundPlayer,
@@ -34,7 +29,6 @@ import {
     withNotification,
     withSpinner,
 } from './utils';
-import { joinRooms } from './listeners';
 
 type SocketContextType = ReturnType<typeof socketIOClient> | null;
 type Game = Parameters<typeof setGame>[0];
@@ -59,45 +53,10 @@ const socket: () => Middleware = () => {
         return round;
     };
 
-    const onJoinRoom = (s: typeof store) => (payload: Room) => {
-        s.dispatch(setRoom(payload));
-        s.dispatch(setConnectionStatus(CONNECTION_STATUS.CONNECTED));
-    };
-
     const onPlayerDisconnect = (s: typeof store) => (
         players: GameClient['players']
     ) => {
         s.dispatch(editGame({ players }));
-    };
-
-    const onNewUser = (s: typeof store) => (payload: User) => {
-        s.dispatch(addRoomUser(payload));
-    };
-
-    const onDeleteUser = (s: typeof store) => (payload: User['id']) => {
-        s.dispatch(deleteRoomUser(payload));
-    };
-
-    const onEditGame = (s: typeof store) => (payload: OnEditGame) => {
-        const user = s.getState().user;
-        const { id } = user;
-        const { roomId, ..._payload } = payload;
-
-        // If we emited edit game, navigate.
-        if (
-            (Object.values(payload.players) as (User | null)[]).some(
-                (player) => player?.id === id
-            )
-        ) {
-            s.dispatch(
-                setFeedback({
-                    editRoomGame: { status: FEEDBACK_STATUS.SUCCESS },
-                })
-            );
-            const path = `${roomId}/${_payload.id}`;
-            history.push(path);
-        }
-        s.dispatch(setRoomGame(_payload));
     };
 
     const onTimer = (s: typeof store) => (game: Game['timer']) => {
@@ -173,28 +132,22 @@ const socket: () => Middleware = () => {
         else {
             switch (action.type) {
                 case ROOMS_EVENTS.JOIN_ROOMS:
-                    connection = joinRooms(connection, action.payload, store);
+                    connection = joinRooms(
+                        connection,
+                        (socketClient) => socketClient(action.payload),
+                        store
+                    );
                     break;
 
                 case ROOM_EVENTS.JOIN_ROOM:
-                    if (connection !== null) connection.disconnect();
-                    store.dispatch(
-                        setConnectionStatus(CONNECTION_STATUS.CONNECTING)
+                    connection = joinRoom(
+                        connection,
+                        (socketClient) =>
+                            socketClient(action.payload, {
+                                query: { userId: store.getState().user?.id },
+                            }),
+                        store
                     );
-                    connection = socketIOClient(action.payload, {
-                        query: { userId: store.getState().user?.id },
-                    });
-
-                    connection.on(ROOM_EVENTS.JOIN_ROOM, onJoinRoom(store));
-
-                    connection.on(ROOM_EVENTS.NEW_USER, onNewUser(store));
-                    connection.on(
-                        ROOM_EVENTS.DISCONNECT_USER,
-
-                        onDeleteUser(store)
-                    );
-
-                    connection.on(ROOM_EVENTS.EDIT_GAME, onEditGame(store));
                     break;
 
                 case GAME_EVENTS.JOIN_GAME:

@@ -9,12 +9,14 @@ export default function withSocketConnection(
 ) {
     return function socketConnection(
         connection: Parameters<typeof wrappedListener>[0] | null,
-        socketUrl: string,
+        connectionCb: (
+            socketClient: typeof socketIOClient
+        ) => SocketIOClient.Socket,
         store: Parameters<typeof wrappedListener>[1]
     ) {
         if (connection !== null) connection.disconnect();
 
-        connection = socketIOClient(socketUrl);
+        connection = connectionCb(socketIOClient);
 
         wrappedListener(connection, store);
 
