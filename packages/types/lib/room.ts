@@ -8,7 +8,6 @@ export enum ROOM_EVENTS {
     GAME_NOT_FOUND = "GAME_NOT_FOUND",
 }
 
-export type EmitJoinRooms = EmitJoinRoom[];
 export type EmitJoinRoom = number;
 export type OnEditGame = EmitEditGame &
     Pick<GameClient, "score"> & { roomId: number };

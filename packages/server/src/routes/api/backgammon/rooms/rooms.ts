@@ -1,11 +1,13 @@
 import { SOCKET_BACKGAMMON } from '@shared-types/constants';
-import { ROOMS_EVENTS } from '@shared-types/rooms';
+import { ROOMS_EVENTS, EmitRooms } from '@shared-types/rooms';
 import { BackgammonRoom } from './room';
 import { RouterType } from '@routes/api/shared/controller';
 
+type IRooms = Map<number, BackgammonRoom>;
+
 export default class Rooms {
     private _namespace: SocketIO.Namespace;
-    private _rooms: Map<number, BackgammonRoom>;
+    private _rooms: IRooms;
     router: ReturnType<RouterType>;
 
     constructor(router: RouterType, _io: SocketIO.Server) {
@@ -32,6 +34,22 @@ export default class Rooms {
     }
 
     private _onClientConnection(socket: SocketIO.Socket) {
-        socket.emit(ROOMS_EVENTS.JOIN_ROOMS, [...this._rooms.keys()]);
+        socket.emit(
+            ROOMS_EVENTS.JOIN_ROOMS,
+            parseRooms(mapToArray(this._rooms))
+        );
     }
+}
+
+function mapToArray(rooms: IRooms) {
+    return Array.from(rooms);
+}
+
+function parseRooms(rooms: ReturnType<typeof mapToArray>) {
+    return rooms.map(mapOutRoom);
+}
+
+function mapOutRoom(_room: [number, BackgammonRoom]): EmitRooms[number] {
+    const [id, room] = _room;
+    return { id, users: room._users.size };
 }

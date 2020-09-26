@@ -2,8 +2,8 @@ import { Middleware } from '@reduxjs/toolkit';
 import socketIOClient from 'socket.io-client';
 import { EmitGameStart, EmitScore, GameClient } from 'types/lib/backgammon';
 import { ChatMessageServer, EmitMessage, GAME_EVENTS } from 'types/lib/game';
-import { EmitJoinRooms, OnEditGame, ROOM_EVENTS } from 'types/lib/room';
-import { ROOMS_EVENTS } from 'types/lib/rooms';
+import { OnEditGame, ROOM_EVENTS } from 'types/lib/room';
+import { ROOMS_EVENTS, EmitRooms } from 'types/lib/rooms';
 import { history } from '../../../lib';
 import { User } from '../../../types/user';
 import {
@@ -58,8 +58,8 @@ const socket: () => Middleware = () => {
         return round;
     };
 
-    const onJoinRooms = (s: typeof store) => (roomIds: EmitJoinRooms) => {
-        s.dispatch(setRooms(roomIds));
+    const onJoinRooms = (s: typeof store) => (rooms: EmitRooms) => {
+        s.dispatch(setRooms(rooms));
         s.dispatch(setConnectionStatus(CONNECTION_STATUS.CONNECTED));
     };
 

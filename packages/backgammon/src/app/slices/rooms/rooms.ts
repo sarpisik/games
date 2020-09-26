@@ -1,20 +1,20 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { EmitJoinRooms } from 'types/lib/room';
+import { EmitRooms } from 'types/lib/rooms';
 
 interface Rooms {
-    ids: number[];
+    rooms: EmitRooms;
 }
 
 const initialState: Rooms = {
-    ids: [],
+    rooms: [],
 };
 
 export const roomsSlice = createSlice({
     name: 'rooms',
     initialState,
     reducers: {
-        setRooms(state, action: PayloadAction<EmitJoinRooms>) {
-            state.ids = action.payload;
+        setRooms(state, action: PayloadAction<EmitRooms>) {
+            Object.assign(state.rooms, action.payload);
         },
     },
 });
