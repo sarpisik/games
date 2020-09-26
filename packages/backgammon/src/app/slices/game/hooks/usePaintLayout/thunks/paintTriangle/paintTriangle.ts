@@ -1,4 +1,5 @@
-import { EmitBrokenPointRound, EVENTS } from 'types/lib/backgammon';
+import { EmitBrokenPointRound } from 'types/lib/backgammon';
+import { GAME_EVENTS } from 'types/lib/game';
 import { resetCurrentRoundLayout } from '../../../..';
 import { PLAYERS } from '../../../../../../../views/game/components/Board/constants';
 import { AppThunk } from '../../../../../../store';
@@ -29,7 +30,7 @@ const paintTriangle = (
             gameId: game.id,
         };
 
-        dispatch({ type: EVENTS.BROKEN_POINT_ROUND, payload });
+        dispatch({ type: GAME_EVENTS.BROKEN_POINT_ROUND, payload });
     }
 };
 

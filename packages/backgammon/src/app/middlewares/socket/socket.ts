@@ -43,6 +43,7 @@ import {
     calculateIsRoundPlayer,
     withDeleteNotification,
     withNotification,
+    withSpinner,
 } from './utils';
 
 type SocketContextType = ReturnType<typeof socketIOClient> | null;
@@ -285,7 +286,7 @@ const socket: () => Middleware = () => {
                     connection.on(
                         GAME_EVENTS.COLLECT_POINT_ROUND,
                         // @ts-ignore
-                        onReplaceRound(store)
+                        withDeleteNotification(onReplaceRound)(store)
                     );
                     connection.on(
                         GAME_EVENTS.UNDO_ROUND,
@@ -347,25 +348,29 @@ const socket: () => Middleware = () => {
                     connection?.emit(ROOM_EVENTS.EDIT_GAME, action.payload);
                     break;
 
-                case EVENTS.ROUND:
-                    connection?.emit(EVENTS.ROUND, action.payload);
-                    break;
-
-                case EVENTS.BROKEN_POINT_ROUND:
-                    connection?.emit(EVENTS.BROKEN_POINT_ROUND, action.payload);
-                    break;
-
-                case EVENTS.COLLECT_POINT_ROUND:
+                case GAME_EVENTS.ROUND:
                     connection?.emit(
-                        EVENTS.COLLECT_POINT_ROUND,
-                        action.payload
+                        GAME_EVENTS.ROUND,
+                        withSpinner(action, store)
+                    );
+                    break;
+
+                case GAME_EVENTS.BROKEN_POINT_ROUND:
+                    connection?.emit(
+                        GAME_EVENTS.BROKEN_POINT_ROUND,
+                        withSpinner(action, store)
+                    );
+                    break;
+
+                case GAME_EVENTS.COLLECT_POINT_ROUND:
+                    connection?.emit(
+                        GAME_EVENTS.COLLECT_POINT_ROUND,
+                        withSpinner(action, store)
                     );
                     break;
 
                 case GAME_EVENTS.UNDO_ROUND:
-                    // @ts-ignore
-                    withNotification(action.type)(store)();
-                    connection?.emit(action.type, action.payload);
+                    connection?.emit(action.type, withSpinner(action, store));
                     break;
 
                 case GAME_EVENTS.START_GAME:
@@ -379,12 +384,10 @@ const socket: () => Middleware = () => {
 
                 case GAME_EVENTS.SURRENDER: {
                     // Inform the subscribed UI elements.
-                    // @ts-ignore
-                    withNotification(action.type)(store)();
                     store.dispatch(editGame({ _status: 'SURRENDER' }));
                     connection?.emit(
                         action.type,
-                        action.payload as EmitSurrender
+                        withSpinner(action.payload as EmitSurrender, store)
                     );
                     break;
                 }

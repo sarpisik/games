@@ -1,10 +1,10 @@
 import {
     EmitCollectPointRound,
     EmitRound,
-    EVENTS,
     PLAYERS,
     STAGES,
 } from 'types/lib/backgammon';
+import { GAME_EVENTS } from 'types/lib/game';
 import { AppThunk } from '../../../../../../store';
 import { resetCurrentRoundLayout } from '../../../../game';
 import { calculateTargetTriangleIndex } from '../utils';
@@ -55,7 +55,7 @@ const paintNewLayout = (
                     roundId,
                     gameId: game.id,
                 };
-                dispatch({ type: EVENTS.ROUND, payload });
+                dispatch({ type: GAME_EVENTS.ROUND, payload });
             }
         } else {
             targetInvalid = notInTheStack;
@@ -67,7 +67,7 @@ const paintNewLayout = (
                     roundId,
                     gameId: game.id,
                 };
-                dispatch({ type: EVENTS.COLLECT_POINT_ROUND, payload });
+                dispatch({ type: GAME_EVENTS.COLLECT_POINT_ROUND, payload });
             }
         }
 

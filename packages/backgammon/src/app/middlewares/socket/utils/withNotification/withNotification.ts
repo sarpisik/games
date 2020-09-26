@@ -63,6 +63,9 @@ const withNotification = <S extends typeof store, P>(
             break;
         }
 
+        case GAME_EVENTS.ROUND:
+        case GAME_EVENTS.BROKEN_POINT_ROUND:
+        case GAME_EVENTS.COLLECT_POINT_ROUND:
         case GAME_EVENTS.UNDO_ROUND:
         case GAME_EVENTS.SURRENDER:
             s.dispatch(actionNotification(type, 'LARGE_OVERLAY'));
