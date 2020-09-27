@@ -1,130 +1,21 @@
 import { Middleware } from '@reduxjs/toolkit';
 import socketIOClient from 'socket.io-client';
-import { EmitGameStart, EmitScore, GameClient } from 'types/lib/backgammon';
-import { ChatMessageServer, EmitMessage, GAME_EVENTS } from 'types/lib/game';
+import { EmitGameStart } from 'types/lib/backgammon';
+import { EmitMessage, GAME_EVENTS } from 'types/lib/game';
 import { ROOM_EVENTS } from 'types/lib/room';
 import { ROOMS_EVENTS } from 'types/lib/rooms';
-import {
-    addMessage,
-    addRound,
-    editChat,
-    editGame,
-    replaceRound,
-    setConnectionStatus,
-    setGame,
-    setRoundPlayer,
-    setShortTimer,
-    setTimer,
-    undoRound,
-} from '../../slices';
-import { CONNECTION_STATUS } from '../../slices/connection/connection';
+import { editChat, editGame } from '../../slices';
 import { FEEDBACK_STATUS, setFeedback } from '../../slices/feedbacks/feedbacks';
-import { store, store as _store } from '../../store';
+import { store as _store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
-import { joinRoom, joinRooms } from './listeners';
-import { onJoinGame, onSurrender } from './thunks';
-import {
-    calculateIsRoundPlayer,
-    withDeleteNotification,
-    withNotification,
-    withSpinner,
-} from './utils';
+import { joinGame, joinRoom, joinRooms } from './listeners';
+import { withSpinner } from './utils';
 
 type SocketContextType = ReturnType<typeof socketIOClient> | null;
-type Game = Parameters<typeof setGame>[0];
-type AddRound = Parameters<typeof addRound>[0];
-type ReplaceRound = Parameters<typeof replaceRound>[0];
-type UndoRound = Parameters<typeof undoRound>[0];
 
 // @ts-ignore
 const socket: () => Middleware = () => {
     let connection: SocketContextType = null;
-
-    const onSetRoundPlayer = (s: typeof store, round: AddRound) => {
-        const state = s.getState();
-        const { game, user } = state;
-
-        s.dispatch(
-            setRoundPlayer(
-                calculateIsRoundPlayer(user.id, game.players, round.player)
-            )
-        );
-
-        return round;
-    };
-
-    const onPlayerDisconnect = (s: typeof store) => (
-        players: GameClient['players']
-    ) => {
-        s.dispatch(editGame({ players }));
-    };
-
-    const onTimer = (s: typeof store) => (game: Game['timer']) => {
-        s.dispatch(setTimer(game));
-    };
-
-    const onShortTimer = (s: typeof store) => (seconds: number) => {
-        s.dispatch(setShortTimer({ seconds }));
-    };
-
-    const withTimer = (
-        wrappedFunction: typeof onTimer | typeof onShortTimer
-    ) => (s: typeof store) => (payload: any) => {
-        s.dispatch(editGame({ _status: 'INITIALIZED' }));
-
-        // @ts-ignore
-        withDeleteNotification(wrappedFunction)(s)(payload);
-    };
-
-    const onUndoRound = (s: typeof store) => (rounds: UndoRound) => {
-        onSetRoundPlayer(s, rounds[rounds.length - 1]);
-        s.dispatch(undoRound(rounds));
-    };
-
-    const onReplaceRound = (s: typeof store) => (round: ReplaceRound) => {
-        s.dispatch(replaceRound(onSetRoundPlayer(s, round)));
-    };
-
-    const onUserDisconnect = (s: typeof store) => (payload: string) => {
-        console.log(`${payload} disconnected.`);
-    };
-
-    const onRound = (s: typeof store) => (round: AddRound) => {
-        s.dispatch(addRound(onSetRoundPlayer(s, round)));
-    };
-
-    const onSkipRound = (s: typeof store) => (round: AddRound) => {
-        s.dispatch(addRound(onSetRoundPlayer(s, round)));
-    };
-
-    const onStageOver = (s: typeof store) => (data: EmitScore) => {
-        const { winner, ..._game } = data;
-        // @ts-ignore
-        s.dispatch(editGame(_game));
-    };
-
-    const onGameOver = (s: typeof store) => (data: EmitScore) => {
-        const { winner, ..._game } = data;
-        // Reset game
-        // @ts-ignore
-        s.dispatch(editGame(Object.assign(_game, { _status: 'OVER' })));
-    };
-
-    const onUserNotFoundChat = (s: typeof store) => (time: number) => {
-        const { user } = s.getState();
-        const message = `Error, could not send your message. Reason: user not found by id ${user.id}.`;
-
-        s.dispatch(
-            addMessage({
-                status: 'ERROR',
-                message: { name: user.name, message, time },
-            })
-        );
-    };
-
-    const onChatMessage = (s: typeof store) => (message: ChatMessageServer) => {
-        s.dispatch(addMessage({ status: 'SUCCESS', message }));
-    };
 
     return (store: typeof _store) => (next) => (action) => {
         if (typeof action === 'function')
@@ -151,102 +42,13 @@ const socket: () => Middleware = () => {
                     break;
 
                 case GAME_EVENTS.JOIN_GAME:
-                    if (connection !== null) connection.disconnect();
-                    store.dispatch(
-                        setConnectionStatus(CONNECTION_STATUS.CONNECTING)
-                    );
-                    connection = socketIOClient(action.payload, {
-                        query: { userId: store.getState().user?.id },
-                    });
-                    connection.on(
-                        'disconnect',
-                        withNotification(GAME_EVENTS.DISCONNECT_FROM_SERVER)(
-                            store
-                        )
-                    );
-
-                    connection.on(
-                        GAME_EVENTS.JOIN_GAME,
-                        onJoinGame(store.dispatch, store.getState, null)
-                    );
-                    connection.on(
-                        GAME_EVENTS.DISCONNECT_PLAYER,
-
-                        onPlayerDisconnect(store)
-                    );
-                    connection.on(
-                        GAME_EVENTS.DISCONNECT_USER,
-
-                        onUserDisconnect(store)
-                    );
-
-                    connection.on(
-                        GAME_EVENTS.ERROR,
-
-                        withNotification(GAME_EVENTS.ERROR)(store)
-                    );
-
-                    connection.on(GAME_EVENTS.TIMER, withTimer(onTimer)(store));
-                    connection.on(
-                        GAME_EVENTS.SHORT_TIMER,
-
-                        withTimer(onShortTimer)(store)
-                    );
-                    connection.on(
-                        GAME_EVENTS.ROUND,
-
-                        withDeleteNotification(onRound)(store)
-                    );
-                    connection.on(
-                        GAME_EVENTS.STAGE_OVER,
-                        withNotification(
-                            GAME_EVENTS.STAGE_OVER,
-                            onStageOver
-                        )(store)
-                    );
-                    connection.on(
-                        GAME_EVENTS.SKIP_ROUND,
-                        withNotification(
-                            GAME_EVENTS.SKIP_ROUND,
-                            onSkipRound
-                        )(store)
-                    );
-                    connection.on(
-                        GAME_EVENTS.REPLACE_ROUND,
-
-                        withDeleteNotification(onReplaceRound)(store)
-                    );
-                    connection.on(
-                        GAME_EVENTS.UNDO_ROUND,
-
-                        withDeleteNotification(onUndoRound)(store)
-                    );
-                    connection.on(
-                        GAME_EVENTS.SURRENDER,
-                        withDeleteNotification(() =>
-                            onSurrender(store.dispatch, store.getState, null)
-                        )(store)
-                    );
-                    connection.on(
-                        GAME_EVENTS.GAME_OVER,
-                        withNotification(
-                            GAME_EVENTS.GAME_OVER,
-                            onGameOver
-                        )(store)
-                    );
-                    connection.on(
-                        GAME_EVENTS.USER_NOT_FOUND_CHAT,
-
-                        onUserNotFoundChat(store)
-                    );
-                    connection.on(
-                        GAME_EVENTS.MESSAGE,
-
-                        onChatMessage(store)
-                    );
-                    connection.on(
-                        GAME_EVENTS.NOTIFICATION,
-                        withNotification(GAME_EVENTS.NOTIFICATION)(store)
+                    connection = joinGame(
+                        connection,
+                        (socketClient) =>
+                            socketClient(action.payload, {
+                                query: { userId: store.getState().user?.id },
+                            }),
+                        store
                     );
                     break;
 
