@@ -13,12 +13,26 @@ const EMIT_GAME_KEYS: (keyof EmitGame)[] = [
 ];
 
 type Keys = typeof EMIT_GAME_KEYS;
+type RecordGame = Record<Keys[number], BackgammonGame[Keys[number]]>;
 
-export default function reduceGameProps<
-    O extends Record<Keys[number], BackgammonGame[Keys[number]]>
->(_game: O, keys = EMIT_GAME_KEYS) {
-    return keys.reduce((game, key) => {
-        game[key] = _game[key];
+export default function reduceGameProps<O extends RecordGame>(
+    _game: O,
+    keys = EMIT_GAME_KEYS
+) {
+    return keys.reduce(setGameProps(_game), {} as O);
+}
+
+function setGameProps<O extends RecordGame>(_game: O) {
+    return function gameProps(game: O, key: keyof O) {
+        copyObjects(game, _game, key);
         return game;
-    }, {} as O);
+    };
+}
+
+function copyObjects<O extends Record<string, unknown>>(
+    obj1: O,
+    obj2: O,
+    key: keyof O
+) {
+    obj1[key] = obj2[key];
 }
