@@ -9,7 +9,7 @@ import { FEEDBACK_STATUS, setFeedback } from '../../slices/feedbacks/feedbacks';
 import { store as _store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
 import { joinGame, joinRoom, joinRooms } from './listeners';
-import { withSpinner } from './utils';
+import { withSpinner, queryByUserId } from './utils';
 
 type SocketContextType = ReturnType<typeof socketIOClient> | null;
 
@@ -34,9 +34,10 @@ const socket: () => Middleware = () => {
                     connection = joinRoom(
                         connection,
                         (socketClient) =>
-                            socketClient(action.payload, {
-                                query: { userId: store.getState().user?.id },
-                            }),
+                            socketClient(
+                                action.payload,
+                                queryByUserId(store.getState())
+                            ),
                         store
                     );
                     break;
@@ -45,9 +46,10 @@ const socket: () => Middleware = () => {
                     connection = joinGame(
                         connection,
                         (socketClient) =>
-                            socketClient(action.payload, {
-                                query: { userId: store.getState().user?.id },
-                            }),
+                            socketClient(
+                                action.payload,
+                                queryByUserId(store.getState())
+                            ),
                         store
                     );
                     break;
