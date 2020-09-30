@@ -16,7 +16,7 @@ const {
 type FillTriangleParams = Parameters<typeof fillTriangle>[0];
 
 interface Params {
-    game: GameClient;
+    isRoundPlayer: GameClient['isRoundPlayer'];
     round: Round;
     pLight?: HTMLImageElement;
     pDark?: HTMLImageElement;
@@ -25,7 +25,14 @@ interface Params {
 }
 
 export default function createPointsOnRound(params: Params) {
-    const { game, round, pLight, pDark, onDragEnd, onDragStart } = params;
+    const {
+        isRoundPlayer,
+        round,
+        pLight,
+        pDark,
+        onDragEnd,
+        onDragStart,
+    } = params;
 
     const roundPlayer = round?.player;
 
@@ -46,9 +53,9 @@ export default function createPointsOnRound(params: Params) {
             ? BOTTOM_LEFT_POINTS_START_X
             : BOTTOM_RIGHT_POINTS_START_X;
         const yBlock = isTop ? POINT_TOP_START_Y : POINT_BOTTOM_START_Y;
-        const isRoundPlayer = game.isRoundPlayer && roundPlayer === player;
+        const _isRoundPlayer = isRoundPlayer && roundPlayer === player;
         const hasNoBroken = isPlayer(player) && round?.brokens[player] < 1;
-        const draggable = isRoundPlayer && hasNoBroken;
+        const draggable = _isRoundPlayer && hasNoBroken;
         const color = PLAYERS[player].toLowerCase();
         const fillPatternImage = color === 'black' ? pDark : pLight;
 

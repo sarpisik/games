@@ -11,12 +11,5 @@ export {
     setTimer,
     undoRound,
 } from './game';
-export {
-    useGame,
-    useLayout,
-    usePaintLayout,
-    useRound,
-    useTimer,
-    useUndoHistory,
-} from './hooks';
+export * from './hooks';
 export { setGame } from './thunks';

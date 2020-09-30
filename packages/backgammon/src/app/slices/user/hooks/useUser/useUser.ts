@@ -1,11 +1,11 @@
 import { Auth } from 'aws-amplify';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../../store';
-import { editUser, deleteUser } from '../../thunks';
+import { useDispatch } from 'react-redux';
+import { deleteUser, editUser } from '../../thunks';
+import { useUserDocument } from '../useUserDocument';
 
 export default function useUser() {
     const dispatch = useDispatch();
-    const user = useSelector(selector);
+    const user = useUserDocument();
 
     return {
         user,
@@ -23,8 +23,4 @@ export default function useUser() {
             dispatch(deleteUser());
         },
     };
-}
-
-function selector(state: RootState) {
-    return state.user;
 }

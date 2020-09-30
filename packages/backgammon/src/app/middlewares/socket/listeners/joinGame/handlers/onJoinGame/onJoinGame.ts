@@ -52,12 +52,13 @@ export default function onJoinGame(s: typeof store) {
         // Handle in case of player reconnected.
         const initialized = _status === 'INITIALIZED';
         const shouldResume = initialized && playersFull && isPlayer;
-        if (shouldResume)
+        if (shouldResume) {
             payload.isRoundPlayer = calculateIsRoundPlayer(
                 user.id,
                 players,
                 isBlackPlayer ? PLAYERS.BLACK : PLAYERS.WHITE
             );
+        }
 
         s.dispatch(editGame(payload));
         s.dispatch(setConnectionStatus(CONNECTION_STATUS.CONNECTED));

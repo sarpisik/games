@@ -39,8 +39,6 @@ export const gameSlice = createSlice({
                 GameClient['rounds'][number]['availableTriangles']
             >
         ) {
-            console.log(action.payload);
-
             const currentRound = state.rounds[state.rounds.length - 1];
             currentRound.availableTriangles = action.payload;
         },
