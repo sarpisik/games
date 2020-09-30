@@ -1,4 +1,4 @@
-import { PLAYERS, STAGES } from 'types/lib/backgammon';
+import { PLAYERS, STAGES, Round } from 'types/lib/backgammon';
 import { AppThunk } from '../../../../../../store';
 import {
     calculateStage,
@@ -7,15 +7,14 @@ import {
     calculateStackIndex,
 } from './utils';
 import { setAvailableTriangles } from '../../../../game';
-import { useLayout } from '../../../useLayout';
 
 const paintAvailableTriangles = (
     fromTriangleIndex: number,
-    color: keyof Pick<typeof PLAYERS, 'BLACK' | 'WHITE'>
+    color: keyof Pick<typeof PLAYERS, 'BLACK' | 'WHITE'>,
+    layout: Round['layout']
 ): AppThunk => async (dispatch, getState) => {
     let paintTriangles: number[] = [];
     const state = getState();
-    const layout = useLayout();
     const { game } = state;
     const [round] = game.rounds.slice(-1);
     const { dice } = round;

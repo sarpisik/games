@@ -2,6 +2,7 @@ import {
     EmitCollectPointRound,
     EmitRound,
     PLAYERS,
+    Round,
     STAGES,
 } from 'types/lib/backgammon';
 import { GAME_EVENTS } from 'types/lib/game';
@@ -9,13 +10,13 @@ import { AppThunk } from '../../../../../../store';
 import { resetCurrentRoundLayout } from '../../../../game';
 import { calculateTargetTriangleIndex } from '../utils';
 import { calculateStage, validateCollectionStack } from './utils';
-import { useLayout } from '../../../useLayout';
 
 const paintNewLayout = (
     fromTriangleIndex: number,
     targetX: number,
     targetY: number,
-    color: keyof Pick<typeof PLAYERS, 'BLACK' | 'WHITE'>
+    color: keyof Pick<typeof PLAYERS, 'BLACK' | 'WHITE'>,
+    layout: Round['layout']
 ): AppThunk => (dispatch, getState) => {
     const state = getState();
     const { game, measures } = state;
@@ -24,7 +25,7 @@ const paintNewLayout = (
     const { id: roundId, availableTriangles } = round;
 
     const player = PLAYERS[color];
-    const stage = calculateStage(player, useLayout());
+    const stage = calculateStage(player, layout);
     const shouldNotCollect = stage === STAGES.MOVE;
 
     if (shouldNotCollect && availableTriangles.length < 1)

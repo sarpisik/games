@@ -2,16 +2,16 @@ import { OPPONENT, Round } from 'types/lib/backgammon';
 import { PLAYERS } from '../../../../../../../views/game/components/Board/constants';
 import { AppThunk } from '../../../../../../store';
 import { setAvailableTriangles } from '../../../../game';
-import { useLayout } from '../../../useLayout';
 
 const paintBrokenPointTriangles = (
-    color: keyof Pick<typeof PLAYERS, 'BLACK' | 'WHITE'>
+    color: keyof Pick<typeof PLAYERS, 'BLACK' | 'WHITE'>,
+    layout: Round['layout']
 ): AppThunk => (dispatch, getState) => {
     const state = getState();
     const { game } = state;
     const [round] = game.rounds.slice(-1);
 
-    const targetTriangles = calculateArea(useLayout());
+    const targetTriangles = calculateArea(layout);
 
     const dice = round.dice.map(decreseByOne); // Triangles start from 0 index!
     const dices = dice.length > 2 ? dice.slice(0, 1) : dice;

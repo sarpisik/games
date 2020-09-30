@@ -5,6 +5,7 @@ import {
     paintTriangle,
     paintBrokenPointTriangles,
 } from './thunks';
+import { useLayout } from '../useLayout';
 
 type paintNewLayoutParams = Parameters<typeof paintNewLayout>;
 type paintAvailableTrianglesParams = Parameters<typeof paintAvailableTriangles>;
@@ -13,6 +14,7 @@ type paintBrokenPointTrianglesParams = Parameters<
 >;
 
 export default function usePaintLayout() {
+    const layout = useLayout();
     const dispatch = useDispatch();
 
     return {
@@ -20,7 +22,7 @@ export default function usePaintLayout() {
             triangleIndex: paintAvailableTrianglesParams[0],
             color: paintAvailableTrianglesParams[1]
         ) {
-            dispatch(paintAvailableTriangles(triangleIndex, color));
+            dispatch(paintAvailableTriangles(triangleIndex, color, layout));
         },
         paintLayout(
             triangleIndex: paintNewLayoutParams[0],
@@ -28,7 +30,9 @@ export default function usePaintLayout() {
             targetY: paintNewLayoutParams[2],
             color: paintNewLayoutParams[3]
         ) {
-            dispatch(paintNewLayout(triangleIndex, targetX, targetY, color));
+            dispatch(
+                paintNewLayout(triangleIndex, targetX, targetY, color, layout)
+            );
         },
         paintTriangle(
             targetX: paintNewLayoutParams[1],
@@ -38,7 +42,7 @@ export default function usePaintLayout() {
             dispatch(paintTriangle(targetX, targetY, color));
         },
         paintBrokenPointTriangles(color: paintBrokenPointTrianglesParams[0]) {
-            dispatch(paintBrokenPointTriangles(color));
+            dispatch(paintBrokenPointTriangles(color, layout));
         },
     };
 }
