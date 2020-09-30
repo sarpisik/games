@@ -9,6 +9,7 @@ import { AppThunk } from '../../../../../../store';
 import { resetCurrentRoundLayout } from '../../../../game';
 import { calculateTargetTriangleIndex } from '../utils';
 import { calculateStage, validateCollectionStack } from './utils';
+import { useLayout } from '../../../useLayout';
 
 const paintNewLayout = (
     fromTriangleIndex: number,
@@ -20,10 +21,10 @@ const paintNewLayout = (
     const { game, measures } = state;
     const { containers } = measures;
     const [round] = game.rounds.slice(-1);
-    const { id: roundId, availableTriangles, layout } = round;
+    const { id: roundId, availableTriangles } = round;
 
     const player = PLAYERS[color];
-    const stage = calculateStage(player, layout);
+    const stage = calculateStage(player, useLayout());
     const shouldNotCollect = stage === STAGES.MOVE;
 
     if (shouldNotCollect && availableTriangles.length < 1)

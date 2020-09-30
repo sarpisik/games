@@ -7,6 +7,7 @@ import {
     calculateStackIndex,
 } from './utils';
 import { setAvailableTriangles } from '../../../../game';
+import { useLayout } from '../../../useLayout';
 
 const paintAvailableTriangles = (
     fromTriangleIndex: number,
@@ -14,9 +15,10 @@ const paintAvailableTriangles = (
 ): AppThunk => async (dispatch, getState) => {
     let paintTriangles: number[] = [];
     const state = getState();
+    const layout = useLayout();
     const { game } = state;
     const [round] = game.rounds.slice(-1);
-    const { dice, layout } = round;
+    const { dice } = round;
 
     const player = PLAYERS[color];
     const stage = calculateStage(player, layout);
