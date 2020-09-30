@@ -9,7 +9,7 @@ import { FEEDBACK_STATUS, setFeedback } from '../../slices/feedbacks/feedbacks';
 import { store as _store } from '../../store';
 import { SOCKET_ACTIONS } from './actions';
 import { joinGame, joinRoom, joinRooms } from './listeners';
-import { withSpinner, queryByUserId } from './utils';
+import { withSpinner, queryByUserId, editIndexesByColor } from './utils';
 
 type SocketContextType = ReturnType<typeof socketIOClient> | null;
 
@@ -70,24 +70,27 @@ const socket: () => Middleware = () => {
                     connection?.emit(ROOM_EVENTS.EDIT_GAME, action.payload);
                     break;
 
+                // Payload extends fromTriangleIndex,EmitRound
                 case GAME_EVENTS.ROUND:
                     connection?.emit(
                         GAME_EVENTS.ROUND,
-                        withSpinner(action, store)
+                        editIndexesByColor(withSpinner(action, store))
                     );
                     break;
 
+                // Payload extends toTriangleIndex,EmitBrokenPointRound
                 case GAME_EVENTS.BROKEN_POINT_ROUND:
                     connection?.emit(
                         GAME_EVENTS.BROKEN_POINT_ROUND,
-                        withSpinner(action, store)
+                        editIndexesByColor(withSpinner(action, store))
                     );
                     break;
 
+                // Payload extends fromTriangleIndex,EmitCollectPointRound
                 case GAME_EVENTS.COLLECT_POINT_ROUND:
                     connection?.emit(
                         GAME_EVENTS.COLLECT_POINT_ROUND,
-                        withSpinner(action, store)
+                        editIndexesByColor(withSpinner(action, store))
                     );
                     break;
 

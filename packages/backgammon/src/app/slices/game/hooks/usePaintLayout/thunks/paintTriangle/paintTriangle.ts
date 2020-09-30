@@ -16,13 +16,13 @@ const paintTriangle = (
     const { id: roundId, availableTriangles } = round;
 
     const toTriangleIndex = calculateTargetTriangleIndex(targetX, targetY);
-    const targetTriangleNotExist = toTriangleIndex < 0;
-    const targetTriangleInvalid =
-        targetTriangleNotExist || !availableTriangles.includes(toTriangleIndex);
+    const targetTriangleInvalid = checkTriangleExist(
+        toTriangleIndex,
+        availableTriangles
+    );
 
-    if (targetTriangleInvalid) {
-        dispatch(resetCurrentRoundLayout());
-    } else {
+    if (targetTriangleInvalid) dispatch(resetCurrentRoundLayout());
+    else {
         const payload: EmitBrokenPointRound = {
             toTriangleIndex,
             color,
@@ -35,3 +35,10 @@ const paintTriangle = (
 };
 
 export default paintTriangle;
+
+function checkTriangleExist(
+    toTriangleIndex: number,
+    availableTriangles: number[]
+) {
+    return toTriangleIndex < 0 || !availableTriangles.includes(toTriangleIndex);
+}

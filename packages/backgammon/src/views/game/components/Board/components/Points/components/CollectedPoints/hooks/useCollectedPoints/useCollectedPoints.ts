@@ -5,6 +5,7 @@ import {
 } from '../../../../../../../../../../app/slices';
 import { useSizes } from '../../../../../../../../../../app/slices/measures';
 import { OFFSETS } from '../../../../../../../../../../configs';
+import { usePlayerIndex } from '../../../../../../../../../../hooks';
 import { useUnitMeasure } from '../useUnitMeasure';
 import { generateCollectedPoints } from './utils';
 
@@ -27,12 +28,13 @@ export default function useCollectedPoints(params: Params) {
 
     const containers = useContainers();
     const heightLimit = sizes.CONTAINER_HEIGHT;
+    const { getPlayerIndex, playerIsBlack } = usePlayerIndex();
 
     const points = [
         {
             baseContainer: containers[3],
-            image: pLight,
-            points: round?.collected[PLAYERS.WHITE],
+            image: playerIsBlack ? pDark : pLight,
+            points: round?.collected[getPlayerIndex(PLAYERS.BLACK)],
             width: CONTAINER_WIDTH,
             heightLimit,
             y: POINT_BOTTOM_START_Y,
@@ -40,8 +42,8 @@ export default function useCollectedPoints(params: Params) {
         },
         {
             baseContainer: containers[0],
-            image: pDark,
-            points: round?.collected[PLAYERS.BLACK],
+            image: playerIsBlack ? pLight : pDark,
+            points: round?.collected[getPlayerIndex(PLAYERS.WHITE)],
             width: CONTAINER_WIDTH,
             heightLimit,
             y: POINT_TOP_START_Y,

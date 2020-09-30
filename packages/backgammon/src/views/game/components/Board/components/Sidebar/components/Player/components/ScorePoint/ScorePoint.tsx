@@ -2,40 +2,28 @@ import React from 'react';
 import { Round } from 'types/lib/backgammon';
 import { User } from 'types/lib/user';
 import { useGame } from '../../../../../../../../../../app/slices';
-import {
-    OFFSETS,
-    SIDEBAR_HIGHSCORE_FONT_SIZE,
-} from '../../../../../../../../../../configs';
+import { SIDEBAR_HIGHSCORE_FONT_SIZE } from '../../../../../../../../../../configs';
 import { BoldLabel } from '../../../../../shared';
-import { withUnitMeasure } from '../../../withUnitMeasure';
+import { Props, withUnitMeasure } from '../../../withUnitMeasure';
 
-interface Props {
+interface HighscoreProps extends Props {
     player: Round['player'];
     scoreKey: keyof Omit<User['backgammon'], 'score'>;
 }
 
-// @ts-ignore
-const EnhancedLabel = withUnitMeasure<React.ComponentProps<typeof BoldLabel>>(
-    (props) => (
-        <BoldLabel
-            fill="#FFFFFF"
-            align="center"
-            verticalAlign="top"
-            {...props}
-        />
-    )
-);
-
-export default function Highscore(_props: Props): React.ReactElement {
-    const { player, scoreKey } = _props;
+export default withUnitMeasure<HighscoreProps>(function Highscore(_props) {
+    const { player, scoreKey, ...props } = _props;
     const { game } = useGame();
     const scorePoint = game.players[player]?.backgammon[scoreKey] ?? '';
 
     return (
-        <EnhancedLabel
+        <BoldLabel
+            fill="#FFFFFF"
+            align="center"
+            verticalAlign="top"
             text={scorePoint.toString()}
             fontSize={SIDEBAR_HIGHSCORE_FONT_SIZE}
-            {...OFFSETS.PLAYER_LABELS[player].SCORE_POINTS[scoreKey]}
+            {...props}
         />
     );
-}
+});

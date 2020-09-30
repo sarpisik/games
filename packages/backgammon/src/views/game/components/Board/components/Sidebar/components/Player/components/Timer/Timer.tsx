@@ -1,33 +1,17 @@
 import React from 'react';
 import { Round } from 'types/lib/backgammon';
 import { useTimer } from '../../../../../../../../../../app/slices';
-import {
-    OFFSETS,
-    SIDEBAR_FONT_SIZE,
-} from '../../../../../../../../../../configs';
+import { SIDEBAR_FONT_SIZE } from '../../../../../../../../../../configs';
 import { addZero } from '../../../../../../../../../../utils';
 import { BoldLabel } from '../../../../../shared';
-import { withUnitMeasure } from '../../../withUnitMeasure';
+import { Props, withUnitMeasure } from '../../../withUnitMeasure';
 
-interface Props {
+interface TimerProps extends Props {
     player: Round['player'];
 }
 
-// @ts-ignore
-const EnhancedLabel = withUnitMeasure<React.ComponentProps<typeof BoldLabel>>(
-    (props) => (
-        <BoldLabel
-            fill="#ffffff"
-            align="center"
-            verticalAlign="middle"
-            fontSize={SIDEBAR_FONT_SIZE}
-            {...props}
-        />
-    )
-);
-
-export default function Timer(props: Props): React.ReactElement {
-    const { player } = props;
+export default withUnitMeasure<TimerProps>(function Timer(_props) {
+    const { player, ...props } = _props;
 
     const timer = useTimer();
     const _time = timer[player];
@@ -38,9 +22,16 @@ export default function Timer(props: Props): React.ReactElement {
     const time = `${minute}:${second}`;
 
     return (
-        <EnhancedLabel text={time} {...OFFSETS.PLAYER_LABELS[player].TIMER} />
+        <BoldLabel
+            fill="#ffffff"
+            align="center"
+            verticalAlign="middle"
+            fontSize={SIDEBAR_FONT_SIZE}
+            text={time}
+            {...props}
+        />
     );
-}
+});
 
 function getMinute(t: number) {
     return addZero(Math.floor((t % 3600) / 60));

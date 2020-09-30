@@ -5,33 +5,17 @@ import {
     useRound,
     useShortTimer,
 } from '../../../../../../../../../../app/slices';
-import {
-    OFFSETS,
-    SIDEBAR_FONT_SIZE,
-} from '../../../../../../../../../../configs';
+import { SIDEBAR_FONT_SIZE } from '../../../../../../../../../../configs';
 import { addZero } from '../../../../../../../../../../utils';
 import { BoldLabel } from '../../../../../shared';
-import { withUnitMeasure } from '../../../withUnitMeasure';
+import { Props, withUnitMeasure } from '../../../withUnitMeasure';
 
-interface Props {
+interface ShortTimerProps extends Props {
     player: Round['player'];
 }
 
-// @ts-ignore
-const EnhancedLabel = withUnitMeasure<React.ComponentProps<typeof BoldLabel>>(
-    (props) => (
-        <BoldLabel
-            fill="#000000"
-            align="center"
-            verticalAlign="middle"
-            fontSize={SIDEBAR_FONT_SIZE}
-            {...props}
-        />
-    )
-);
-
-export default function ShortTimer(props: Props): React.ReactElement {
-    const { player } = props;
+export default withUnitMeasure<ShortTimerProps>(function ShortTimer(_props) {
+    const { player, ...props } = _props;
 
     const round = useRound();
     const shortTimer = useShortTimer();
@@ -42,9 +26,13 @@ export default function ShortTimer(props: Props): React.ReactElement {
         : SHORT_TIMER;
 
     return (
-        <EnhancedLabel
+        <BoldLabel
             text={shortTimerSecond.toString()}
-            {...OFFSETS.PLAYER_LABELS[player].SHORT_TIMER}
+            fill="#000000"
+            align="center"
+            verticalAlign="middle"
+            fontSize={SIDEBAR_FONT_SIZE}
+            {...props}
         />
     );
-}
+});

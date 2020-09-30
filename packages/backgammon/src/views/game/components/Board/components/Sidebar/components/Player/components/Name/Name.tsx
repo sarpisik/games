@@ -1,33 +1,25 @@
 import React from 'react';
 import { Round } from 'types/lib/backgammon';
 import { useGame } from '../../../../../../../../../../app/slices';
-import {
-    OFFSETS,
-    SIDEBAR_FONT_SIZE,
-} from '../../../../../../../../../../configs';
+import { SIDEBAR_FONT_SIZE } from '../../../../../../../../../../configs';
 import { shortenString } from '../../../../../../../../../../utils';
 import { BoldLabel } from '../../../../../shared';
-import { withUnitMeasure } from '../../../withUnitMeasure';
+import { Props, withUnitMeasure } from '../../../withUnitMeasure';
 import * as Helpers from './helpers';
 
-interface Props {
+interface NameProps extends Props {
     player: Round['player'];
 }
 
-// @ts-ignore
-const EnhancedLabel = withUnitMeasure<React.ComponentProps<typeof BoldLabel>>(
-    (props) => <BoldLabel align="left" verticalAlign="top" {...props} />
-);
-
-export default function Name(props: Props): React.ReactElement {
-    const { player } = props;
+export default withUnitMeasure<NameProps>(function Name(_props) {
+    const { player, ...props } = _props;
     const { game } = useGame();
-    const _name = game.players[player]?.name ?? '';
-    const name = shortenString(_name, 11);
 
     return (
-        <EnhancedLabel
-            text={name}
+        <BoldLabel
+            align="left"
+            verticalAlign="top"
+            text={shortenString(game.players[player]?.name ?? '', 11)}
             fontSize={SIDEBAR_FONT_SIZE}
             fill={Helpers.setFontColor(
                 Helpers.checkIsRoundPlayer(
@@ -35,7 +27,7 @@ export default function Name(props: Props): React.ReactElement {
                     Helpers.getCurrentRound(game.rounds)
                 )
             )}
-            {...OFFSETS.PLAYER_LABELS[player].NAME}
+            {...props}
         />
     );
-}
+});

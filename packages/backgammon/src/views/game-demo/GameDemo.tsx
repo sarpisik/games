@@ -22,8 +22,9 @@ function GameDemo(_props: RouteComponentProps) {
             turn: 1,
             brokens: generatePlayers(0, 0),
             collected: generatePlayers(8, 8),
-            player: PLAYERS.WHITE,
-            layout,
+            player: PLAYERS.BLACK,
+            layout: layout.reverse(),
+            // layout,
             dice: [1, 5],
         };
         dispatch(addRound(round));
@@ -34,6 +35,7 @@ function GameDemo(_props: RouteComponentProps) {
                 players: generatePlayers(
                     {
                         name: 'black player',
+                        id: '117592233792384240779',
                         backgammon: {
                             score: 10300,
                             wins: 10,
@@ -43,6 +45,7 @@ function GameDemo(_props: RouteComponentProps) {
                     },
                     {
                         name: 'white player white player',
+                        id: '12345',
                         backgammon: {
                             score: 11700,
                             wins: 10,

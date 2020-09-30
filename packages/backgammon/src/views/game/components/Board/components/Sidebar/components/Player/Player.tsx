@@ -16,25 +16,53 @@ type PointProps = React.ComponentProps<typeof Circle>;
 interface Props {
     player: Round['player'];
     pointImage: Exclude<PointProps['image'], undefined>;
+    dynamicIndex: Round['player'];
 }
 
 export default function Player(props: Props): React.ReactElement {
-    const { player, pointImage } = props;
+    const { player, pointImage, dynamicIndex } = props;
 
     return (
         <React.Fragment>
             <Circle
                 image={pointImage}
-                {...OFFSETS.PLAYER_LABELS[player].POINT}
+                {...OFFSETS.PLAYER_LABELS[dynamicIndex].POINT}
             />
-            <Score player={player} />
-            <Name player={player} />
-            <Highscore player={player} />
-            <ScorePoint player={player} scoreKey="wins" />
-            <ScorePoint player={player} scoreKey="loses" />
-            <ScorePoint player={player} scoreKey="escapes" />
-            <ShortTimer player={player} />
-            <Timer player={player} />
+            <Score
+                player={player}
+                {...OFFSETS.PLAYER_LABELS[dynamicIndex].SCORE}
+            />
+            <Name
+                player={player}
+                {...OFFSETS.PLAYER_LABELS[dynamicIndex].NAME}
+            />
+            <Highscore
+                player={player}
+                {...OFFSETS.PLAYER_LABELS[dynamicIndex].HIGHSCORE}
+            />
+            <ScorePoint
+                player={player}
+                scoreKey="wins"
+                {...OFFSETS.PLAYER_LABELS[dynamicIndex].SCORE_POINTS.wins}
+            />
+            <ScorePoint
+                player={player}
+                scoreKey="loses"
+                {...OFFSETS.PLAYER_LABELS[dynamicIndex].SCORE_POINTS.loses}
+            />
+            <ScorePoint
+                player={player}
+                scoreKey="escapes"
+                {...OFFSETS.PLAYER_LABELS[dynamicIndex].SCORE_POINTS.escapes}
+            />
+            <ShortTimer
+                player={player}
+                {...OFFSETS.PLAYER_LABELS[dynamicIndex].SHORT_TIMER}
+            />
+            <Timer
+                player={player}
+                {...OFFSETS.PLAYER_LABELS[dynamicIndex].TIMER}
+            />
         </React.Fragment>
     );
 }

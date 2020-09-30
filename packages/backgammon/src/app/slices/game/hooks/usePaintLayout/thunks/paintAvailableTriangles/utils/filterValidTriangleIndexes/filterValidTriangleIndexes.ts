@@ -9,13 +9,6 @@ interface Params {
     triangles: Round['layout'];
 }
 
-const DIRECTIONS_MAP = {
-    [PLAYERS.WHITE]: (startIndex: number) => (dice: number) =>
-        startIndex + dice,
-    [PLAYERS.BLACK]: (startIndex: number) => (dice: number) =>
-        startIndex - dice,
-};
-
 export default function filterValidTriangleIndexes(params: Params) {
     const {
         isDouble,
@@ -25,9 +18,9 @@ export default function filterValidTriangleIndexes(params: Params) {
         player,
         triangles,
     } = params;
-    const calculateDirectionFrom = DIRECTIONS_MAP[player];
-    const calculatePossibleIndexes = calculateDirectionFrom(startIndex);
-    const possibleTriangleIndexes = validDices.map(calculatePossibleIndexes);
+    const possibleTriangleIndexes = validDices.map(
+        calculatePossibleIndexes(startIndex)
+    );
     const validTriangleIndexes = isDouble
         ? getValidTrianglesOnDoubledDice(
               triangles,
@@ -43,6 +36,12 @@ export default function filterValidTriangleIndexes(params: Params) {
           );
 
     return validTriangleIndexes;
+}
+
+function calculatePossibleIndexes(startIndex: number) {
+    return function onIterate(dice: number) {
+        return startIndex + dice;
+    };
 }
 
 function getValidTrianglesOnDoubledDice(

@@ -22,9 +22,8 @@ interface Params {
 async function recursivelyFilterMaxDice(data: Params) {
     const { dices, maxDiceIndex, resolve, i = 0 } = data;
 
-    if (i >= dices.length) {
-        resolve(maxDiceIndex);
-    } else {
+    if (i >= dices.length) resolve(maxDiceIndex);
+    else {
         const dice = dices[i];
         const prevDice = dices[maxDiceIndex];
 

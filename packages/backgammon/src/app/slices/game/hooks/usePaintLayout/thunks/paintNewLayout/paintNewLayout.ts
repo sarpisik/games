@@ -26,13 +26,12 @@ const paintNewLayout = (
     const stage = calculateStage(player, layout);
     const shouldNotCollect = stage === STAGES.MOVE;
 
-    if (shouldNotCollect && availableTriangles.length < 1) {
+    if (shouldNotCollect && availableTriangles.length < 1)
         dispatch(resetCurrentRoundLayout());
-    } else {
+    else {
         let targetInvalid = true;
         const notInTheStack = !validateCollectionStack({
-            containers,
-            player,
+            container: containers[1],
             targetX,
             targetY,
         });

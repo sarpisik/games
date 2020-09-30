@@ -1,18 +1,14 @@
-import { PLAYERS, Round } from 'types/lib/backgammon';
+import { Round } from 'types/lib/backgammon';
+
+const END = 23;
 
 export default function filterFarthestTriangle(
     triangles: Round['layout'],
     player: Round['player']
 ) {
-    const isWhite = player === PLAYERS.WHITE;
-    const start = isWhite ? 18 : 5;
-    const end = isWhite ? 23 : 0;
-
     return new Promise<number>((resolve, reject) => {
         recursivelyFilterFarthestTriangle({
-            isWhite,
-            start,
-            end,
+            start: 18,
             triangles,
             player,
             resolve,
@@ -21,29 +17,25 @@ export default function filterFarthestTriangle(
 }
 
 interface Params {
-    isWhite: boolean;
     start: number;
-    end: number;
     triangles: Round['layout'];
     player: Round['player'];
     resolve: (value: number) => void;
 }
 
 async function recursivelyFilterFarthestTriangle(params: Params) {
-    const { isWhite, start, end, triangles, player, resolve } = params;
-    let shouldBreak = isWhite ? start >= end : start <= end;
+    const { start, triangles, player, resolve } = params;
+    let shouldBreak = start >= END;
 
-    if (shouldBreak) {
-        resolve(start);
-    } else {
+    if (shouldBreak) resolve(start);
+    else {
         const triangle = triangles[start];
         const [owner] = triangle;
 
         shouldBreak = owner === player;
-        if (shouldBreak) {
-            resolve(start);
-        } else {
-            params.start = isWhite ? start + 1 : start - 1;
+        if (shouldBreak) resolve(start);
+        else {
+            params.start = start + 1;
 
             setTimeout(() => {
                 recursivelyFilterFarthestTriangle(params);

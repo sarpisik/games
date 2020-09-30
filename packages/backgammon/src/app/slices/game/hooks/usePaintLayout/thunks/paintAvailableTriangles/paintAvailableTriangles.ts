@@ -22,14 +22,6 @@ const paintAvailableTriangles = (
     const stage = calculateStage(player, layout);
     const collect = stage === STAGES.COLLECT;
 
-    const validDice = filterValidDice({
-        startIndex: fromTriangleIndex,
-        player,
-        dice,
-        triangles: layout,
-        stage,
-    });
-
     if (collect) {
         const stackIndex = await calculateStackIndex(
             player,
@@ -43,7 +35,12 @@ const paintAvailableTriangles = (
     const validTriangleIndexes = filterValidTriangleIndexes({
         isDouble: dice[0] === dice[1],
         collect,
-        validDices: validDice,
+        validDices: filterValidDice({
+            startIndex: fromTriangleIndex,
+            dice,
+            triangles: layout,
+            stage,
+        }),
         startIndex: fromTriangleIndex,
         player,
         triangles: layout,

@@ -7,10 +7,7 @@ import {
 
 type StackIndex = number[];
 
-const STACK_INDEX_MAP = {
-    [PLAYERS.WHITE]: 24,
-    [PLAYERS.BLACK]: -1,
-};
+const STACK_INDEX = 24;
 
 export default async function calculateStackIndex(
     player: PLAYERS.WHITE | PLAYERS.BLACK,
@@ -19,10 +16,7 @@ export default async function calculateStackIndex(
     layout: Round['layout']
 ): Promise<StackIndex> {
     let stackIndex: StackIndex = [];
-    const triangleIndex =
-        player === PLAYERS.BLACK
-            ? fromTriangleIndex
-            : layout.length - 1 - fromTriangleIndex;
+    const triangleIndex = layout.length - 1 - fromTriangleIndex;
 
     const [
         validDiceIndex,
@@ -42,9 +36,7 @@ export default async function calculateStackIndex(
         diceAndTriangleAreEqual ||
         (isFarthestTriangle && collectableByHigherDice);
 
-    if (shouldCollectable) {
-        const _stackIndex = STACK_INDEX_MAP[player];
-        stackIndex.push(_stackIndex);
-    }
+    if (shouldCollectable) stackIndex.push(STACK_INDEX);
+
     return stackIndex;
 }

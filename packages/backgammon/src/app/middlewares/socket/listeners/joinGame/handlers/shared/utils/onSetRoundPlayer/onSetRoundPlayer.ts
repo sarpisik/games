@@ -1,23 +1,21 @@
 import { setRoundPlayer } from '../../../../../../../../slices';
-import { store } from '../../../../../../../../store';
 import { calculateIsRoundPlayer } from '../../../../../../utils';
+import { withDynamicLayout } from './withDynamicLayout';
 
-const onSetRoundPlayer = <
-    R extends { player: Parameters<typeof calculateIsRoundPlayer>[2] }
->(
-    s: typeof store,
-    round: R
-) => {
-    const state = s.getState();
-    const { game, user } = state;
-
-    s.dispatch(
+export default withDynamicLayout(function onSetRoundPlayer(
+    state,
+    dispatch,
+    round
+) {
+    dispatch(
         setRoundPlayer(
-            calculateIsRoundPlayer(user.id, game.players, round.player)
+            calculateIsRoundPlayer(
+                state.user.id,
+                state.game.players,
+                round.player
+            )
         )
     );
 
     return round;
-};
-
-export default onSetRoundPlayer;
+});
