@@ -27,3 +27,4 @@ export { setStatus } from './setStatus';
 export { undoRound } from './undoRound';
 export { updatePlayerScore } from './updatePlayerScore';
 export { withBreakTimer } from './withBreakTimer';
+export { withGameOver } from './withGameOver';

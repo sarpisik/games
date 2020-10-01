@@ -34,6 +34,7 @@ import {
     undoRound,
     updatePlayerScore,
     withBreakTimer,
+    withGameOver,
 } from './methods';
 import { Round } from './round';
 
@@ -84,6 +85,7 @@ export default class BackgammonGame extends SocketConnection
     _updatePlayerScore: typeof updatePlayerScore;
     _undoRound: typeof undoRound;
     _withBreakTimer: typeof withBreakTimer;
+    _withGameOver: typeof withGameOver;
 
     constructor(
         public id: number,
@@ -125,6 +127,8 @@ export default class BackgammonGame extends SocketConnection
         this._undoRound = undoRound.bind(this);
         // @ts-ignore
         this._withBreakTimer = withBreakTimer.bind(this);
+        // @ts-ignore
+        this._withGameOver = withGameOver.bind(this);
 
         // properties
         this._setStatus('UNINITIALIZED');
@@ -157,22 +161,40 @@ export default class BackgammonGame extends SocketConnection
             );
             socket.on(
                 GAME_EVENTS.ROUND,
-                self._withBreakTimer(self._handleRoundCalculate).bind(self)
+                self
+                    ._withGameOver(
+                        socket,
+                        self._withBreakTimer(self._handleRoundCalculate)
+                    )
+                    .bind(self)
             );
             socket.on(
                 GAME_EVENTS.BROKEN_POINT_ROUND,
-                self._withBreakTimer(self._handleBrokenPoint).bind(self)
+                self
+                    ._withGameOver(
+                        socket,
+                        self._withBreakTimer(self._handleBrokenPoint)
+                    )
+                    .bind(self)
             );
             socket.on(
                 GAME_EVENTS.COLLECT_POINT_ROUND,
-                self._withBreakTimer(self._handleCollectPoint).bind(self)
+                self
+                    ._withGameOver(
+                        socket,
+                        self._withBreakTimer(self._handleCollectPoint)
+                    )
+                    .bind(self)
             );
             socket.on(
                 GAME_EVENTS.SURRENDER,
                 // @ts-ignore
                 self._withBreakTimer(self._onSurrender).bind(self)
             );
-            socket.on(GAME_EVENTS.UNDO_ROUND, self._handleUndoRound.bind(self));
+            socket.on(
+                GAME_EVENTS.UNDO_ROUND,
+                self._withGameOver(socket, self._handleUndoRound).bind(self)
+            );
             socket.on(GAME_EVENTS.RESTART_GAME, self._restartGame.bind(self));
             socket.on(
                 GAME_EVENTS.MESSAGE,
