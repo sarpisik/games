@@ -23,6 +23,7 @@
         },
         "notifications": {
             "error": {
+                "actionAfterOver": "Oyun bitti. Hamle yapamazsınız.",
                 "disconnected": "Hata! Sunucu ile bağlantınız kesildi."
             },
             "game": {
@@ -37,13 +38,13 @@
                 },
                 "surrender": {
                     "accept": {
-                        "asker": "{{name}} el verme isteğinizi kabul etti.",
                         "answerer": "{{name}} el verdi. Sen kazandın!",
+                        "asker": "{{name}} el verme isteğinizi kabul etti.",
                         "guest": "{{name}} el verdi."
                     },
                     "reject": {
-                        "asker": "{{name}} el verme isteğinizi reddetti. Oyuna devam edilecek.",
                         "answerer": "El verme talebini reddettiniz. Oyuna devam edilecek.",
+                        "asker": "{{name}} el verme isteğinizi reddetti. Oyuna devam edilecek.",
                         "guest": "{{name}} el verme talebini reddetti. Oyuna devam edilecek."
                     },
                     "request": {

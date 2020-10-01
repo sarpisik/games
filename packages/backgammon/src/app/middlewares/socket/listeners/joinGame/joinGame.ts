@@ -51,6 +51,10 @@ export default withSocketConnection(function joinGame(connection, store) {
         GAME_EVENTS.GAME_OVER,
         withNotification(GAME_EVENTS.GAME_OVER, onGameOver)(store)
     );
+    connection.on(
+        GAME_EVENTS.ACTION_AFTER_OVER,
+        withNotification(GAME_EVENTS.ACTION_AFTER_OVER)(store)
+    );
 
     // CHAT
     connection.on(GAME_EVENTS.USER_NOT_FOUND_CHAT, onUserNotFoundChat(store));

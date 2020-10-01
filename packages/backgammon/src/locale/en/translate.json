@@ -23,6 +23,7 @@
         },
         "notifications": {
             "error": {
+                "actionAfterOver": "Game over. You cannot move.",
                 "disconnected": "Error! disconnected."
             },
             "game": {

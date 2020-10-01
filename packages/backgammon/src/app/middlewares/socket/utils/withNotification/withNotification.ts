@@ -10,6 +10,15 @@ const withNotification = <S extends typeof store, P>(
     wrappedFunction?: (s: typeof store) => (payload: P) => void
 ) => (s: S) => (payload: P) => {
     switch (type) {
+        case GAME_EVENTS.ACTION_AFTER_OVER:
+            s.dispatch(
+                actionNotification(
+                    i18n.t('notifications.error.actionAfterOver'),
+                    type
+                )
+            );
+            break;
+
         case GAME_EVENTS.SKIP_ROUND:
             s.dispatch(
                 actionNotification(i18n.t('notifications.game.skipRound'), type)
