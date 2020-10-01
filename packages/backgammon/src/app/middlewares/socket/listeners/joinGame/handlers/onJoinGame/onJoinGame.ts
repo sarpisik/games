@@ -1,4 +1,4 @@
-import { PLAYERS, GameClient } from 'types/lib/backgammon';
+import { GameClient } from 'types/lib/backgammon';
 import i18n from '../../../../../../../i18n';
 import { editGame, setConnectionStatus } from '../../../../../../slices';
 import { CONNECTION_STATUS } from '../../../../../../slices/connection/connection';
@@ -16,7 +16,6 @@ export default function onJoinGame(s: typeof store) {
         const { _status, players } = payload;
 
         const playersFull = Object.values(players).every(Boolean);
-        const isBlackPlayer = players?.[PLAYERS.BLACK]?.id === user.id;
         const isPlayer = checkIsPlayer(players, user.id);
 
         // Handle notification
@@ -51,12 +50,13 @@ export default function onJoinGame(s: typeof store) {
 
         // Handle in case of player reconnected.
         const initialized = _status === 'INITIALIZED';
-        const shouldResume = initialized && playersFull && isPlayer;
+        const shouldResume =
+            initialized && playersFull && isPlayer && payload.rounds.length > 0;
         if (shouldResume) {
             payload.isRoundPlayer = calculateIsRoundPlayer(
                 user.id,
                 players,
-                isBlackPlayer ? PLAYERS.BLACK : PLAYERS.WHITE
+                payload.rounds[payload.rounds.length - 1].player
             );
         }
 
