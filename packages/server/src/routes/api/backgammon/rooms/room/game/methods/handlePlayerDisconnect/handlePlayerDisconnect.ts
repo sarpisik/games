@@ -4,6 +4,7 @@ import { ONE_SECOND, DISCONNECT_PLAYER_TIMEOUT } from '@shared-types/constants';
 import { GAME_EVENTS } from '@shared-types/game';
 import logger from '@shared/Logger';
 import BackgammonGame from '../../game';
+import { SCORES } from '../../constants';
 
 export default function handlePlayerDisconnect(
     this: BackgammonGame,
@@ -28,21 +29,32 @@ export default function handlePlayerDisconnect(
                 return false;
             }) as Exclude<typeof players[number], null>;
 
-            logger.info(
-                `Disconnected player's name is ${name} and the id: ${id}.`
-            );
+            // If winner is still connected, handle both of them score calculations.
+            // Else, set lose player score only.
+            if (winnerPlayer) {
+                logger.info(
+                    `Disconnected player's name is ${name} and the id: ${id}.`
+                );
 
-            logger.info(
-                `Winner player's name is ${winnerPlayer.name} and the id ${winnerPlayer.id}.`
-            );
+                logger.info(
+                    `Winner player's name is ${winnerPlayer.name} and the id ${winnerPlayer.id}.`
+                );
 
-            const winner =
-                this.players[PLAYERS.BLACK]?.id === winnerPlayer.id
-                    ? PLAYERS.BLACK
-                    : PLAYERS.WHITE;
-            const payload: EmitGameOver = { winner, lose: id };
+                const winner =
+                    this.players[PLAYERS.BLACK]?.id === winnerPlayer.id
+                        ? PLAYERS.BLACK
+                        : PLAYERS.WHITE;
+                const payload: EmitGameOver = { winner, lose: id };
 
-            this._setStatus('OVER', payload);
+                this._setStatus('OVER', payload);
+            } else {
+                this._updatePlayerScore({
+                    action: 'LOSE',
+                    playerId: id,
+                    _score: SCORES.ESCAPE,
+                });
+                this._setStatus('UNINITIALIZED');
+            }
         } else {
             this._emitNamespace(
                 GAME_EVENTS.NOTIFICATION,
