@@ -30,5 +30,5 @@ function pickAudio(audios: HTMLAudioElement[], index: number) {
 }
 
 function playAudio(audio: ReturnType<typeof pickAudio>) {
-    return audio.play();
+    return audio.play().catch(console.error);
 }
