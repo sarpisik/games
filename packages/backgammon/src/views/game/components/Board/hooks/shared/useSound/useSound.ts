@@ -30,5 +30,6 @@ function pickAudio(audios: HTMLAudioElement[], index: number) {
 }
 
 function playAudio(audio: ReturnType<typeof pickAudio>) {
-    return audio.play().catch(console.error);
+    const promise = audio.play();
+    typeof promise !== 'undefined' && promise.catch(console.error);
 }
