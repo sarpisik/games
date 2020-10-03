@@ -3,7 +3,10 @@ import {
     useRoundPlayer,
     useRound,
 } from '../../../../../../../../../../app/slices';
-import { usePlaySound, usePointEventHandlers } from './hooks';
+import {
+    // usePlaySound,
+    usePointEventHandlers,
+} from './hooks';
 import { createPointsOnRound } from './utils';
 
 interface Params {
@@ -15,7 +18,7 @@ export default function usePoints(params: Params) {
     const round = useRound();
     const isRoundPlayer = useRoundPlayer();
     const { onDragEnd, onDragStart } = usePointEventHandlers();
-    usePlaySound(round?.layout);
+    // usePlaySound(round?.layout);
 
     const reducePointsFromLayout = createPointsOnRound({
         ...params,
