@@ -1,0 +1,75 @@
+{
+    "translations": {
+        "game": "game",
+        "gameSettings": {
+            "black": "black",
+            "color": "color",
+            "create": "create game",
+            "duration": "duration",
+            "sit": "sit",
+            "stages": "stages",
+            "title": "set game",
+            "white": "white"
+        },
+        "links": {
+            "en": "en",
+            "home": "home",
+            "profile": "profile",
+            "room": "room",
+            "rooms": "rooms",
+            "signIn": "sign in",
+            "signOut": "sign out",
+            "tr": "tr"
+        },
+        "notifications": {
+            "error": {
+                "actionAfterOver": "Game over. You cannot move.",
+                "disconnected": "Error! disconnected."
+            },
+            "game": {
+                "initialized": {
+                    "disconnected": "Opponent disconnected. Can not move."
+                },
+                "nextStage": "Preparing the next stage.",
+                "skipRound": "You can not move. Skipping to the next round.",
+                "start": {
+                    "empty": "Missing opponent. Can not start the game.",
+                    "full": "Waiting for both players to click the start button."
+                },
+                "surrender": {
+                    "accept": {
+                        "asker": "{{name}} has accepted your request to surrender.",
+                        "asnwerer": "{{name}} has surrendered. You win!",
+                        "guest": "{{name}} has surrendered."
+                    },
+                    "reject": {
+                        "asker": "{{name}} has rejected your request to surrender. The game will continue.",
+                        "asnwerer": "You have rejected the request to surrender. The game will continue.",
+                        "guest": "{{name}} has rejected the request to surrender. The game will continue."
+                    },
+                    "request": {
+                        "answerer": "{{name}} requests to surrender.",
+                        "asker": "Waiting for your opponent to confirm your request to surrender."
+                    }
+                },
+                "uninitialized": {
+                    "empty": "The opponent is expected to sit down.",
+                    "full": "You can click the start button."
+                },
+                "winner": {
+                    "guest": "The winner is {{winner}} player.",
+                    "opponent": "You lose!",
+                    "self": "Congratulations! You win!"
+                }
+            }
+        },
+        "profile": {
+            "delete": "delete account",
+            "description": "description",
+            "name": "name",
+            "pleaseWait": "please wait",
+            "save": "save"
+        },
+        "room": "room"
+    }
+}

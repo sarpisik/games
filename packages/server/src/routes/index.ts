@@ -1,13 +1,30 @@
 import { Router } from 'express';
-import UserRouter from './Users';
-import AuthRouter from './Auth';
 
-// Init router and path
-const router = Router();
+import { default as apiRoutes } from './api';
+import { OK } from 'http-status-codes';
 
-// Add sub-routes
-router.use('/users', UserRouter);
-router.use('/auth', AuthRouter);
+export default (io: SocketIO.Server) => {
+    const router = Router();
 
-// Export the base-router
-export default router;
+    router.use('/api', apiRoutes(io));
+
+    router.use('/', (_, res) => {
+        res.status(OK).json({ message: 'Server is running' });
+    });
+
+    return router;
+};
+
+// import { Router } from 'express';
+// import UserRouter from './Users';
+// import AuthRouter from './Auth';
+
+// // Init router and path
+// const router = Router();
+
+// // Add sub-routes
+// router.use('/users', UserRouter);
+// router.use('/auth', AuthRouter);
+
+// // Export the base-router
+// export default router;

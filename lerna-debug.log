@@ -1,0 +1,20 @@
+0 silly argv {
+0 silly argv   _: [ 'add' ],
+0 silly argv   scope: 'server',
+0 silly argv   exact: true,
+0 silly argv   E: true,
+0 silly argv   dev: true,
+0 silly argv   D: true,
+0 silly argv   globs: [],
+0 silly argv   lernaVersion: '3.22.1',
+0 silly argv   '$0': '../../../../../.npm/_npx/41103/bin/lerna',
+0 silly argv   pkg: 'istanbuljs/nyc-config-typescript'
+0 silly argv }
+1 notice cli v3.22.1
+2 verbose rootPath /Users/sarpisik/Projects/sarpisik/games
+3 error Error: exited with error code: 128
+3 error     at ChildProcess.<anonymous> (/Users/sarpisik/Projects/sarpisik/games/node_modules/@evocateur/pacote/lib/util/finished.js:12:19)
+3 error     at ChildProcess.emit (events.js:321:20)
+3 error     at maybeClose (internal/child_process.js:1026:16)
+3 error     at Socket.<anonymous> (internal/child_process.js:441:11)
+3 error     at Socket.emit (events.js:321:20)

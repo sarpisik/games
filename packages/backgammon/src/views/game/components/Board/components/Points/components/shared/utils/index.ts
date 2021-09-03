@@ -1,0 +1,1 @@
+export { generatePlayerColor } from './generatePlayerColor';

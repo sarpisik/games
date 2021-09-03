@@ -1,0 +1,75 @@
+{
+    "translations": {
+        "game": "oyun",
+        "gameSettings": {
+            "black": "siyah",
+            "color": "renk",
+            "create": "kur",
+            "duration": "zaman",
+            "sit": "otur",
+            "stages": "el",
+            "title": "oyun kur",
+            "white": "beyaz"
+        },
+        "links": {
+            "en": "en",
+            "home": "anasayfa",
+            "profile": "profil",
+            "room": "salon",
+            "rooms": "salonlar",
+            "signIn": "oturum aç",
+            "signOut": "oturum kapat",
+            "tr": "tr"
+        },
+        "notifications": {
+            "error": {
+                "actionAfterOver": "Oyun bitti. Hamle yapamazsınız.",
+                "disconnected": "Hata! Sunucu ile bağlantınız kesildi."
+            },
+            "game": {
+                "initialized": {
+                    "disconnected": "Rakibin bağlantısı kesildi. Hareket edilemiyor."
+                },
+                "nextStage": "Bir sonraki oyun hazırlanıyor.",
+                "skipRound": "Hamle kalmadı. Bir sonraki tura geçiliyor.",
+                "start": {
+                    "empty": "Eksik rakip. Oyuna devam edilemiyor.",
+                    "full": "Her iki oyuncunun da başlat düğmesine tıklamaları bekleniyor."
+                },
+                "surrender": {
+                    "accept": {
+                        "answerer": "{{name}} el verdi. Sen kazandın!",
+                        "asker": "{{name}} el verme isteğinizi kabul etti.",
+                        "guest": "{{name}} el verdi."
+                    },
+                    "reject": {
+                        "answerer": "El verme talebini reddettiniz. Oyuna devam edilecek.",
+                        "asker": "{{name}} el verme isteğinizi reddetti. Oyuna devam edilecek.",
+                        "guest": "{{name}} el verme talebini reddetti. Oyuna devam edilecek."
+                    },
+                    "request": {
+                        "answerer": "{{name}} eli vermek istiyor.",
+                        "asker": "Rakibinizin el verme talebinizi onaylaması bekleniyor."
+                    }
+                },
+                "uninitialized": {
+                    "empty": "Rakibin oturması bekleniyor.",
+                    "full": "Başlat düğmesine tıklayabilirsiniz."
+                },
+                "winner": {
+                    "guest": "Kazanan {{winner}} oyuncu.",
+                    "opponent": "Kaybettin!",
+                    "self": "Tebrikler! Sen kazandın!"
+                }
+            }
+        },
+        "profile": {
+            "delete": "hesabı sil",
+            "description": "hakkında",
+            "name": "isim",
+            "pleaseWait": "lütfen bekleyiniz",
+            "save": "kaydet"
+        },
+        "room": "oda"
+    }
+}

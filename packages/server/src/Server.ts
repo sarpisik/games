@@ -1,18 +1,29 @@
+import http from 'http';
+
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
-import path from 'path';
 import helmet from 'helmet';
 
 import express, { Request, Response, NextFunction } from 'express';
 import { BAD_REQUEST } from 'http-status-codes';
 import 'express-async-errors';
 
-import BaseRouter from './routes';
+import routes from './routes';
 import logger from '@shared/Logger';
 import { cookieProps } from '@shared/constants';
+import { socket } from './connection/socket';
+import Cognito from '@shared/cognito';
 
 // Init express
 const app = express();
+const server = http.createServer(app);
+new Cognito().signIn();
+
+/************************************************************************************
+ *                              Set socket settings
+ ***********************************************************************************/
+const io = socket(server);
+app.locals.io = io;
 
 /************************************************************************************
  *                              Set basic express settings
@@ -33,15 +44,18 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Add APIs
-app.use('/api', BaseRouter);
+app.use('/', routes(io));
 
 // Print API errors
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    logger.error(err.message, err);
+    const shouldLogError = process.env.NODE_ENV !== 'test';
+    shouldLogError && logger.error(err.message, err);
     return res.status(BAD_REQUEST).json({
         error: err.message,
     });
 });
 
+// Export app instance for testing
+export { app };
 // Export express instance
-export default app;
+export default server;

@@ -1,0 +1,25 @@
+type User
+    @model
+    @auth(
+        rules: [
+            { allow: owner, operations: [create, read] }
+            {
+                allow: groups
+                groups: ["Administrators"]
+                operations: [create, read, update, delete]
+            }
+        ]
+    ) {
+    id: ID!
+    name: String!
+    description: String
+    email: String!
+    backgammon: Game!
+}
+
+type Game {
+    score: Int!
+    wins: Int!
+    loses: Int!
+    escapes: Int!
+}

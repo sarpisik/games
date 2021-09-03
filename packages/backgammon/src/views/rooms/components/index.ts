@@ -1,0 +1,1 @@
+export { withRoomsConnection } from './withRoomsConnection';

@@ -1,0 +1,1 @@
+export { transformCollectAreaIndex } from './transformCollectAreaIndex';

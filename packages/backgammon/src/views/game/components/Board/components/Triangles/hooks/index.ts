@@ -1,0 +1,1 @@
+export { useTriangles } from './useTriangles';

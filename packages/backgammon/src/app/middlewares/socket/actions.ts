@@ -1,0 +1,4 @@
+export enum SOCKET_ACTIONS {
+    CONNECT = 'CONNECT',
+    DISCONNECT = 'DISCONNECT',
+}

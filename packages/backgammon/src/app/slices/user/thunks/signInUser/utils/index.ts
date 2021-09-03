@@ -1,0 +1,1 @@
+export { handleUserAuth } from './handleUserAuth';

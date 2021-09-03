@@ -1,0 +1,1 @@
+export { useFeedbacks } from './useFeedbacks';

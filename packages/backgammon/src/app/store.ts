@@ -1,8 +1,35 @@
-import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
-import { history, pointsLayout, round, game } from './slices';
+import {
+    Action,
+    configureStore,
+    MiddlewareArray,
+    ThunkAction,
+} from '@reduxjs/toolkit';
+import { socket } from './middlewares';
+import {
+    connection,
+    feedbacks,
+    game,
+    measures,
+    notification,
+    room,
+    rooms,
+    shortTimer,
+    user,
+} from './slices';
 
 export const store = configureStore({
-    reducer: { history, pointsLayout, round, game },
+    reducer: {
+        connection,
+        feedbacks,
+        game,
+        notification,
+        user,
+        measures,
+        room,
+        rooms,
+        shortTimer,
+    },
+    middleware: new MiddlewareArray().concat([socket]),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
